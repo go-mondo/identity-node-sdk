@@ -45,7 +45,7 @@ export const OrganizationPayloadSchema = type({
 export type OrganizationPayload = typeof OrganizationPayloadSchema.inferOut;
 
 export const InsertOrganizationPayloadSchema = type({
-  id: OrganizationIdSchema.default(generateOrganizationId()),
+  id: OrganizationIdSchema.default(() => generateOrganizationId()),
   status: StatusSchema.optional(),
   name: OrganizationNameSchema,
 }).and(UpsertMetadataPayloadPropertySchema);

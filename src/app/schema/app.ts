@@ -37,7 +37,7 @@ export const AppPayloadSchema = type({
 export type AppPayload = typeof AppPayloadSchema.inferOut;
 
 export const InsertAppPayloadSchema = type({
-  id: AppIdSchema.default(generateAppId()),
+  id: AppIdSchema.default(() => generateAppId()),
   status: StatusSchema.default(AppStatus.ENABLED),
   label: type('string'),
   description: type('string').optional(),

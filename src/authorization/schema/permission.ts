@@ -43,7 +43,7 @@ export const PermissionPayloadSchema = PermissionIdPropertySchema.and({
 export type PermissionPayload = typeof PermissionPayloadSchema.inferOut;
 
 export const InsertPermissionPayloadSchema = type({
-  id: PermissionIdSchema.default(generatePermissionId()),
+  id: PermissionIdSchema.default(() => generatePermissionId()),
   name: type('string'),
   status: StatusSchema.default(PermissionStatus.ENABLED),
   description: type('string').optional(),

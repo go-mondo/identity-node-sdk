@@ -24,8 +24,8 @@ export type TenantPayload = typeof TenantPayloadSchema.inferOut;
 export const InsertTenantPayloadSchema = InsertOrganizationPayloadSchema.omit(
   'id'
 ).and({
-  id: TenantIdSchema.default(generateTenantId()),
-  handle: type('string').default(generateHandle()),
+  id: TenantIdSchema.default(() => generateTenantId()),
+  handle: type('string').default(() => generateHandle()),
   supportEmail: type('string.email').optional(),
 });
 export type InsertTenantPayload = typeof InsertTenantPayloadSchema.inferOut;

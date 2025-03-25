@@ -49,7 +49,7 @@ export type UserNotificationPayload =
   typeof UserNotificationPayloadSchema.inferOut;
 
 export const InsertUserNotificationPayloadSchema = type({
-  id: UserIdSchema.default(generateNotificationId()),
+  id: UserIdSchema.default(() => generateNotificationId()),
   type: type.enumerated(NotificationType.INFO),
   action: ActionSchema.optional(),
 })

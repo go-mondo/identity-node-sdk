@@ -40,7 +40,7 @@ export const RolePayloadSchema = RoleIdPropertySchema.and({
 export type RolePayload = typeof RolePayloadSchema.inferOut;
 
 export const InsertRolePayloadSchema = type({
-  id: RoleIdSchema.default(generateRoleId()),
+  id: RoleIdSchema.default(() => generateRoleId()),
   name: type('string'),
   status: StatusSchema.default(RoleStatus.ENABLED),
   description: type('string').optional(),

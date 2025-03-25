@@ -93,7 +93,7 @@ export type UserPayload = typeof UserPayloadSchema.inferOut;
 
 export const InsertUserPayloadSchema = type({
   suspended: type.boolean.optional(),
-  id: UserIdSchema.default(generateUserId()),
+  id: UserIdSchema.default(() => generateUserId()),
 })
   .and(UserNamePropertiesSchema)
   .and(VerifiedEmailOrPhonePropertiesSchema)

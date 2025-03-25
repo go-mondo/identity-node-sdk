@@ -22,6 +22,6 @@ export const OAuthPayloadSchema = OAuthIdPropertySchema.and({
 export type OAuthPayload = typeof OAuthPayloadSchema.inferOut;
 
 export const InsertOAuthPayloadSchema = type({
-  id: OAuthIdSchema.default(generateOAuthId()),
+  id: OAuthIdSchema.default(() => generateOAuthId()),
 }).and(MetadataPayloadPropertySchema);
 export type InsertOAuthPayload = typeof InsertOAuthPayloadSchema.inferOut;

@@ -44,7 +44,7 @@ export const BasePayloadSchema = type({
 }).and(MetadataPayloadPropertySchema);
 
 export const BaseInsertPayloadSchema = type({
-  id: ActivityIdSchema.default(generateActivityId()),
+  id: ActivityIdSchema.default(() => generateActivityId()),
   performedBy: PerformedBySchema.optional(),
 }).and(UpsertMetadataPayloadPropertySchema);
 
