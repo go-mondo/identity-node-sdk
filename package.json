@@ -1,5 +1,5 @@
 {
-  "name": "@mondo-identity/sdk",
+  "name": "@go-mondo/sdk",
   "version": "0.0.0",
   "type": "module",
   "description": "A node SDK for Mondo Identity",
