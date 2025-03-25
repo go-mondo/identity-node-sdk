@@ -28,7 +28,8 @@
     "lint:fix": "npx biome lint --fix",
     "format": "npx biome format",
     "format:fix": "npx biome format --fix",
-    "pre-commit": "pnpm run check-types && pnpm run lint && pnpm run format"
+    "pre-commit": "pnpm run check-types && pnpm run lint && pnpm run format",
+    "prepare": "husky"
   },
   "dependencies": {
     "arktype": "^2.1.12",
@@ -39,6 +40,7 @@
     "@tsconfig/node20": "^20.1.5",
     "@types/node": "^20.17.27",
     "@vitest/coverage-v8": "^3.0.9",
+    "husky": "^9.1.7",
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
   },
