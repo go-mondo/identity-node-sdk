@@ -1,0 +1,48 @@
+{
+  "name": "@mondo-identity/sdk",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "A node SDK for Mondo Identity",
+  "license": "MIT",
+  "exports": {
+    "./common": "./packages/common/index.ts",
+    "./action": "./packages/action/index.ts",
+    "./activity": "./packages/activity/index.ts",
+    "./app": "./packages/app/index.ts",
+    "./association": "./packages/association/index.ts",
+    "./authentication": "./packages/authentication/index.ts",
+    "./authorization": "./packages/authorization/index.ts",
+    "./customer": "./packages/customer/index.ts",
+    "./identity": "./packages/identity/index.ts",
+    "./oauth": "./packages/oauth/index.ts",
+    "./workspace": "./packages/workspace/index.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit -p ./tsconfig.json",
+    "build": "tsc -p ./tsconfig.json",
+    "test:ci": "npx vitest run --silent",
+    "test:dev": "npx vitest --silent",
+    "test": "npx vitest run --silent",
+    "check-types": "tsc --noEmit -p ./tsconfig.json",
+    "lint": "npx biome lint",
+    "lint:fix": "npx biome lint --fix",
+    "format": "npx biome format",
+    "format:fix": "npx biome format --fix",
+    "pre-commit": "pnpm run check-types && pnpm run lint && pnpm run format"
+  },
+  "dependencies": {
+    "arktype": "^2.1.12",
+    "ksuid": "^3.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@tsconfig/node20": "^20.1.5",
+    "@types/node": "^20.17.27",
+    "@vitest/coverage-v8": "^3.0.9",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

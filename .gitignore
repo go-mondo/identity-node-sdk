@@ -1,0 +1,8 @@
+*.js
+!.axiom*.js
+*.d.ts
+.DS_Store
+node_modules
+
+# Tests
+coverage
