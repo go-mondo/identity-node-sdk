@@ -1,8 +1,16 @@
-*.js
-!.axiom*.js
-*.d.ts
-.DS_Store
+# Dependency directories
 node_modules
 
-# Tests
+# Build output
+dist
+lib
+
+# Coverage directory
 coverage
+
+# OS
+.DS_Store
+
+# TS build files
+tsconfig.tsbuildinfo
+.tsbuildinfo

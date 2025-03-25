@@ -1,8 +1,26 @@
 {
-  "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
-    "preserveConstEnums": true
+    "incremental": true,
+    "composite": true,
+    "target": "ES2022", // Node.js 18
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "declaration": true,
+    "removeComments": false,
+    "isolatedModules": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "pretty": true,
+    "preserveConstEnums": true,
+    "outDir": "./lib/cjs/",
+    "rootDir": "./src",
+    "tsBuildInfoFile": ".tsbuildinfo/cjs.json"
   },
   "include": ["src/*.ts", "src/**/*.ts"],
-  "exclude": ["dist", ".test.ts", "node_modules", "coverage", "**/__mocks__/*"]
+  "exclude": [".test.ts", "node_modules", "coverage", "**/__mocks__/*"]
 }

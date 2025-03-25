@@ -5,21 +5,122 @@
   "description": "A node SDK for Mondo Identity",
   "license": "MIT",
   "exports": {
-    "./common": "./src/common/index.ts",
-    "./action": "./src/action/index.ts",
-    "./activity": "./src/activity/index.ts",
-    "./app": "./src/app/index.ts",
-    "./association": "./src/association/index.ts",
-    "./authentication": "./src/authentication/index.ts",
-    "./authorization": "./src/authorization/index.ts",
-    "./customer": "./src/customer/index.ts",
-    "./identity": "./src/identity/index.ts",
-    "./oauth": "./src/oauth/index.ts",
-    "./workspace": "./src/workspace/index.ts"
+    ".": {
+      "require": {
+        "types": "./lib/cjs/common/index.d.ts",
+        "default": "./lib/cjs/common/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/common/index.d.ts",
+        "default": "./lib/esm/common/index.js"
+      }
+    },
+    "./action": {
+      "require": {
+        "types": "./lib/cjs/action/index.d.ts",
+        "default": "./lib/cjs/action/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/action/index.d.ts",
+        "default": "./lib/esm/action/index.js"
+      }
+    },
+    "./activity": {
+      "require": {
+        "types": "./lib/cjs/activity/index.d.ts",
+        "default": "./lib/cjs/activity/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/activity/index.d.ts",
+        "default": "./lib/esm/activity/index.js"
+      }
+    },
+    "./app": {
+      "require": {
+        "types": "./lib/cjs/app/index.d.ts",
+        "default": "./lib/cjs/app/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/app/index.d.ts",
+        "default": "./lib/esm/app/index.js"
+      }
+    },
+    "./association": {
+      "require": {
+        "types": "./lib/cjs/association/index.d.ts",
+        "default": "./lib/cjs/association/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/association/index.d.ts",
+        "default": "./lib/esm/association/index.js"
+      }
+    },
+    "./authentication": {
+      "require": {
+        "types": "./lib/cjs/authentication/index.d.ts",
+        "default": "./lib/cjs/authentication/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/authentication/index.d.ts",
+        "default": "./lib/esm/authentication/index.js"
+      }
+    },
+    "./authorization": {
+      "require": {
+        "types": "./lib/cjs/authorization/index.d.ts",
+        "default": "./lib/cjs/authorization/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/authorization/index.d.ts",
+        "default": "./lib/esm/authorization/index.js"
+      }
+    },
+    "./customer": {
+      "require": {
+        "types": "./lib/cjs/customer/index.d.ts",
+        "default": "./lib/cjs/customer/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/customer/index.d.ts",
+        "default": "./lib/esm/customer/index.js"
+      }
+    },
+    "./identity": {
+      "require": {
+        "types": "./lib/cjs/identity/index.d.ts",
+        "default": "./lib/cjs/identity/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/identity/index.d.ts",
+        "default": "./lib/esm/identity/index.js"
+      }
+    },
+    "./oauth": {
+      "require": {
+        "types": "./lib/cjs/oauth/index.d.ts",
+        "default": "./lib/cjs/oauth/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/oauth/index.d.ts",
+        "default": "./lib/esm/oauth/index.js"
+      }
+    },
+    "./workspace": {
+      "require": {
+        "types": "./lib/cjs/workspace/index.d.ts",
+        "default": "./lib/cjs/workspace/index.js"
+      },
+      "import": {
+        "types": "./lib/esm/workspace/index.d.ts",
+        "default": "./lib/esm/workspace/index.js"
+      }
+    }
   },
   "scripts": {
     "type-check": "tsc --noEmit -p ./tsconfig.json",
-    "build": "tsc -p ./tsconfig.json",
+    "build:cjs": "tsc --build tsconfig.json && echo '{ \"type\": \"commonjs\" }' > lib/cjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{ \"type\": \"module\" }' > lib/esm/package.json",
+    "build": "npm run build:esm & npm run build:cjs",
     "test:ci": "npx vitest run --silent",
     "test:dev": "npx vitest --silent",
     "test": "npx vitest run --silent",
@@ -37,7 +138,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@tsconfig/node20": "^20.1.5",
     "@types/node": "^20.17.27",
     "@vitest/coverage-v8": "^3.0.9",
     "husky": "^9.1.7",
