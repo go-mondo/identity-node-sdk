@@ -5,17 +5,17 @@
   "description": "A node SDK for Mondo Identity",
   "license": "MIT",
   "exports": {
-    "./common": "./packages/common/index.ts",
-    "./action": "./packages/action/index.ts",
-    "./activity": "./packages/activity/index.ts",
-    "./app": "./packages/app/index.ts",
-    "./association": "./packages/association/index.ts",
-    "./authentication": "./packages/authentication/index.ts",
-    "./authorization": "./packages/authorization/index.ts",
-    "./customer": "./packages/customer/index.ts",
-    "./identity": "./packages/identity/index.ts",
-    "./oauth": "./packages/oauth/index.ts",
-    "./workspace": "./packages/workspace/index.ts"
+    "./common": "./src/common/index.ts",
+    "./action": "./src/action/index.ts",
+    "./activity": "./src/activity/index.ts",
+    "./app": "./src/app/index.ts",
+    "./association": "./src/association/index.ts",
+    "./authentication": "./src/authentication/index.ts",
+    "./authorization": "./src/authorization/index.ts",
+    "./customer": "./src/customer/index.ts",
+    "./identity": "./src/identity/index.ts",
+    "./oauth": "./src/oauth/index.ts",
+    "./workspace": "./src/workspace/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit -p ./tsconfig.json",
