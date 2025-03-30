@@ -9,7 +9,6 @@ env:
   NODE_VERSION: 20
   PNPM_VERSION: 10
 
-name: release-please
 jobs:
   release-please:
     runs-on: ubuntu-latest
