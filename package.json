@@ -132,8 +132,8 @@
     "check-types": "tsc --noEmit -p ./tsconfig.json",
     "lint": "npx biome lint",
     "lint:fix": "npx biome lint --fix",
-    "format": "npx biome format",
-    "format:fix": "npx biome format --fix",
+    "format": "npx biome format ./src",
+    "format:fix": "npx biome format ./src --fix",
     "pre-commit": "pnpm run check-types && pnpm run lint && pnpm run format",
     "prepare": "husky"
   },
