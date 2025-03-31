@@ -24,6 +24,8 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@go-mondo'
 
       - uses: pnpm/action-setup@v4
         if: ${{ steps.release.outputs.release_created }}
