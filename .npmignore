@@ -13,12 +13,17 @@ scripts
 coverage
 tslint.json
 tsconfig.json
+tsconfig.*.json
 MakeFile
 vitest.config.ts
 vitest.workspace.ts
 .npmignore
 .eslintignore
 .huskyrc.js
+.husky
 .eslintrc.json
 examples
 tsconfig.tsbuildinfo
+release-please-config.json
+.release-please-manifest.json
+biome.json

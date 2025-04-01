@@ -22,12 +22,7 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release-type: node
-          prerelease-type: beta
-          prerelease: true
-          release-as: "0.0.1"
-
-          # config-file: release-please-config.json
+          config-file: release-please-config.json
     outputs:
       pr: ${{ steps.release.outputs.pr }}
       release_created: ${{ steps.release.outputs.release_created }}
@@ -63,10 +58,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          prerelease-type: beta
-          prerelease: true
-          release-as: "0.0.1"
-          # config-file: release-please-config.json
+          config-file: release-please-config.json
       # The logic below handles the npm publication:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -99,10 +91,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: pnpm install
+      - name: pnpm install & build
         if: ${{ steps.release.outputs.release_created }}
         run: |
           pnpm install
+          pnpm build
         # these if statements ensure that a publication only occurs when
         # a new release is created:
       - run: npm publish
