@@ -4,7 +4,7 @@ import {
   InsertUserPayloadSchema,
   UserPayloadSchema,
   UserStatus,
-} from './user.js';
+} from './schema.js';
 
 describe('Customer - User', () => {
   describe('User Payload', () => {

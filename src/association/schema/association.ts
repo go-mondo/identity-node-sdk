@@ -5,7 +5,7 @@ import {
 } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
 import { OrganizationAssociationReferenceSchema } from '../../customer/schema/organization.js';
-import { UserAssociationReferenceSchema } from '../../customer/schema/user.js';
+import { UserAssociationReferenceSchema } from '../../customer/users/schema.js';
 
 export const AssociationIdReferenceSchema = type({
   id: type('string'),

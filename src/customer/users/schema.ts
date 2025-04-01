@@ -2,13 +2,16 @@ import { type } from 'arktype';
 import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
   OptionalDatePayloadSchema,
+  OptionalDateSchema,
   RequiredDatePayloadSchema,
+  RequiredDateSchema,
 } from '../../common/schema/dates.js';
 import {
+  MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
   UpsertMetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
-import { generateUserId } from './utils.js';
+import { generateUserId } from '../schema/utils.js';
 
 export const VerifiableAttribute = {
   EMAIL: 'email',
@@ -25,7 +28,7 @@ export const UserStatus = {
 } as const;
 export type AnyUserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 
-const StatusSchema = type.enumerated(
+const UserStatusSchema = type.enumerated(
   UserStatus.ACTIVE,
   UserStatus.SUSPENDED,
   UserStatus.UNVERIFIED
@@ -76,19 +79,30 @@ export const EmailOrPhonePropertiesSchema = type({
   phoneNumber: PhoneNumberSchema.optional(),
 });
 
-export const UserPayloadSchema = type({
-  status: StatusSchema,
-  roles: AggregateSchema.or(type.undefined).optional(),
+const BaseSchema = UserIdPropertySchema.and(UserNamePropertiesSchema)
+  .and(VerifiedEmailOrPhonePropertiesSchema)
+  .and({
+    status: UserStatusSchema,
+    roles: AggregateSchema.or(type.undefined).optional(),
+  });
+
+export const UserSchema = BaseSchema.and({
+  lastLogin: OptionalDateSchema.optional(),
+  createdAt: RequiredDateSchema,
+  updatedAt: RequiredDateSchema,
+  'deletedAt?': OptionalDateSchema,
+  'deactivatedAt?': OptionalDateSchema,
+}).and(MetadataMapPropertySchema);
+export type UserProperties = typeof UserSchema.inferIn;
+export type User = typeof UserSchema.inferOut;
+
+export const UserPayloadSchema = BaseSchema.and({
   lastLogin: OptionalDatePayloadSchema.optional(),
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,
   'deactivatedAt?': OptionalDatePayloadSchema,
-})
-  .and(UserIdPropertySchema)
-  .and(UserNamePropertiesSchema)
-  .and(VerifiedEmailOrPhonePropertiesSchema)
-  .and(MetadataPayloadPropertySchema);
+}).and(MetadataPayloadPropertySchema);
 export type UserPayload = typeof UserPayloadSchema.inferOut;
 
 export const InsertUserPayloadSchema = type({
@@ -98,6 +112,7 @@ export const InsertUserPayloadSchema = type({
   .and(UserNamePropertiesSchema)
   .and(VerifiedEmailOrPhonePropertiesSchema)
   .and(UpsertMetadataPayloadPropertySchema);
+export type InsertUserInput = typeof InsertUserPayloadSchema.inferIn;
 export type InsertUserPayload = typeof InsertUserPayloadSchema.inferOut;
 
 export const UpdateUserPayloadSchema = type({
@@ -105,6 +120,7 @@ export const UpdateUserPayloadSchema = type({
 })
   .and(UpsertUserNamePropertiesSchema)
   .and(UpsertMetadataPayloadPropertySchema);
+export type UpdateUserInput = typeof UpdateUserPayloadSchema.inferIn;
 export type UpdateUserPayload = typeof UpdateUserPayloadSchema.inferOut;
 
 const UserRoleAssociationSchema = type('string[] | undefined');
@@ -120,6 +136,7 @@ export const UserAssociationReferenceSchema = UserIdPropertySchema.and(
 ).and(
   EmailOrPhonePropertiesSchema.and(
     type({
+      status: UserStatusSchema,
       model: "'User'",
     })
   )

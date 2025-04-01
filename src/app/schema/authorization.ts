@@ -4,7 +4,7 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
-import { type AnyGrantType, GrantType } from '../../oauth/schema/schema.js';
+import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
 import { AuthorizationPayloadSchema as WorkspaceAuthorizationPayloadSchema } from '../../workspace/schema/authorization.js';
 
 const StringSetSchema = type.instanceOf(Set<string>);

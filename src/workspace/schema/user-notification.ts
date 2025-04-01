@@ -4,7 +4,7 @@ import {
   RequiredDatePayloadSchema,
 } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
-import { UserIdSchema } from '../../customer/schema/user.js';
+import { UserIdSchema } from '../../customer/users/schema.js';
 import { generateNotificationId } from './utils.js';
 
 export const NotificationType = {

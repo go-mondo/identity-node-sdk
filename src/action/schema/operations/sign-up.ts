@@ -5,7 +5,7 @@ import {
   RequiredEmailSchema,
   RequiredPhoneNumberSchema,
   UserNamePropertiesSchema,
-} from '../../../customer/schema/user.js';
+} from '../../../customer/users/schema.js';
 import { BasePayloadSchema } from '../base.js';
 
 export const SignUpActionPayloadSchema = BasePayloadSchema.and({

@@ -23,26 +23,26 @@ const SettingsSchema = type({
   passwordPolicy: PasswordPolicySchema,
 });
 
-export const PasswordStrategySettingsSchema = type({
+export const PasswordStrategySettingsPropertySchema = type({
   settings: SettingsSchema,
 });
 
 export const PasswordStrategyPayloadSchema = BaseStrategyPayloadSchema.and(
   TypeSchema
-).and(PasswordStrategySettingsSchema);
+).and(PasswordStrategySettingsPropertySchema);
 export type PasswordStrategyPayload =
   typeof PasswordStrategyPayloadSchema.inferOut;
 
 export const InsertPasswordStrategyPayloadSchema =
   BaseInsertStrategyPayloadSchema.and(TypeSchema).and(
-    PasswordStrategySettingsSchema
+    PasswordStrategySettingsPropertySchema
   );
 export type InsertPasswordStrategyPayload =
   typeof InsertPasswordStrategyPayloadSchema.inferOut;
 
 export const UpdatePasswordStrategyPayloadSchema =
   BaseUpdateStrategyPayloadSchema.and(TypeSchema).and(
-    PasswordStrategySettingsSchema
+    PasswordStrategySettingsPropertySchema
   );
 export type UpdatePasswordStrategyPayload =
   typeof UpdatePasswordStrategyPayloadSchema.inferOut;
