@@ -22,6 +22,7 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
           # config-file: release-please-config.json
     outputs:
       pr: ${{ steps.release.outputs.pr }}
