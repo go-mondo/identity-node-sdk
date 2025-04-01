@@ -62,6 +62,8 @@ jobs:
           # config-file: release-please-config.json
       # The logic below handles the npm publication:
       - uses: actions/checkout@v4
+        with: 
+          ref: ${{ needs.release-please.outputs.sha }}
       - name: Use Node.js
         uses: actions/setup-node@v4
         if: ${{ steps.release.outputs.release_created }}
