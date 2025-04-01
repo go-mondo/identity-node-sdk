@@ -1,9 +1,14 @@
 {
   "name": "@go-mondo/identity-sdk",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "description": "A node SDK for Mondo Identity",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./lib/cjs/common/index.js",
+  "types": "./lib/cjs/common/index.d.ts",
   "exports": {
     ".": {
       "require": {
@@ -127,8 +132,8 @@
     "check-types": "tsc --noEmit -p ./tsconfig.json",
     "lint": "npx biome lint",
     "lint:fix": "npx biome lint --fix",
-    "format": "npx biome format",
-    "format:fix": "npx biome format --fix",
+    "format": "npx biome format ./src",
+    "format:fix": "npx biome format ./src --fix",
     "pre-commit": "pnpm run check-types && pnpm run lint && pnpm run format",
     "prepare": "husky"
   },
