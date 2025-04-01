@@ -22,7 +22,12 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          config-file: release-please-config.json
+          release-type: node
+          prerelease-type: beta
+          prerelease: true
+          release-as: "0.0.1"
+
+          # config-file: release-please-config.json
     outputs:
       pr: ${{ steps.release.outputs.pr }}
       release_created: ${{ steps.release.outputs.release_created }}
@@ -57,7 +62,11 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          config-file: release-please-config.json
+          release-type: node
+          prerelease-type: beta
+          prerelease: true
+          release-as: "0.0.1"
+          # config-file: release-please-config.json
       # The logic below handles the npm publication:
       - uses: actions/checkout@v4
       - name: Use Node.js
