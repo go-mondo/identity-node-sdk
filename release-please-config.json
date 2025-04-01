@@ -1,0 +1,6 @@
+{
+  "release-type": "node",
+  "prerelease-type": "beta",
+  "bump-patch-for-minor-pre-major": true,
+  "prerelease": true
+}
