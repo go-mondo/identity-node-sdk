@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.1-beta.2](https://github.com/go-mondo/identity-node-sdk/compare/v0.0.1-beta.1...v0.0.1-beta.2) (2025-04-01)
+
+
+### Miscellaneous Chores
+
+* release 0.0.1-beta.2 ([287214f](https://github.com/go-mondo/identity-node-sdk/commit/287214fe1af35d2824d110c8a7a2d2b79ee88c00))
+
 ## [0.0.1-beta.1](https://github.com/go-mondo/identity-node-sdk/compare/v1.0.0...v0.0.1-beta.1) (2025-04-01)
 
 
