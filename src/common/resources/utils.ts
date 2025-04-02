@@ -1,5 +1,6 @@
 import { type } from 'arktype';
 import { HttpError } from '../errors/http.js';
+import { ValidationError } from '../errors/validation.js';
 import type { Pagination } from '../schema/pagination.js';
 
 /**
@@ -77,9 +78,29 @@ export async function responseToHttpError(
     });
   }
 
-  return new HttpError(body?.error_description, {
+  const {
+    error: type,
+    error_description: message,
+    trace,
+    fields,
+    ...data
+  } = body;
+
+  if (fields) {
+    return new ValidationError(message, {
+      statusCode: response.status,
+      type,
+      trace,
+      body: data,
+      fields,
+    });
+  }
+
+  return new HttpError(message, {
     statusCode: response.status,
-    type: body?.error,
+    type,
+    trace,
+    body: data,
   });
 }
 

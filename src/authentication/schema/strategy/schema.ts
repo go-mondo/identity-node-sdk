@@ -14,22 +14,6 @@ import {
   UpdateTOTPStrategyPayloadSchema,
 } from './types/totp.js';
 
-export const StrategyType = {
-  EMAIL: 'email',
-  PASSWORD: 'password',
-  TOTP: 'totp',
-} as const;
-
-export type AnyStrategyType = (typeof StrategyType)[keyof typeof StrategyType];
-
-export const StrategyStatus = {
-  ENABLED: 'enabled',
-  DISABLED: 'disabled',
-} as const;
-
-export type AnyStrategyStatus =
-  (typeof StrategyStatus)[keyof typeof StrategyStatus];
-
 /**
  * Union(s)
  */
@@ -57,7 +41,11 @@ export {
   StrategyIdPropertySchema,
   StrategyIdSchema,
   StrategyLabelSchema,
+  StrategyStatus,
   StrategyStatusSchema,
+  StrategyType,
+  type AnyStrategyStatus,
+  type AnyStrategyType,
   type StrategyId,
   type StrategyIdProperty,
 } from './base.js';

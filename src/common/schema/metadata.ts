@@ -49,7 +49,7 @@ export const MetadataPayloadPropertySchema = type({
 export type MetadataPayloadProperty =
   typeof MetadataPayloadPropertySchema.inferOut;
 
-const UpsertMetadataPayloadSchema = type('undefined | null')
+export const UpsertMetadataPayloadSchema = type('undefined | null')
   .or(MetadataMapSchema)
   .or(MetadataRecordSchema)
   .pipe((map) => (map ? buildUpsertMetadataPayload(map) || null : null));

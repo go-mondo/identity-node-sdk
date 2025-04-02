@@ -1,23 +1,17 @@
 export type HttpErrorOptions = {
   statusCode?: number;
   type?: string;
+  trace?: string;
+  body?: {
+    [key: string]: string;
+  };
 };
 
 export class HttpError extends Error {
   readonly statusCode: number;
-
   readonly type: string;
-  public expose?: boolean = undefined;
-  readonly headers?:
-    | {
-        [key: string]: string;
-      }
-    | undefined;
-  readonly body?:
-    | {
-        [key: string]: string;
-      }
-    | undefined;
+  readonly trace?: HttpErrorOptions['trace'];
+  readonly body?: HttpErrorOptions['body'];
 
   public constructor(
     message = 'An unknown error occurred. Please try the operation again.',

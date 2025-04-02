@@ -4,7 +4,22 @@ import {
   RequiredDatePayloadSchema,
 } from '../../../common/index.js';
 import { MetadataPayloadPropertySchema } from '../../../common/schema/metadata.js';
-import { StrategyStatus, StrategyType } from './schema.js';
+
+export const StrategyType = {
+  EMAIL: 'email',
+  PASSWORD: 'password',
+  TOTP: 'totp',
+} as const;
+
+export type AnyStrategyType = (typeof StrategyType)[keyof typeof StrategyType];
+
+export const StrategyStatus = {
+  ENABLED: 'enabled',
+  DISABLED: 'disabled',
+} as const;
+
+export type AnyStrategyStatus =
+  (typeof StrategyStatus)[keyof typeof StrategyStatus];
 
 export const StrategyIdSchema = type.string;
 export type StrategyId = typeof StrategyIdSchema.inferOut;

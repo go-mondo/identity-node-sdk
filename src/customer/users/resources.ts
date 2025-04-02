@@ -23,7 +23,7 @@ import {
   UserSchema,
 } from './schema.js';
 
-const PATH = '/v1/authorization/user';
+const PATH = '/v1/customers/users';
 
 export class UserResources {
   public constructor(private readonly instance: MondoIdentity) {}
@@ -63,31 +63,23 @@ export async function listUsers(
   instance: MondoIdentity,
   pagination?: Pagination
 ): Promise<PaginationCollection<User>> {
-  console.groupCollapsed('Mondo Identity SDK: Users');
-
   const url = addPaginationToURL(
     new URL(UserResources.buildPath(), instance.config.host),
     pagination
   );
 
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     PaginationCollectionSchema(UserSchema)(
       await getItemWithAuthorization(url, instance.authorizer)
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function getUser(
   instance: MondoIdentity,
   id: string
 ): Promise<User> {
-  console.groupCollapsed('Mondo Identity SDK: Users');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     UserSchema(
       await getItemWithAuthorization(
         new URL(UserResources.buildPath(id), instance.config.host),
@@ -95,33 +87,23 @@ export async function getUser(
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function insertUser(
   instance: MondoIdentity,
   item: InsertUserInput
 ): Promise<User> {
-  console.groupCollapsed('Mondo Identity SDK: Users');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     UserSchema(
       await insertItemWithAuthorization(
         new URL(UserResources.buildPath(), instance.config.host),
         instance.authorizer,
         parseEgressSchema(
-          InsertUserPayloadSchema.onDeepUndeclaredKey('delete')(item)
+          InsertUserPayloadSchema.onUndeclaredKey('delete')(item)
         )
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function updateUser(
@@ -129,35 +111,25 @@ export async function updateUser(
   id: string,
   item: UpdateUserInput
 ): Promise<User> {
-  console.groupCollapsed('Mondo Identity SDK: Users');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     UserSchema(
       await updateItemWithAuthorization(
         new URL(UserResources.buildPath(id), instance.config.host),
         instance.authorizer,
         parseEgressSchema(
-          UpdateUserPayloadSchema.onDeepUndeclaredKey('delete')(item)
+          UpdateUserPayloadSchema.onUndeclaredKey('delete')(item)
         )
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function deleteUser(
   instance: MondoIdentity,
   id: string
 ): Promise<void> {
-  console.groupCollapsed('Mondo Identity SDK: Users');
-
   await deleteItemWithAuthorization(
     new URL(UserResources.buildPath(id), instance.config.host),
     instance.authorizer
   );
-
-  console.groupEnd();
 }

@@ -9,6 +9,7 @@ import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
+  UpsertMetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
 import { generatePermissionId } from '../utils.js';
 
@@ -76,7 +77,7 @@ export const InsertPermissionPayloadSchema = type({
   description: type('string').optional(),
 })
   .and(PermissionAssociationsSchema)
-  .and(MetadataPayloadPropertySchema);
+  .and(UpsertMetadataPayloadPropertySchema);
 export type InsertPermissionInput =
   typeof InsertPermissionPayloadSchema.inferIn;
 export type InsertPermissionPayload =
@@ -89,7 +90,7 @@ export const UpdatePermissionPayloadSchema = type({
   name: type('string').optional(),
   status: PermissionStatusSchema.optional(),
   description: type('string').optional(),
-}).and(MetadataPayloadPropertySchema);
+}).and(UpsertMetadataPayloadPropertySchema);
 export type UpdatePermissionInput =
   typeof UpdatePermissionPayloadSchema.inferIn;
 export type UpdatePermissionPayload =

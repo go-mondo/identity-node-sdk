@@ -25,6 +25,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules", "coverage", "lib", ".vscode/*"]
+    "ignore": ["node_modules", "coverage", "dist", ".vscode/*", ".tsbuildinfo"]
   }
 }

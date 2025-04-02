@@ -17,7 +17,7 @@
     "skipLibCheck": true,
     "pretty": true,
     "preserveConstEnums": true,
-    "outDir": "./lib/cjs/",
+    "outDir": "./dist/cjs/",
     "rootDir": "./src",
     "tsBuildInfoFile": ".tsbuildinfo/cjs.json"
   },

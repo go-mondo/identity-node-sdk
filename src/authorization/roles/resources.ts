@@ -63,31 +63,23 @@ export async function listRoles(
   instance: MondoIdentity,
   pagination?: Pagination
 ): Promise<PaginationCollection<Role>> {
-  console.groupCollapsed('Mondo Identity SDK: Roles');
-
   const url = addPaginationToURL(
     new URL(RoleResources.buildPath(), instance.config.host),
     pagination
   );
 
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     PaginationCollectionSchema(RoleSchema)(
       await getItemWithAuthorization(url, instance.authorizer)
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function getRole(
   instance: MondoIdentity,
   id: string
 ): Promise<Role> {
-  console.groupCollapsed('Mondo Identity SDK: Roles');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     RoleSchema(
       await getItemWithAuthorization(
         new URL(RoleResources.buildPath(id), instance.config.host),
@@ -95,33 +87,23 @@ export async function getRole(
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function insertRole(
   instance: MondoIdentity,
   item: InsertRoleInput
 ): Promise<Role> {
-  console.groupCollapsed('Mondo Identity SDK: Roles');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     RoleSchema(
       await insertItemWithAuthorization(
         new URL(RoleResources.buildPath(), instance.config.host),
         instance.authorizer,
         parseEgressSchema(
-          InsertRolePayloadSchema.onDeepUndeclaredKey('delete')(item)
+          InsertRolePayloadSchema.onUndeclaredKey('delete')(item)
         )
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function updateRole(
@@ -129,35 +111,25 @@ export async function updateRole(
   id: string,
   item: UpdateRoleInput
 ): Promise<Role> {
-  console.groupCollapsed('Mondo Identity SDK: Roles');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     RoleSchema(
       await updateItemWithAuthorization(
         new URL(RoleResources.buildPath(id), instance.config.host),
         instance.authorizer,
         parseEgressSchema(
-          UpdateRolePayloadSchema.onDeepUndeclaredKey('delete')(item)
+          UpdateRolePayloadSchema.onUndeclaredKey('delete')(item)
         )
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function deleteRole(
   instance: MondoIdentity,
   id: string
 ): Promise<void> {
-  console.groupCollapsed('Mondo Identity SDK: Roles');
-
   await deleteItemWithAuthorization(
     new URL(RoleResources.buildPath(id), instance.config.host),
     instance.authorizer
   );
-
-  console.groupEnd();
 }

@@ -10,7 +10,7 @@ export default defineConfig({
         functions: 100,
         lines: 100,
       },
-      include: ['src/**'],
+      include: ['src/**/*.{test,spec}.{ts,mts,cts}'],
       exclude: [...coverageConfigDefaults.exclude],
     },
     hookTimeout: 1_000 * 60 * 10, // 10 minutes

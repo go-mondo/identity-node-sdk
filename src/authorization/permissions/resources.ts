@@ -66,31 +66,23 @@ export async function listPermissions(
   instance: MondoIdentity,
   pagination?: Pagination
 ): Promise<PaginationCollection<Permission>> {
-  console.groupCollapsed('Mondo Identity SDK: Permissions');
-
   const url = addPaginationToURL(
     new URL(PermissionResources.buildPath(), instance.config.host),
     pagination
   );
 
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     PaginationCollectionSchema(PermissionSchema)(
       await getItemWithAuthorization(url, instance.authorizer)
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function getPermission(
   instance: MondoIdentity,
   id: string
 ): Promise<Permission> {
-  console.groupCollapsed('Mondo Identity SDK: Permissions');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     PermissionSchema(
       await getItemWithAuthorization(
         new URL(PermissionResources.buildPath(id), instance.config.host),
@@ -98,33 +90,23 @@ export async function getPermission(
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function insertPermission(
   instance: MondoIdentity,
   item: InsertPermissionInput
 ): Promise<Permission> {
-  console.groupCollapsed('Mondo Identity SDK: Permissions');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     PermissionSchema(
       await insertItemWithAuthorization(
         new URL(PermissionResources.buildPath(), instance.config.host),
         instance.authorizer,
         parseEgressSchema(
-          InsertPermissionPayloadSchema.onDeepUndeclaredKey('delete')(item)
+          InsertPermissionPayloadSchema.onUndeclaredKey('delete')(item)
         )
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function updatePermission(
@@ -132,35 +114,25 @@ export async function updatePermission(
   id: string,
   item: UpdatePermissionInput
 ): Promise<Permission> {
-  console.groupCollapsed('Mondo Identity SDK: Permissions');
-
-  const result = parseEgressSchema(
+  return parseEgressSchema(
     PermissionSchema(
       await updateItemWithAuthorization(
         new URL(PermissionResources.buildPath(id), instance.config.host),
         instance.authorizer,
         parseEgressSchema(
-          UpdatePermissionPayloadSchema.onDeepUndeclaredKey('delete')(item)
+          UpdatePermissionPayloadSchema.onUndeclaredKey('delete')(item)
         )
       )
     )
   );
-
-  console.groupEnd();
-
-  return result;
 }
 
 export async function deletePermission(
   instance: MondoIdentity,
   id: string
 ): Promise<void> {
-  console.groupCollapsed('Mondo Identity SDK: Permissions');
-
   await deleteItemWithAuthorization(
     new URL(PermissionResources.buildPath(id), instance.config.host),
     instance.authorizer
   );
-
-  console.groupEnd();
 }

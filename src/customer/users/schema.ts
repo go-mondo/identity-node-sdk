@@ -79,6 +79,13 @@ export const EmailOrPhonePropertiesSchema = type({
   phoneNumber: PhoneNumberSchema.optional(),
 });
 
+const UserRoleAssociationSchema = type('string[] | undefined');
+
+export const UserAssociationsSchema = type({
+  roles: UserRoleAssociationSchema.optional(),
+});
+export type UserAssociations = typeof UserAssociationsSchema.inferOut;
+
 const BaseSchema = UserIdPropertySchema.and(UserNamePropertiesSchema)
   .and(VerifiedEmailOrPhonePropertiesSchema)
   .and({
@@ -111,6 +118,7 @@ export const InsertUserPayloadSchema = type({
 })
   .and(UserNamePropertiesSchema)
   .and(VerifiedEmailOrPhonePropertiesSchema)
+  .and(UserAssociationsSchema)
   .and(UpsertMetadataPayloadPropertySchema);
 export type InsertUserInput = typeof InsertUserPayloadSchema.inferIn;
 export type InsertUserPayload = typeof InsertUserPayloadSchema.inferOut;
@@ -122,14 +130,6 @@ export const UpdateUserPayloadSchema = type({
   .and(UpsertMetadataPayloadPropertySchema);
 export type UpdateUserInput = typeof UpdateUserPayloadSchema.inferIn;
 export type UpdateUserPayload = typeof UpdateUserPayloadSchema.inferOut;
-
-const UserRoleAssociationSchema = type('string[] | undefined');
-
-export const UserAssociationsSchema = type({
-  '+': 'delete',
-  roles: UserRoleAssociationSchema.optional(),
-});
-export type UserAssociations = typeof UserAssociationsSchema.inferOut;
 
 export const UserAssociationReferenceSchema = UserIdPropertySchema.and(
   UserNamePropertiesSchema

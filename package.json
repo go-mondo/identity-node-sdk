@@ -7,122 +7,122 @@
   "exports": {
     ".": {
       "require": {
-        "types": "./lib/cjs/common/index.d.ts",
-        "default": "./lib/cjs/common/index.js"
+        "types": "./dist/cjs/common/index.d.ts",
+        "default": "./dist/cjs/common/index.js"
       },
       "import": {
-        "types": "./lib/esm/common/index.d.ts",
-        "default": "./lib/esm/common/index.js"
+        "types": "./dist/esm/common/index.d.ts",
+        "default": "./dist/esm/common/index.js"
       }
     },
     "./action": {
       "require": {
-        "types": "./lib/cjs/action/index.d.ts",
-        "default": "./lib/cjs/action/index.js"
+        "types": "./dist/cjs/action/index.d.ts",
+        "default": "./dist/cjs/action/index.js"
       },
       "import": {
-        "types": "./lib/esm/action/index.d.ts",
-        "default": "./lib/esm/action/index.js"
+        "types": "./dist/esm/action/index.d.ts",
+        "default": "./dist/esm/action/index.js"
       }
     },
     "./activity": {
       "require": {
-        "types": "./lib/cjs/activity/index.d.ts",
-        "default": "./lib/cjs/activity/index.js"
+        "types": "./dist/cjs/activity/index.d.ts",
+        "default": "./dist/cjs/activity/index.js"
       },
       "import": {
-        "types": "./lib/esm/activity/index.d.ts",
-        "default": "./lib/esm/activity/index.js"
+        "types": "./dist/esm/activity/index.d.ts",
+        "default": "./dist/esm/activity/index.js"
       }
     },
     "./app": {
       "require": {
-        "types": "./lib/cjs/app/index.d.ts",
-        "default": "./lib/cjs/app/index.js"
+        "types": "./dist/cjs/app/index.d.ts",
+        "default": "./dist/cjs/app/index.js"
       },
       "import": {
-        "types": "./lib/esm/app/index.d.ts",
-        "default": "./lib/esm/app/index.js"
+        "types": "./dist/esm/app/index.d.ts",
+        "default": "./dist/esm/app/index.js"
       }
     },
     "./association": {
       "require": {
-        "types": "./lib/cjs/association/index.d.ts",
-        "default": "./lib/cjs/association/index.js"
+        "types": "./dist/cjs/association/index.d.ts",
+        "default": "./dist/cjs/association/index.js"
       },
       "import": {
-        "types": "./lib/esm/association/index.d.ts",
-        "default": "./lib/esm/association/index.js"
+        "types": "./dist/esm/association/index.d.ts",
+        "default": "./dist/esm/association/index.js"
       }
     },
     "./authentication": {
       "require": {
-        "types": "./lib/cjs/authentication/index.d.ts",
-        "default": "./lib/cjs/authentication/index.js"
+        "types": "./dist/cjs/authentication/index.d.ts",
+        "default": "./dist/cjs/authentication/index.js"
       },
       "import": {
-        "types": "./lib/esm/authentication/index.d.ts",
-        "default": "./lib/esm/authentication/index.js"
+        "types": "./dist/esm/authentication/index.d.ts",
+        "default": "./dist/esm/authentication/index.js"
       }
     },
     "./authorization": {
       "require": {
-        "types": "./lib/cjs/authorization/index.d.ts",
-        "default": "./lib/cjs/authorization/index.js"
+        "types": "./dist/cjs/authorization/index.d.ts",
+        "default": "./dist/cjs/authorization/index.js"
       },
       "import": {
-        "types": "./lib/esm/authorization/index.d.ts",
-        "default": "./lib/esm/authorization/index.js"
+        "types": "./dist/esm/authorization/index.d.ts",
+        "default": "./dist/esm/authorization/index.js"
       }
     },
     "./customer": {
       "require": {
-        "types": "./lib/cjs/customer/index.d.ts",
-        "default": "./lib/cjs/customer/index.js"
+        "types": "./dist/cjs/customer/index.d.ts",
+        "default": "./dist/cjs/customer/index.js"
       },
       "import": {
-        "types": "./lib/esm/customer/index.d.ts",
-        "default": "./lib/esm/customer/index.js"
+        "types": "./dist/esm/customer/index.d.ts",
+        "default": "./dist/esm/customer/index.js"
       }
     },
     "./identity": {
       "require": {
-        "types": "./lib/cjs/identity/index.d.ts",
-        "default": "./lib/cjs/identity/index.js"
+        "types": "./dist/cjs/identity/index.d.ts",
+        "default": "./dist/cjs/identity/index.js"
       },
       "import": {
-        "types": "./lib/esm/identity/index.d.ts",
-        "default": "./lib/esm/identity/index.js"
+        "types": "./dist/esm/identity/index.d.ts",
+        "default": "./dist/esm/identity/index.js"
       }
     },
     "./oauth": {
       "require": {
-        "types": "./lib/cjs/oauth/index.d.ts",
-        "default": "./lib/cjs/oauth/index.js"
+        "types": "./dist/cjs/oauth/index.d.ts",
+        "default": "./dist/cjs/oauth/index.js"
       },
       "import": {
-        "types": "./lib/esm/oauth/index.d.ts",
-        "default": "./lib/esm/oauth/index.js"
+        "types": "./dist/esm/oauth/index.d.ts",
+        "default": "./dist/esm/oauth/index.js"
       }
     },
     "./workspace": {
       "require": {
-        "types": "./lib/cjs/workspace/index.d.ts",
-        "default": "./lib/cjs/workspace/index.js"
+        "types": "./dist/cjs/workspace/index.d.ts",
+        "default": "./dist/cjs/workspace/index.js"
       },
       "import": {
-        "types": "./lib/esm/workspace/index.d.ts",
-        "default": "./lib/esm/workspace/index.js"
+        "types": "./dist/esm/workspace/index.d.ts",
+        "default": "./dist/esm/workspace/index.js"
       }
     }
   },
   "scripts": {
     "type-check": "tsc --noEmit -p ./tsconfig.json",
-    "build:cjs": "tsc --build tsconfig.json && echo '{ \"type\": \"commonjs\" }' > lib/cjs/package.json",
-    "build:esm": "tsc --build tsconfig.esm.json && echo '{ \"type\": \"module\" }' > lib/esm/package.json",
+    "build:cjs": "tsc --build tsconfig.json && echo '{ \"type\": \"commonjs\" }' > dist/cjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{ \"type\": \"module\" }' > dist/esm/package.json",
     "build": "npm run build:esm & npm run build:cjs",
     "test:ci": "npx vitest run --silent",
-    "test:dev": "npx vitest --silent",
+    "test:dev": "npx vitest",
     "test": "npx vitest run --silent",
     "check-types": "tsc --noEmit -p ./tsconfig.json",
     "lint": "npx biome lint",

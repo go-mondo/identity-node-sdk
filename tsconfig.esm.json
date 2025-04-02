@@ -3,7 +3,7 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "./lib/esm",
+    "outDir": "./dist/esm",
     "rootDir": "./src",
     "tsBuildInfoFile": ".tsbuildinfo/esm.json"
   }
