@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.3](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.2...identity-sdk-v0.0.2-beta.3) (2025-04-30)
+
+
+### Bug Fixes
+
+* testing cicd ([9ca800c](https://github.com/go-mondo/identity-node-sdk/commit/9ca800ca73f1c210b15a12bef5949030f496a0bc))
+
 ## [0.0.2-beta.2](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.1...identity-sdk-v0.0.2-beta.2) (2025-04-29)
 
 
