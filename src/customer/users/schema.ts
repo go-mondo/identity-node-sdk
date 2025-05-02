@@ -11,6 +11,11 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
+import {
+  optionallyNullish,
+  optionallyNullishToUndefined,
+  optionallyUndefined,
+} from '../../common/schema/schema.js';
 import { generateUserId } from '../schema/utils.js';
 
 export const VerifiableAttribute = {
@@ -35,21 +40,22 @@ const UserStatusSchema = type.enumerated(
 );
 
 export const UserNamePropertiesSchema = type({
-  givenName: type('string | undefined').or('undefined').optional(),
-  middleName: type('string | undefined').optional(),
-  familyName: type('string | undefined').optional(),
-  honorificPrefix: type('string | undefined').optional(),
-  honorificSuffix: type('string | undefined').optional(),
+  givenName: optionallyNullishToUndefined(type('string')),
+  middleName: optionallyNullishToUndefined(type('string')),
+  familyName: optionallyNullishToUndefined(type('string')),
+  honorificPrefix: optionallyNullishToUndefined(type('string')),
+  honorificSuffix: optionallyNullishToUndefined(type('string')),
 });
-export type UserNameProperties = typeof UserNamePropertiesSchema.inferOut;
+// export type UserNameProperties = typeof UserNamePropertiesSchema.inferOut;
 
-export const UpsertUserNamePropertiesSchema = type({
-  givenName: type('string | undefined | null').optional(),
-  middleName: type('string | undefined | null').optional(),
-  familyName: type('string | undefined | null').optional(),
-  honorificPrefix: type('string | undefined | null').optional(),
-  honorificSuffix: type('string | undefined | null').optional(),
+export const UpdateUserNamePropertiesSchema = type({
+  givenName: optionallyNullish(type('string')),
+  middleName: optionallyNullish(type('string')),
+  familyName: optionallyNullish(type('string')),
+  honorificPrefix: optionallyNullish(type('string')),
+  honorificSuffix: optionallyNullish(type('string')),
 });
+// type UpsertUserNameProperties = typeof UpdateUserNamePropertiesSchema.inferOut;
 
 export const UserIdSchema = type.string;
 export type UserId = typeof UserIdSchema.inferOut;
@@ -62,21 +68,16 @@ export type UserIdProperty = typeof UserIdPropertySchema.inferOut;
 export const RequiredEmailSchema = type('string.email');
 export const RequiredPhoneNumberSchema = type('string');
 
-const EmailSchema = RequiredEmailSchema.or('undefined').pipe((v) =>
-  v != null ? v : undefined
-);
-const PhoneNumberSchema = RequiredPhoneNumberSchema.or('undefined');
-
 export const VerifiedEmailOrPhonePropertiesSchema = type({
-  email: EmailSchema.optional(),
-  verifiedEmail: type('boolean').or('undefined').optional(),
-  phoneNumber: PhoneNumberSchema.optional(),
-  verifiedPhoneNumber: type('boolean').or('undefined').optional(),
+  email: optionallyNullishToUndefined(RequiredEmailSchema),
+  verifiedEmail: optionallyNullishToUndefined(type('boolean')),
+  phoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
+  verifiedPhoneNumber: optionallyNullishToUndefined(type('boolean')),
 });
 
 export const EmailOrPhonePropertiesSchema = type({
-  email: EmailSchema.optional(),
-  phoneNumber: PhoneNumberSchema.optional(),
+  email: optionallyNullishToUndefined(RequiredEmailSchema),
+  phoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
 });
 
 const UserRoleAssociationSchema = type('string[] | undefined');
@@ -90,15 +91,15 @@ const BaseSchema = UserIdPropertySchema.and(UserNamePropertiesSchema)
   .and(VerifiedEmailOrPhonePropertiesSchema)
   .and({
     status: UserStatusSchema,
-    roles: AggregateSchema.or(type.undefined).optional(),
+    roles: optionallyUndefined(AggregateSchema),
   });
 
 export const UserSchema = BaseSchema.and({
   lastLogin: OptionalDateSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  'deletedAt?': OptionalDateSchema,
-  'deactivatedAt?': OptionalDateSchema,
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
 }).and(MetadataMapPropertySchema);
 export type UserProperties = typeof UserSchema.inferIn;
 export type User = typeof UserSchema.inferOut;
@@ -126,7 +127,7 @@ export type InsertUserPayload = typeof InsertUserPayloadSchema.inferOut;
 export const UpdateUserPayloadSchema = type({
   suspended: type.boolean.optional(),
 })
-  .and(UpsertUserNamePropertiesSchema)
+  .and(UpdateUserNamePropertiesSchema)
   .and(UpsertMetadataPayloadPropertySchema);
 export type UpdateUserInput = typeof UpdateUserPayloadSchema.inferIn;
 export type UpdateUserPayload = typeof UpdateUserPayloadSchema.inferOut;

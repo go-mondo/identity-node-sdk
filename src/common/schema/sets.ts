@@ -5,6 +5,6 @@ const StringArrayToSet = StringArraySchema.pipe((s) => new Set(s));
 const StringSet = type.instanceOf(Set<string>);
 
 export const UniqueStringSetPayloadSchema = StringSet.or(StringArrayToSet);
-export const UniqueStringSetPayload = UniqueStringSetPayloadSchema.pipe((s) =>
-  Array.from(s.values())
+export const UniqueStringPayloadSchema = UniqueStringSetPayloadSchema.pipe(
+  (s) => Array.from(s.values())
 );

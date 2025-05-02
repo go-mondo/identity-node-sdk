@@ -46,11 +46,11 @@ const BaseSchema = PermissionIdPropertySchema.and({
   name: type('string'),
   status: PermissionStatusSchema,
   description: type('string').optional(),
-  apps: AggregateSchema.optional(),
-  roles: AggregateSchema.optional(),
 });
 
 export const PermissionSchema = BaseSchema.and({
+  apps: AggregateSchema.optional(),
+  roles: AggregateSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
   'deletedAt?': OptionalDateSchema,
@@ -60,6 +60,8 @@ export type PermissionProperties = typeof PermissionSchema.inferIn;
 export type Permission = typeof PermissionSchema.inferOut;
 
 export const PermissionPayloadSchema = BaseSchema.and({
+  apps: AggregateSchema.optional(),
+  roles: AggregateSchema.optional(),
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,
