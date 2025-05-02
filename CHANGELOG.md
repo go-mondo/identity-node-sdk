@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.4](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.3...identity-sdk-v0.0.2-beta.4) (2025-05-02)
+
+
+### Bug Fixes
+
+* authorization permissions ([642a568](https://github.com/go-mondo/identity-node-sdk/commit/642a568e4dc14184655c11645850f0f485345d0a))
+
 ## [0.0.2-beta.3](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.2...identity-sdk-v0.0.2-beta.3) (2025-04-30)
 
 
