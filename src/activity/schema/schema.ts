@@ -8,26 +8,12 @@ import {
 import { OperationActivityPayloadSchema } from './types/operation.js';
 import { UnknownActivityPayloadSchema } from './types/unknown.js';
 
-export const ActivityType = {
-  UNKNOWN: 'unknown',
-  NOTE: 'note',
-  OPERATION: 'operation',
-  AUTHORIZATION: 'authorization',
-  AUTHENTICATION: 'authentication',
-} as const;
-
-export type AnyActivityType = (typeof ActivityType)[keyof typeof ActivityType];
-
-export const PerformerType = {
-  SYSTEM: 'system',
-  GUEST: 'guest',
-  IDENTITY: 'identity',
-  AUTOMATION: 'automation',
-  INTEGRATION: 'integration',
-} as const;
-
-export type AnyPerformerType =
-  (typeof PerformerType)[keyof typeof PerformerType];
+export {
+  ActivityType,
+  type AnyActivityType,
+  PerformerType,
+  type AnyPerformerType,
+} from './base.js';
 
 export const ActivityPayloadSchema = NoteActivityPayloadSchema.or(
   AuthenticationActivityPayloadSchema

@@ -7,8 +7,28 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
-import { PerformerType } from './schema.js';
 import { generateActivityId } from './utils.js';
+
+export const ActivityType = {
+  UNKNOWN: 'unknown',
+  NOTE: 'note',
+  OPERATION: 'operation',
+  AUTHORIZATION: 'authorization',
+  AUTHENTICATION: 'authentication',
+} as const;
+
+export type AnyActivityType = (typeof ActivityType)[keyof typeof ActivityType];
+
+export const PerformerType = {
+  SYSTEM: 'system',
+  GUEST: 'guest',
+  IDENTITY: 'identity',
+  AUTOMATION: 'automation',
+  INTEGRATION: 'integration',
+} as const;
+
+export type AnyPerformerType =
+  (typeof PerformerType)[keyof typeof PerformerType];
 
 export const ActivityIdSchema = type.string;
 export type ActivityId = typeof ActivityIdSchema.inferOut;
