@@ -1,6 +1,6 @@
 {
   "name": "@go-mondo/identity-sdk",
-  "version": "0.0.2-beta.4",
+  "version": "0.0.2-beta.5",
   "type": "module",
   "description": "A node SDK for Mondo Identity",
   "license": "MIT",
