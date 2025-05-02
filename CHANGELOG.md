@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.5](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.4...identity-sdk-v0.0.2-beta.5) (2025-05-02)
+
+
+### Bug Fixes
+
+* Cannot access PerformerType before initialization ([d4c4c2c](https://github.com/go-mondo/identity-node-sdk/commit/d4c4c2cd9880e76efbe10af85b293d9da0c8abfb))
+
 ## [0.0.2-beta.4](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.3...identity-sdk-v0.0.2-beta.4) (2025-05-02)
 
 
