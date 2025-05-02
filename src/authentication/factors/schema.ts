@@ -1,5 +1,5 @@
 import { scope, type } from 'arktype';
-import { StrategyIdSchema } from './strategy/base.js';
+import { StrategyIdSchema } from '../strategies/schema/base.js';
 
 const factorScope = scope({
   factor: {

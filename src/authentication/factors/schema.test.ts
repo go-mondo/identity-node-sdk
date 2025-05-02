@@ -4,7 +4,7 @@ import {
   AuthenticationFactorPayloadSchema,
   AuthenticationFactorsPayloadSchema,
   UpsertAuthenticationFactorsPayloadSchema,
-} from './factors.js';
+} from './schema.js';
 
 describe('Authentication - Factors', () => {
   describe('Schema', () => {

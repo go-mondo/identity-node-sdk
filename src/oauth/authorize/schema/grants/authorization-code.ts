@@ -1,5 +1,5 @@
 import { type } from 'arktype';
-import { AppIdSchema } from '../../../../app/schema/app.js';
+import { AppIdSchema } from '../../../../app/schema.js';
 import {
   AuthorizationDisplaySchema,
   AuthorizationPromptSchema,

@@ -4,7 +4,7 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
-import { AuthenticationFactorsSchema } from './factors.js';
+import { AuthenticationFactorsSchema } from '../factors/schema.js';
 
 export const SettingsPayloadSchema = type({
   factors: AuthenticationFactorsSchema.optional(),

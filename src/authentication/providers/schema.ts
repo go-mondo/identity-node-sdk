@@ -5,7 +5,7 @@ import {
 } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
 import { UserIdSchema } from '../../customer/users/schema.js';
-import { StrategyIdSchema } from './strategy/base.js';
+import { StrategyIdSchema } from '../strategies/schema/base.js';
 
 export const ProviderType = {
   MONDO: 'mondo',

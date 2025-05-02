@@ -1,7 +1,7 @@
 import { type } from 'arktype';
 import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
-import { generateOAuthId } from './utils.js';
+import { generateOAuthId } from '../utils.js';
 
 export const OAuthIdSchema = type.string;
 export type OAuthId = typeof OAuthIdSchema.inferOut;

@@ -5,7 +5,10 @@ import {
 } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
 import { UserIdSchema } from '../../customer/users/schema.js';
-import { StrategyIdSchema, StrategyTypeSchema } from './strategy/base.js';
+import {
+  StrategyIdSchema,
+  StrategyTypeSchema,
+} from '../strategies/schema/base.js';
 
 export const SessionStatus = {
   INITIATED: 'initiated', // Session was created, but no activity has been taken

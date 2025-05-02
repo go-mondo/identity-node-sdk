@@ -1,6 +1,6 @@
 import { type } from 'arktype';
-import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
-import { UpsertMetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import { OptionalDatePayloadSchema } from '../../../common/schema/dates.js';
+import { UpsertMetadataPayloadPropertySchema } from '../../../common/schema/metadata.js';
 
 const TableSchema = type({
   columns: type('string').array().optional(),

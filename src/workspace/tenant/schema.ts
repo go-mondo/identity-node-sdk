@@ -4,8 +4,8 @@ import {
   OrganizationPayloadSchema,
   UpdateOrganizationPayloadSchema,
 } from '../../customer/schema/organization.js';
-import { MembershipPayloadSchema } from './membership.js';
-import { generateHandle, generateTenantId } from './utils.js';
+import { MembershipPayloadSchema } from '../membership/schema.js';
+import { generateHandle, generateTenantId } from '../utils.js';
 
 export const TenantIdSchema = type.string;
 

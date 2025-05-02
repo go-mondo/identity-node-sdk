@@ -3,18 +3,6 @@ import { SignUpVerificationActionPayloadSchema } from './operations/sign-up-veri
 import { SignUpActionPayloadSchema } from './operations/sign-up.js';
 import { UserAttributeVerificationActionPayloadSchema } from './operations/user-attribute-verification.js';
 
-export const ActionOperation = {
-  SET_PASSWORD: 'set-password',
-
-  USER_ATTRIBUTE_VERIFICATION: 'user-attribute-verification',
-
-  SIGN_UP: 'sign-up',
-  SIGN_UP_VERIFICATION: 'sign-up-verification',
-} as const;
-
-export type AnyActionOperation =
-  (typeof ActionOperation)[keyof typeof ActionOperation];
-
 /**
  * Union
  */
@@ -28,8 +16,10 @@ export type ActionPayload = typeof ActionPayloadSchema.inferOut;
 export {
   ActionIdPropertySchema,
   ActionIdSchema,
+  ActionOperation,
   type ActionId,
   type ActionIdProperty,
+  type AnyActionOperation,
 } from './base.js';
 export * from './operations/set-password.js';
 export * from './operations/sign-up-verification.js';

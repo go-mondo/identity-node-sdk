@@ -1,6 +1,6 @@
 import { type } from 'arktype';
 import { UserIdSchema } from '../../../customer/users/schema.js';
-import { IdentityIdentifierSchema } from '../../../identity/schema/schema.js';
+import { IdentityIdentifierSchema } from '../../../identity/schema.js';
 import { BasePayloadSchema } from '../base.js';
 
 export const UserAttributeVerificationActionPayloadSchema =

@@ -2,8 +2,8 @@ import { type } from 'arktype';
 import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
-} from '../../common/index.js';
-import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+} from '../common/index.js';
+import { MetadataPayloadPropertySchema } from '../common/schema/metadata.js';
 import { generateAppId } from './utils.js';
 
 export const AppStatus = {

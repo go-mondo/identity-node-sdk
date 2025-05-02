@@ -4,7 +4,18 @@ import {
   RequiredDatePayloadSchema,
 } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
-import { ActionOperation } from './schema.js';
+
+export const ActionOperation = {
+  SET_PASSWORD: 'set-password',
+
+  USER_ATTRIBUTE_VERIFICATION: 'user-attribute-verification',
+
+  SIGN_UP: 'sign-up',
+  SIGN_UP_VERIFICATION: 'sign-up-verification',
+} as const;
+
+export type AnyActionOperation =
+  (typeof ActionOperation)[keyof typeof ActionOperation];
 
 export const ActionIdSchema = type.string;
 export type ActionId = typeof ActionIdSchema.inferOut;

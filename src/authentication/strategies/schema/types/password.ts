@@ -1,5 +1,5 @@
 import { type } from 'arktype';
-import { IdentityIdentifierSchema } from '../../../../identity/schema/schema.js';
+import { IdentityIdentifierSchema } from '../../../../identity/schema.js';
 import {
   BaseInsertStrategyPayloadSchema,
   BaseStrategyPayloadSchema,

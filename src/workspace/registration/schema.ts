@@ -1,7 +1,7 @@
 import { type } from 'arktype';
 import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
-import { IdentityIdentifierSchema } from '../../identity/schema/schema.js';
+import { IdentityIdentifierSchema } from '../../identity/schema.js';
 
 const IdentityIdentifierPropertySchema = type({
   type: IdentityIdentifierSchema,
