@@ -57,7 +57,7 @@ export class PermissionResources {
     return updatePermission(this.instance, id, item);
   }
 
-  public deleteItem(id: string): Promise<void> {
+  public deleteItem(id: string): Promise<Permission> {
     return deletePermission(this.instance, id);
   }
 }
@@ -130,9 +130,13 @@ export async function updatePermission(
 export async function deletePermission(
   instance: MondoIdentity,
   id: string
-): Promise<void> {
-  await deleteItemWithAuthorization(
-    new URL(PermissionResources.buildPath(id), instance.config.host),
-    instance.authorizer
+): Promise<Permission> {
+  return parseEgressSchema(
+    PermissionSchema(
+      await deleteItemWithAuthorization(
+        new URL(PermissionResources.buildPath(id), instance.config.host),
+        instance.authorizer
+      )
+    )
   );
 }

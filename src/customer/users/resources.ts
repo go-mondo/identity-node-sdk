@@ -3,6 +3,7 @@ import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
   insertItemWithAuthorization,
+  listItemsWithAuthorization,
   updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import {
@@ -54,7 +55,7 @@ export class UserResources {
     return updateUser(this.instance, id, item);
   }
 
-  public deleteItem(id: string): Promise<void> {
+  public deleteItem(id: string): Promise<User> {
     return deleteUser(this.instance, id);
   }
 }
@@ -70,7 +71,7 @@ export async function listUsers(
 
   return parseEgressSchema(
     PaginationCollectionSchema(UserSchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
+      await listItemsWithAuthorization(url, instance.authorizer)
     )
   );
 }
@@ -127,9 +128,13 @@ export async function updateUser(
 export async function deleteUser(
   instance: MondoIdentity,
   id: string
-): Promise<void> {
-  await deleteItemWithAuthorization(
-    new URL(UserResources.buildPath(id), instance.config.host),
-    instance.authorizer
+): Promise<User> {
+  return parseEgressSchema(
+    UserSchema(
+      await deleteItemWithAuthorization(
+        new URL(UserResources.buildPath(id), instance.config.host),
+        instance.authorizer
+      )
+    )
   );
 }

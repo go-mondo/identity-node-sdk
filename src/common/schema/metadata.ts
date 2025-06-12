@@ -9,7 +9,7 @@ const MetadataValueSchema = type('string | number | boolean');
  * Record
  */
 const MetadataRecordSchema = type({ '[string]': MetadataValueSchema });
-type MetadataRecord = typeof MetadataRecordSchema.inferOut;
+export type MetadataRecord = typeof MetadataRecordSchema.inferOut;
 
 /**
  * Map
@@ -53,6 +53,8 @@ export const UpsertMetadataPayloadSchema = type('undefined | null')
   .or(MetadataMapSchema)
   .or(MetadataRecordSchema)
   .pipe((map) => (map ? buildUpsertMetadataPayload(map) || null : null));
+export type UpsertMetadataInput = typeof UpsertMetadataPayloadSchema.inferIn;
+export type UpsertMetadataPayload = typeof UpsertMetadataPayloadSchema.inferOut;
 
 export const UpsertMetadataPayloadPropertySchema = type({
   'metadata?': UpsertMetadataPayloadSchema,

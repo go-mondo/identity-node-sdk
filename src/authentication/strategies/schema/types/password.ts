@@ -3,20 +3,30 @@ import { IdentityIdentifierSchema } from '../../../../identity/schema.js';
 import {
   BaseInsertStrategyPayloadSchema,
   BaseStrategyPayloadSchema,
+  BaseStrategySchema,
   BaseUpdateStrategyPayloadSchema,
 } from '../base.js';
+
+export const PasswordPolicyDefaults = {
+  minimumLength: 8,
+  maximumLength: 36,
+  minimumCapital: 1,
+  minimumLower: 1,
+  minimumNumber: 1,
+  minimumSpecial: 1,
+};
 
 const TypeSchema = type({
   type: "'password'",
 });
 
 export const PasswordPolicySchema = type({
-  minimumLength: type.number.default(8),
-  maximumLength: type.number.default(36),
-  minimumCapital: type.number.default(1),
-  minimumLower: type.number.default(1),
-  minimumNumber: type.number.default(1),
-  minimumSpecial: type.number.default(1),
+  minimumLength: type.number.default(PasswordPolicyDefaults.minimumLength),
+  maximumLength: type.number.default(PasswordPolicyDefaults.maximumLength),
+  minimumCapital: type.number.default(PasswordPolicyDefaults.minimumCapital),
+  minimumLower: type.number.default(PasswordPolicyDefaults.minimumLower),
+  minimumNumber: type.number.default(PasswordPolicyDefaults.minimumNumber),
+  minimumSpecial: type.number.default(PasswordPolicyDefaults.minimumSpecial),
 });
 
 const SettingsSchema = type({
@@ -27,23 +37,37 @@ export const PasswordStrategySettingsPropertySchema = type({
   settings: SettingsSchema,
 });
 
+export const PasswordStrategySchema = BaseStrategySchema.and(TypeSchema).and({
+  settings: SettingsSchema,
+});
+export type PasswordStrategyProperties = typeof PasswordStrategySchema.inferIn;
+export type PasswordStrategy = typeof PasswordStrategySchema.inferOut;
+
 export const PasswordStrategyPayloadSchema = BaseStrategyPayloadSchema.and(
   TypeSchema
 ).and(PasswordStrategySettingsPropertySchema);
 export type PasswordStrategyPayload =
   typeof PasswordStrategyPayloadSchema.inferOut;
 
-export const InsertPasswordStrategyPayloadSchema =
-  BaseInsertStrategyPayloadSchema.and(TypeSchema).and(
-    PasswordStrategySettingsPropertySchema
-  );
+export const InsertPasswordStrategyPayloadSchema = TypeSchema.and(
+  BaseInsertStrategyPayloadSchema
+)
+  .and(TypeSchema)
+  .and({
+    settings: SettingsSchema.optional(),
+  });
+export type InsertPasswordStrategyInput =
+  typeof InsertPasswordStrategyPayloadSchema.inferIn;
 export type InsertPasswordStrategyPayload =
   typeof InsertPasswordStrategyPayloadSchema.inferOut;
 
-export const UpdatePasswordStrategyPayloadSchema =
-  BaseUpdateStrategyPayloadSchema.and(TypeSchema).and(
-    PasswordStrategySettingsPropertySchema
-  );
+export const UpdatePasswordStrategyPayloadSchema = TypeSchema.and(
+  BaseUpdateStrategyPayloadSchema
+).and({
+  settings: SettingsSchema.optional(),
+});
+export type UpdatePasswordStrategyInput =
+  typeof UpdatePasswordStrategyPayloadSchema.inferIn;
 export type UpdatePasswordStrategyPayload =
   typeof UpdatePasswordStrategyPayloadSchema.inferOut;
 

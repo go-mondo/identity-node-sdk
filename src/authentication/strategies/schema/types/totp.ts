@@ -2,6 +2,7 @@ import { type } from 'arktype';
 import {
   BaseInsertStrategyPayloadSchema,
   BaseStrategyPayloadSchema,
+  BaseStrategySchema,
   BaseUpdateStrategyPayloadSchema,
 } from '../base.js';
 
@@ -53,22 +54,36 @@ export const TOTPStrategySettingsPropertySchema = type({
 export type TOTPStrategySettingsProperty =
   typeof TOTPStrategySettingsPropertySchema.inferOut;
 
+export const TOTPStrategySchema = BaseStrategySchema.and(TypeSchema).and({
+  settings: TOTPStrategySettingsSchema,
+});
+export type TOTPStrategyProperties = typeof TOTPStrategySchema.inferIn;
+export type TOTPStrategy = typeof TOTPStrategySchema.inferOut;
+
 export const TOTPStrategyPayloadSchema = BaseStrategyPayloadSchema.and(
   TypeSchema
 ).and(TOTPStrategySettingsPropertySchema);
 export type TOTPStrategyPayload = typeof TOTPStrategyPayloadSchema.inferOut;
 
-export const InsertTOTPStrategyPayloadSchema =
-  BaseInsertStrategyPayloadSchema.and(TypeSchema).and(
-    TOTPStrategySettingsPropertySchema
-  );
+export const InsertTOTPStrategyPayloadSchema = TypeSchema.and(
+  BaseInsertStrategyPayloadSchema
+)
+  .and(TypeSchema)
+  .and({
+    settings: TOTPStrategySettingsSchema.optional(),
+  });
+export type InsertTOTPStrategyInput =
+  typeof InsertTOTPStrategyPayloadSchema.inferIn;
 export type InsertTOTPStrategyPayload =
   typeof InsertTOTPStrategyPayloadSchema.inferOut;
 
-export const UpdateTOTPStrategyPayloadSchema =
-  BaseUpdateStrategyPayloadSchema.and(TypeSchema).and(
-    TOTPStrategySettingsPropertySchema
-  );
+export const UpdateTOTPStrategyPayloadSchema = TypeSchema.and(
+  BaseUpdateStrategyPayloadSchema
+).and({
+  settings: TOTPStrategySettingsSchema.optional(),
+});
+export type UpdateTOTPStrategyInput =
+  typeof UpdateTOTPStrategyPayloadSchema.inferIn;
 export type UpdateTOTPStrategyPayload =
   typeof UpdateTOTPStrategyPayloadSchema.inferOut;
 

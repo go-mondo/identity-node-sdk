@@ -1,9 +1,14 @@
 import { type } from 'arktype';
 import {
   OptionalDatePayloadSchema,
+  OptionalDateSchema,
   RequiredDatePayloadSchema,
+  RequiredDateSchema,
 } from '../../../common/index.js';
-import { MetadataPayloadPropertySchema } from '../../../common/schema/metadata.js';
+import {
+  MetadataMapPropertySchema,
+  MetadataPayloadPropertySchema,
+} from '../../../common/schema/metadata.js';
 
 export const StrategyType = {
   EMAIL: 'email',
@@ -40,9 +45,19 @@ export const StrategyTypeSchema = type.enumerated(
 );
 export const StrategyLabelSchema = type('string');
 
-export const BaseStrategyPayloadSchema = StrategyIdPropertySchema.and({
+const BaseSchema = StrategyIdPropertySchema.and({
   status: StrategyStatusSchema,
   label: StrategyLabelSchema,
+});
+
+export const BaseStrategySchema = BaseSchema.and({
+  createdAt: RequiredDateSchema,
+  updatedAt: RequiredDateSchema,
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+}).and(MetadataMapPropertySchema);
+
+export const BaseStrategyPayloadSchema = BaseSchema.and({
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,

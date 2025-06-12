@@ -16,7 +16,6 @@ import {
   optionallyNullishToUndefined,
   optionallyUndefined,
 } from '../../common/schema/schema.js';
-import { generateUserId } from '../schema/utils.js';
 
 export const VerifiableAttribute = {
   EMAIL: 'email',
@@ -114,8 +113,7 @@ export const UserPayloadSchema = BaseSchema.and({
 export type UserPayload = typeof UserPayloadSchema.inferOut;
 
 export const InsertUserPayloadSchema = type({
-  suspended: type.boolean.optional(),
-  id: UserIdSchema.default(() => generateUserId()),
+  id: UserIdSchema.optional(),
 })
   .and(UserNamePropertiesSchema)
   .and(VerifiedEmailOrPhonePropertiesSchema)

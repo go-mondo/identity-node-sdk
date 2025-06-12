@@ -1,9 +1,13 @@
 import { type } from 'arktype';
+import { AppIdSchema } from 'src/app/schema.js';
 import {
   OptionalDatePayloadSchema,
+  OptionalDateSchema,
   RequiredDatePayloadSchema,
+  RequiredDateSchema,
 } from '../../common/index.js';
 import {
+  MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
   UpsertMetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
@@ -52,11 +56,22 @@ export const PerformedBySchema = type({
 });
 export type PerformedBy = typeof PerformedBySchema.inferOut;
 
-export const BasePayloadSchema = type({
+const CommonSchema = type({
   id: ActivityIdSchema,
   performedBy: PerformedBySchema,
   source: SourceSchema,
+  app: AppIdSchema.optional(),
   isMutateable: type('boolean'),
+});
+
+export const BaseSchema = CommonSchema.and({
+  createdAt: RequiredDateSchema,
+  updatedAt: RequiredDateSchema,
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+}).and(MetadataMapPropertySchema);
+
+export const BasePayloadSchema = CommonSchema.and({
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,

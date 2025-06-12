@@ -10,6 +10,15 @@ const factorScope = scope({
   'nextFactors?': 'factor[] | undefined | null',
 });
 
+export const AuthenticationFactorSchema = type({
+  id: StrategyIdSchema,
+  ...factorScope.export('nextFactors?'),
+});
+export type AuthenticationFactorProperties =
+  typeof AuthenticationFactorPayloadSchema.inferIn;
+export type AuthenticationFactor =
+  typeof AuthenticationFactorPayloadSchema.inferOut;
+
 export const AuthenticationFactorPayloadSchema = type({
   id: StrategyIdSchema,
   ...factorScope.export('nextFactors?'),

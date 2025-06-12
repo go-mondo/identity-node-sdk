@@ -54,7 +54,7 @@ export class RoleResources {
     return updateRole(this.instance, id, item);
   }
 
-  public deleteItem(id: string): Promise<void> {
+  public deleteItem(id: string): Promise<Role> {
     return deleteRole(this.instance, id);
   }
 }
@@ -127,9 +127,13 @@ export async function updateRole(
 export async function deleteRole(
   instance: MondoIdentity,
   id: string
-): Promise<void> {
-  await deleteItemWithAuthorization(
-    new URL(RoleResources.buildPath(id), instance.config.host),
-    instance.authorizer
+): Promise<Role> {
+  return parseEgressSchema(
+    RoleSchema(
+      await deleteItemWithAuthorization(
+        new URL(RoleResources.buildPath(id), instance.config.host),
+        instance.authorizer
+      )
+    )
   );
 }

@@ -1,11 +1,37 @@
 import { type } from 'arktype';
+import type { AppAssociationReference } from 'src/app/schema.js';
+import type {
+  PermissionAssociationReference,
+  RoleAssociationReference,
+} from 'src/authorization/index.js';
 import {
   OptionalDatePayloadSchema,
+  OptionalDateSchema,
   RequiredDatePayloadSchema,
+  RequiredDateSchema,
 } from '../common/schema/dates.js';
-import { MetadataPayloadPropertySchema } from '../common/schema/metadata.js';
-import { OrganizationAssociationReferenceSchema } from '../customer/schema/organization.js';
-import { UserAssociationReferenceSchema } from '../customer/users/schema.js';
+import {
+  MetadataMapPropertySchema,
+  MetadataPayloadPropertySchema,
+} from '../common/schema/metadata.js';
+import {
+  type OrganizationAssociationReference,
+  OrganizationAssociationReferenceSchema,
+} from '../customer/schema/organization.js';
+import {
+  type UserAssociationReference,
+  UserAssociationReferenceSchema,
+} from '../customer/users/schema.js';
+
+export const AssociationObjectType = {
+  USER: 'User',
+  ORGANIZATION: 'Organization',
+  ROLE: 'Role',
+  APP: 'App',
+  PERMISSION: 'Permission',
+} as const;
+export type AnyAssociationObjectType =
+  (typeof AssociationObjectType)[keyof typeof AssociationObjectType];
 
 export const AssociationIdReferenceSchema = type({
   id: type('string'),
@@ -26,11 +52,37 @@ export const AssociationObjectSchema = type.enumerated(
   UserAssociationReferenceSchema,
   OrganizationAssociationReferenceSchema
 );
-export type AssociationObject = typeof AssociationObjectSchema.inferOut;
+export type AssociationObject =
+  | UserAssociationReference
+  | OrganizationAssociationReference
+  | AppAssociationReference
+  | RoleAssociationReference
+  | PermissionAssociationReference;
 
 export const ObjectPropertySchema = type({
   object: AssociationObjectSchema,
 });
+
+export const AssociationSchema = ObjectPropertySchema.and({
+  expiresAt: RequiredDateSchema,
+  createdAt: RequiredDateSchema,
+  updatedAt: RequiredDateSchema,
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+}).and(MetadataMapPropertySchema);
+const RootAssociationProperties = AssociationSchema.omit('object');
+type RootAssociationProperties = typeof RootAssociationProperties.inferIn;
+export type AssociationProperties<
+  O extends AssociationObject = AssociationObject,
+> = RootAssociationProperties & {
+  object: O;
+};
+const RootAssociation = AssociationSchema.omit('object');
+type RootAssociation = typeof RootAssociation.inferOut;
+export type Association<O extends AssociationObject = AssociationObject> =
+  RootAssociation & {
+    object: O;
+  };
 
 export const AssociationPayloadSchema = type({
   updatedAt: RequiredDatePayloadSchema,
@@ -39,10 +91,18 @@ export const AssociationPayloadSchema = type({
 })
   .and(ObjectPropertySchema)
   .and(MetadataPayloadPropertySchema);
-export type AssociationPayload = typeof AssociationPayloadSchema.inferOut;
+type RootAssociationPayload = typeof AssociationPayloadSchema.inferOut;
+
+export type AssociationPayload<
+  O extends AssociationObject = AssociationObject,
+> = RootAssociationPayload & {
+  object: O;
+};
 
 export const UpsertAssociationPayloadSchema = type({
   expiresAt: OptionalDatePayloadSchema.optional(),
 }).and(MetadataPayloadPropertySchema);
+export type UpsertAssociationInput =
+  typeof UpsertAssociationPayloadSchema.inferIn;
 export type UpsertAssociationPayload =
   typeof UpsertAssociationPayloadSchema.inferOut;

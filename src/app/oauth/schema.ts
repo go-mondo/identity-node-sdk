@@ -1,6 +1,12 @@
 import { type } from 'arktype';
-import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
-import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import {
+  OptionalDatePayloadSchema,
+  OptionalDateSchema,
+} from '../../common/schema/dates.js';
+import {
+  MetadataMapPropertySchema,
+  MetadataPayloadPropertySchema,
+} from '../../common/schema/metadata.js';
 import { generateOAuthId } from '../utils.js';
 
 export const OAuthIdSchema = type.string;
@@ -11,10 +17,20 @@ export const OAuthIdPropertySchema = type({
 });
 export type OAuthIdProperty = typeof OAuthIdPropertySchema.inferOut;
 
-export const OAuthPayloadSchema = OAuthIdPropertySchema.and({
+const BaseOAuth = OAuthIdPropertySchema.and({
   clientId: type('string'),
   clientSecret: type('string'),
+});
 
+export const OAuthSchema = BaseOAuth.and({
+  'updatedAt?': OptionalDateSchema,
+  'deletedAt?': OptionalDateSchema,
+  'deactivatedAt?': OptionalDateSchema,
+}).and(MetadataMapPropertySchema);
+export type OAuthProperties = typeof OAuthSchema.inferIn;
+export type OAuth = typeof OAuthSchema.inferOut;
+
+export const OAuthPayloadSchema = BaseOAuth.and({
   'updatedAt?': OptionalDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,
   'deactivatedAt?': OptionalDatePayloadSchema,
@@ -24,4 +40,5 @@ export type OAuthPayload = typeof OAuthPayloadSchema.inferOut;
 export const InsertOAuthPayloadSchema = type({
   id: OAuthIdSchema.default(() => generateOAuthId()),
 }).and(MetadataPayloadPropertySchema);
+export type InsertOAuthInput = typeof InsertOAuthPayloadSchema.inferIn;
 export type InsertOAuthPayload = typeof InsertOAuthPayloadSchema.inferOut;

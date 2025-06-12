@@ -1,6 +1,6 @@
 import { type } from 'arktype';
 import { UserIdSchema } from '../../../customer/users/schema.js';
-import { BasePayloadSchema } from '../base.js';
+import { BasePayloadSchema, BaseSchema } from '../base.js';
 
 export const AuthenticationStatus = {
   SUCESS: 'success',
@@ -15,10 +15,23 @@ export const AuthenticationStatusSchema = type.enumerated(
   AuthenticationStatus.FAIL
 );
 
-export const AuthenticationActivityPayloadSchema = BasePayloadSchema.and({
+const BaseAuthenticationSchema = type({
   type: type("'authentication'"),
   status: AuthenticationStatusSchema,
   identity: UserIdSchema,
+  message: type('string'),
 });
+
+export const AuthenticationActivitySchema = BaseSchema.and(
+  BaseAuthenticationSchema
+);
+export type AuthenticationActivityProperties =
+  typeof AuthenticationActivitySchema.inferIn;
+export type AuthenticationActivity =
+  typeof AuthenticationActivitySchema.inferOut;
+
+export const AuthenticationActivityPayloadSchema = BasePayloadSchema.and(
+  BaseAuthenticationSchema
+);
 export type AuthenticationActivityPayload =
   typeof AuthenticationActivityPayloadSchema.inferOut;

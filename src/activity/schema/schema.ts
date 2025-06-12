@@ -1,19 +1,41 @@
-import { AuthenticationActivityPayloadSchema } from './types/authentication.js';
-import { AuthorizationActivityPayloadSchema } from './types/authorization.js';
+import {
+  AuthenticationActivityPayloadSchema,
+  AuthenticationActivitySchema,
+} from './types/authentication.js';
+import {
+  AuthorizationActivityPayloadSchema,
+  AuthorizationActivitySchema,
+} from './types/authorization.js';
 import {
   InsertNoteActivityPayloadSchema,
   NoteActivityPayloadSchema,
+  NoteActivitySchema,
   UpdateNoteActivityPayloadSchema,
 } from './types/note.js';
-import { OperationActivityPayloadSchema } from './types/operation.js';
-import { UnknownActivityPayloadSchema } from './types/unknown.js';
+import {
+  OperationActivityPayloadSchema,
+  OperationActivitySchema,
+} from './types/operation.js';
+import {
+  UnknownActivityPayloadSchema,
+  UnknownActivitySchema,
+} from './types/unknown.js';
 
 export {
   ActivityType,
-  type AnyActivityType,
   PerformerType,
+  type AnyActivityType,
   type AnyPerformerType,
 } from './base.js';
+
+export const ActivitySchema = NoteActivitySchema.or(
+  AuthenticationActivitySchema
+)
+  .or(AuthorizationActivitySchema)
+  .or(OperationActivitySchema)
+  .or(UnknownActivitySchema);
+export type ActivityProperties = typeof ActivitySchema.inferIn;
+export type Activity = typeof ActivitySchema.inferOut;
 
 export const ActivityPayloadSchema = NoteActivityPayloadSchema.or(
   AuthenticationActivityPayloadSchema
@@ -38,7 +60,6 @@ export {
   type ActivityIdProperty,
   type PerformedBy,
 } from './base.js';
-export * from './schema.js';
 export * from './types/authentication.js';
 export * from './types/authorization.js';
 export * from './types/note.js';

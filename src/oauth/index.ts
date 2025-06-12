@@ -6,6 +6,7 @@ export {
   CodeChallengeMethod,
   CodeChallengeMethodSchema,
   GrantType,
+  GrantTypeLabel,
   OAuthScope,
   OIDCScope,
   ResponseType,

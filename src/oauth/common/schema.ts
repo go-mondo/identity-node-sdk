@@ -9,6 +9,13 @@ export const GrantType = {
 
 export type AnyGrantType = (typeof GrantType)[keyof typeof GrantType];
 
+export const GrantTypeLabel = {
+  [GrantType.CLIENT_CREDENTIALS]: 'Client Credentials',
+  [GrantType.AUTHORIZATION_CODE]: 'Authorization Code',
+  [GrantType.IMPLICIT]: 'Implicit',
+  [GrantType.REFRESH_TOKEN]: 'Refresh Token',
+} as const;
+
 export const ResponseType = {
   ID_TOKEN: 'id_token',
   TOKEN: 'token',

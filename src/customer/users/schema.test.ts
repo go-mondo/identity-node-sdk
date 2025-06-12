@@ -36,6 +36,7 @@ describe('Customer - User', () => {
       const item = {
         foo: 'bar',
         id: '123',
+        familyName: 'Foo',
         phoneNumber: '123',
       };
 
@@ -49,6 +50,7 @@ describe('Customer - User', () => {
 
       expect(result).not.toBeInstanceOf(type.errors);
       expect(result?.metadata).to.undefined;
+      expect(result?.familyName).to.equal(item.familyName);
     });
 
     test('should serialize successfully', async () => {

@@ -7,13 +7,14 @@ export * from './jwt.js';
 export * from './metadata.js';
 export * from './pagination.js';
 export * from './sets.js';
+export * from './url.js';
 
 export const optionallyNullishToUndefined = <t extends type.Any>(
   t: t
-): [type<t['t'] | undefined>, '?'] =>
+): [type<t['t']>, '?'] =>
   (t as Type)
     .or('null | undefined')
-    .pipe((v) => (v == null ? v : undefined))
+    .pipe((v) => (v == null ? undefined : v))
     .optional() as never;
 
 export const optionallyNullish = <t extends type.Any>(
