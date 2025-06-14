@@ -135,7 +135,7 @@ export const UserAssociationReferenceSchema = UserIdPropertySchema.and(
 ).and(
   EmailOrPhonePropertiesSchema.and(
     type({
-      status: UserStatusSchema,
+      status: UserStatusSchema.default('unverified'),
       model: "'User'",
     })
   )

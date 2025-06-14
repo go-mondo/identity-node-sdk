@@ -95,11 +95,9 @@ export type UpdateRolePayload = typeof UpdateRolePayloadSchema.inferOut;
 /**
  * Association
  */
-export const RoleAssociationReferenceSchema = RolePayloadSchema.pick(
-  'id',
-  'name',
-  'status'
-).and({
+export const RoleAssociationReferenceSchema = RoleIdPropertySchema.and({
+  name: type('string'),
+  status: StatusSchema.default('disabled'),
   model: "'Role'",
 });
 export type RoleAssociationReference =

@@ -102,7 +102,9 @@ export type UpdatePermissionPayload =
  * Association
  */
 export const PermissionAssociationReferenceSchema =
-  PermissionPayloadSchema.pick('id', 'name', 'status').and({
+  PermissionIdPropertySchema.and({
+    name: type('string'),
+    status: PermissionStatusSchema.default('disabled'),
     model: "'Permission'",
   });
 export type PermissionAssociationReference =

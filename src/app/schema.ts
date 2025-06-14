@@ -72,7 +72,7 @@ export type UpdateAppPayload = typeof UpdateAppPayloadSchema.inferOut;
 
 export const AppAssociationReferenceSchema = AppIdPropertySchema.and(
   type({
-    status: StatusSchema,
+    status: StatusSchema.default('disabled'),
     label: type('string'),
     model: "'App'",
   })

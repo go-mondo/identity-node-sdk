@@ -1,9 +1,9 @@
 import { type } from 'arktype';
-import type { AppAssociationReference } from 'src/app/schema.js';
-import type {
-  PermissionAssociationReference,
-  RoleAssociationReference,
-} from 'src/authorization/index.js';
+import { AppAssociationReferenceSchema } from '../app/schema.js';
+import {
+  PermissionAssociationReferenceSchema,
+  RoleAssociationReferenceSchema,
+} from '../authorization/index.js';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -14,14 +14,8 @@ import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../common/schema/metadata.js';
-import {
-  type OrganizationAssociationReference,
-  OrganizationAssociationReferenceSchema,
-} from '../customer/schema/organization.js';
-import {
-  type UserAssociationReference,
-  UserAssociationReferenceSchema,
-} from '../customer/users/schema.js';
+import { OrganizationAssociationReferenceSchema } from '../customer/schema/organization.js';
+import { UserAssociationReferenceSchema } from '../customer/users/schema.js';
 
 export const AssociationObjectType = {
   USER: 'User',
@@ -48,24 +42,26 @@ export type AssociationReference =
   | AssociationIdReference
   | AssociationAttributesReference;
 
-export const AssociationObjectSchema = type.enumerated(
-  UserAssociationReferenceSchema,
+export const AssociationObjectSchema = UserAssociationReferenceSchema.or(
   OrganizationAssociationReferenceSchema
-);
-export type AssociationObject =
-  | UserAssociationReference
-  | OrganizationAssociationReference
-  | AppAssociationReference
-  | RoleAssociationReference
-  | PermissionAssociationReference;
+)
+  .or(AppAssociationReferenceSchema)
+  .or(RoleAssociationReferenceSchema)
+  .or(PermissionAssociationReferenceSchema);
+export type AssociationObject = typeof AssociationObjectSchema.inferOut;
+// export type AssociationObject =
+//   | UserAssociationReference
+//   | OrganizationAssociationReference
+//   | AppAssociationReference
+//   | RoleAssociationReference
+//   | PermissionAssociationReference;
 
 export const ObjectPropertySchema = type({
   object: AssociationObjectSchema,
 });
 
 export const AssociationSchema = ObjectPropertySchema.and({
-  expiresAt: RequiredDateSchema,
-  createdAt: RequiredDateSchema,
+  expiresAt: RequiredDateSchema.optional(),
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
@@ -85,6 +81,7 @@ export type Association<O extends AssociationObject = AssociationObject> =
   };
 
 export const AssociationPayloadSchema = type({
+  'expiresAt?': OptionalDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,
   'deactivatedAt?': OptionalDatePayloadSchema,
