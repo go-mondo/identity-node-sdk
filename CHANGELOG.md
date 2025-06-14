@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.8](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.7...identity-sdk-v0.0.2-beta.8) (2025-06-14)
+
+
+### Bug Fixes
+
+* default association status ([fb37d00](https://github.com/go-mondo/identity-node-sdk/commit/fb37d00d6d3dd089adfb8dee393c96c49edf1fb3))
+
 ## [0.0.2-beta.7](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.6...identity-sdk-v0.0.2-beta.7) (2025-06-12)
 
 
