@@ -3,6 +3,7 @@ import { describe, expect, test } from 'vitest';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
+  UpsertMetadataPayloadSchema,
 } from './metadata.js';
 
 describe('Common - Metadata', () => {
@@ -74,6 +75,67 @@ describe('Common - Metadata', () => {
 
       expect(result).not.toBeInstanceOf(type.errors);
       expect(result?.metadata).is.undefined;
+    });
+  });
+
+  describe('Upsert Metadata Payload Schema', () => {
+    test('should handle incoming record', async () => {
+      const result = UpsertMetadataPayloadSchema({
+        foo: 'bar',
+        bar: 'baz',
+      }) as typeof UpsertMetadataPayloadSchema.inferOut;
+
+      expect(result).not.toBeInstanceOf(type.errors);
+      expect(result?.foo).to.equal('bar');
+      expect(result?.bar).to.equal('baz');
+    });
+
+    test('should handle incoming map', async () => {
+      const result = UpsertMetadataPayloadSchema(
+        new Map([
+          ['foo', 'bar'],
+          ['bar', 'baz'],
+        ])
+      ) as typeof UpsertMetadataPayloadSchema.inferOut;
+
+      expect(result).not.toBeInstanceOf(type.errors);
+      expect(result?.foo).to.equal('bar');
+      expect(result?.bar).to.equal('baz');
+    });
+
+    test('should only allow 10 items', async () => {
+      const result = UpsertMetadataPayloadSchema(
+        new Map([
+          ['1', '1'],
+          ['2', '2'],
+          ['3', '3'],
+          ['4', '4'],
+          ['5', '5'],
+          ['6', '6'],
+          ['7', '7'],
+          ['8', '8'],
+          ['9', '9'],
+          ['10', '10'],
+          ['11', '11'],
+        ])
+      ) as typeof UpsertMetadataPayloadSchema.inferOut;
+
+      expect(result).toBeInstanceOf(type.errors);
+    });
+  });
+
+  describe('Map Property Schema', () => {
+    test('should parse map to record', async () => {
+      const result = MetadataMapPropertySchema({
+        metadata: {
+          foo: 'bar',
+          bar: 'baz',
+        },
+      }) as typeof MetadataMapPropertySchema.inferOut;
+
+      expect(result).not.toBeInstanceOf(type.errors);
+      expect(result?.metadata?.get('foo')).to.equal('bar');
+      expect(result?.metadata?.get('bar')).to.equal('baz');
     });
   });
 });

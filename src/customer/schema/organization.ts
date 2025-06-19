@@ -5,7 +5,7 @@ import {
 } from '../../common/index.js';
 import {
   MetadataPayloadPropertySchema,
-  UpsertMetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 import { generateOrganizationId } from './utils.js';
 
@@ -48,14 +48,14 @@ export const InsertOrganizationPayloadSchema = type({
   id: OrganizationIdSchema.default(() => generateOrganizationId()),
   status: StatusSchema.optional(),
   name: OrganizationNameSchema,
-}).and(UpsertMetadataPayloadPropertySchema);
+}).and(UpsertMetadataPropertyPayloadSchema);
 export type InsertOrganizationPayload =
   typeof InsertOrganizationPayloadSchema.inferOut;
 
 export const UpdateOrganizationPayloadSchema = type({
   status: StatusSchema.or(type.null).optional(),
   name: OrganizationNameSchema.or(type.null).optional(),
-}).and(UpsertMetadataPayloadPropertySchema);
+}).and(UpsertMetadataPropertyPayloadSchema);
 export type UpdateOrganizationPayload =
   typeof UpdateOrganizationPayloadSchema.inferOut;
 

@@ -7,7 +7,7 @@ import {
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
-  UpsertMetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 import { AuthenticationFactorsSchema } from '../factors/schema.js';
 
@@ -31,6 +31,6 @@ export type SettingsPayload = typeof SettingsPayloadSchema.inferOut;
 
 export const UpsertSettingsPayloadSchema = type({
   factors: AuthenticationFactorsSchema.optional(),
-}).and(UpsertMetadataPayloadPropertySchema);
+}).and(UpsertMetadataPropertyPayloadSchema);
 export type UpsertSettingsInput = typeof UpsertSettingsPayloadSchema.inferIn;
 export type UpsertSettingsPayload = typeof UpsertSettingsPayloadSchema.inferOut;

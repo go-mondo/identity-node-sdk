@@ -3,7 +3,7 @@ import { match, type } from 'arktype';
 /**
  * Value
  */
-const MetadataValueSchema = type('string | number | boolean');
+export const MetadataValueSchema = type('string | number | boolean');
 
 /**
  * Record
@@ -31,8 +31,8 @@ const MetadataMapMatch = match({
       new Map<string, typeof MetadataValueSchema.inferOut>(s)
   )
   .case(
-    MetadataMapSchema,
-    (s: typeof MetadataMapSchema.inferOut) =>
+    MetadataRecordSchema,
+    (s: typeof MetadataRecordSchema.inferOut) =>
       new Map(Object.entries(s || {}).map(([key, value]) => [key, value]))
   )
   .default(() => new Map<string, typeof MetadataValueSchema.inferOut>());
@@ -40,7 +40,15 @@ const MetadataMapMatch = match({
 export const MetadataPayloadSchema = type('undefined | null')
   .or(MetadataMapSchema)
   .or(MetadataRecordSchema)
-  .pipe((map) => (map ? buildMetadataPayload(map) : undefined));
+  .pipe((map) => (map ? buildMetadataPayload(map) : undefined))
+  .narrow((n, ctx) =>
+    n && Object.keys(n).length > 10
+      ? ctx.reject({
+          expected: '10 items or less',
+          actual: `${Object.keys(n).length}`,
+        })
+      : true
+  );
 export type MetadataPayload = typeof MetadataPayloadSchema.inferOut;
 
 export const MetadataPayloadPropertySchema = type({
@@ -52,15 +60,25 @@ export type MetadataPayloadProperty =
 export const UpsertMetadataPayloadSchema = type('undefined | null')
   .or(MetadataMapSchema)
   .or(MetadataRecordSchema)
-  .pipe((map) => (map ? buildUpsertMetadataPayload(map) || null : null));
+  .pipe((map) => (map ? buildUpsertMetadataPayload(map) || null : null))
+  .narrow((n, ctx) =>
+    n && Object.keys(n).length > 10
+      ? ctx.reject({
+          expected: '10 items or less',
+          actual: `${Object.keys(n).length}`,
+        })
+      : true
+  );
 export type UpsertMetadataInput = typeof UpsertMetadataPayloadSchema.inferIn;
 export type UpsertMetadataPayload = typeof UpsertMetadataPayloadSchema.inferOut;
 
-export const UpsertMetadataPayloadPropertySchema = type({
+export const UpsertMetadataPropertyPayloadSchema = type({
   'metadata?': UpsertMetadataPayloadSchema,
 });
-export type UpsertMetadataPayloadProperty =
-  typeof UpsertMetadataPayloadPropertySchema.inferOut;
+export type UpsertMetadataPropertyInput =
+  typeof UpsertMetadataPropertyPayloadSchema.inferIn;
+export type UpsertMetadataPropertyPayload =
+  typeof UpsertMetadataPropertyPayloadSchema.inferOut;
 
 export function buildMetadataPayload(
   map: MetadataMap | MetadataRecord
@@ -89,7 +107,17 @@ export function buildUpsertMetadataPayload(
     return map;
   }
 
-  const result = Array.from(map.entries()).reduce((result, [key, value]) => {
+  return buildUpsertMetadataPayloadFromIterable(map.entries());
+}
+
+export function buildUpsertMetadataPayloadFromIterable(
+  metadata: Iterable<[string, string | number | boolean]> | null
+): MetadataRecord | null {
+  if (metadata == null) {
+    return null;
+  }
+
+  const result = Array.from(metadata).reduce((result, [key, value]) => {
     if (value == null || value === '') {
       return result;
     }

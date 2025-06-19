@@ -9,7 +9,7 @@ import {
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
-  UpsertMetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 import { generateActivityId } from './utils.js';
 
@@ -81,8 +81,8 @@ export const BasePayloadSchema = CommonSchema.and({
 export const BaseInsertPayloadSchema = type({
   id: ActivityIdSchema.default(() => generateActivityId()),
   performedBy: PerformedBySchema.optional(),
-}).and(UpsertMetadataPayloadPropertySchema);
+}).and(UpsertMetadataPropertyPayloadSchema);
 
 export const BaseUpdatePayloadSchema = type({
   performedBy: PerformedBySchema.optional(),
-}).and(UpsertMetadataPayloadPropertySchema);
+}).and(UpsertMetadataPropertyPayloadSchema);

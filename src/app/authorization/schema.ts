@@ -6,14 +6,14 @@ import {
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
-  UpsertMetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
 import { AuthorizationPayloadSchema as WorkspaceAuthorizationPayloadSchema } from '../../workspace/authorization/schema.js';
 
 const StringSetSchema = type.instanceOf(Set<string>);
-const UrlStringSchema = type('string.url[]').pipe((v) => v.filter((i) => !!i));
-const StringSchema = type('string[]').pipe((v) => v.filter((i) => !!i));
+const UrlStringSchema = type('string.url[]').pipe((v) => v?.filter((i) => !!i));
+const StringSchema = type('string[]').pipe((v) => v?.filter((i) => !!i));
 
 const CallbackUrlsSchema = type('undefined')
   .or(UrlStringSchema)
@@ -81,7 +81,7 @@ export const UpsertAuthorizationPayloadSchema = BaseAuthorization.and({
   availableGrants: AvailableGrantsSchema.optional(),
   //   availableAudiences: type('string').array().optional(),
   defaultAudience: type('string | undefined').optional(),
-}).and(UpsertMetadataPayloadPropertySchema);
+}).and(UpsertMetadataPropertyPayloadSchema);
 export type UpsertAuthorizationInput =
   typeof UpsertAuthorizationPayloadSchema.inferIn;
 export type UpsertAuthorizationPayload =

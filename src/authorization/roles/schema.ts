@@ -9,6 +9,7 @@ import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 import { generateRoleId } from '../utils.js';
 
@@ -77,7 +78,7 @@ export const InsertRolePayloadSchema = type({
   description: type('string').optional(),
 })
   .and(RoleAssociationsSchema)
-  .and(MetadataPayloadPropertySchema);
+  .and(UpsertMetadataPropertyPayloadSchema);
 export type InsertRoleInput = typeof InsertRolePayloadSchema.inferIn;
 export type InsertRolePayload = typeof InsertRolePayloadSchema.inferOut;
 
@@ -88,7 +89,7 @@ export const UpdateRolePayloadSchema = type({
   name: type('string').optional(),
   status: StatusSchema.optional(),
   description: type('string').optional(),
-}).and(MetadataPayloadPropertySchema);
+}).and(UpsertMetadataPropertyPayloadSchema);
 export type UpdateRoleInput = typeof UpdateRolePayloadSchema.inferIn;
 export type UpdateRolePayload = typeof UpdateRolePayloadSchema.inferOut;
 

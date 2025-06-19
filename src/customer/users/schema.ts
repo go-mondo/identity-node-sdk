@@ -9,7 +9,7 @@ import {
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
-  UpsertMetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 import {
   optionallyNullish,
@@ -118,7 +118,7 @@ export const InsertUserPayloadSchema = type({
   .and(UserNamePropertiesSchema)
   .and(VerifiedEmailOrPhonePropertiesSchema)
   .and(UserAssociationsSchema)
-  .and(UpsertMetadataPayloadPropertySchema);
+  .and(UpsertMetadataPropertyPayloadSchema);
 export type InsertUserInput = typeof InsertUserPayloadSchema.inferIn;
 export type InsertUserPayload = typeof InsertUserPayloadSchema.inferOut;
 
@@ -126,7 +126,7 @@ export const UpdateUserPayloadSchema = type({
   suspended: type.boolean.optional(),
 })
   .and(UpdateUserNamePropertiesSchema)
-  .and(UpsertMetadataPayloadPropertySchema);
+  .and(UpsertMetadataPropertyPayloadSchema);
 export type UpdateUserInput = typeof UpdateUserPayloadSchema.inferIn;
 export type UpdateUserPayload = typeof UpdateUserPayloadSchema.inferOut;
 
