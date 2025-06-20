@@ -1,17 +1,18 @@
 import { type } from 'arktype';
-import { AppIdSchema } from 'src/app/schema.js';
+import { AppIdSchema } from '../../app/schema.js';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
   RequiredDatePayloadSchema,
   RequiredDateSchema,
 } from '../../common/index.js';
+import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
-import { generateActivityId } from './utils.js';
+import { Model, generateActivityId } from './utils.js';
 
 export const ActivityType = {
   UNKNOWN: 'unknown',
@@ -34,7 +35,7 @@ export const PerformerType = {
 export type AnyPerformerType =
   (typeof PerformerType)[keyof typeof PerformerType];
 
-export const ActivityIdSchema = type.string;
+export const ActivityIdSchema = KSUIDSchema(Model.Activity.UIDPrefix);
 export type ActivityId = typeof ActivityIdSchema.inferOut;
 
 export const ActivityIdPropertySchema = type({

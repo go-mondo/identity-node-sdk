@@ -53,7 +53,10 @@ export async function jsonBody<R>(
   }
 }
 
-export function addPaginationToURL(url: URL, pagination?: Pagination): URL {
+export function addPaginationToURL(
+  url: URL,
+  pagination?: Pagination | null
+): URL {
   if (pagination?.nextToken != null) {
     url.searchParams.set('pagination[nextToken]', pagination.nextToken);
   }

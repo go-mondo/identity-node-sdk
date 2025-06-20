@@ -1,4 +1,5 @@
 import { type } from 'arktype';
+import { RoleIdAssociationsSchema } from '../../authorization/schema.js';
 import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
   OptionalDatePayloadSchema,
@@ -16,6 +17,7 @@ import {
   optionallyNullishToUndefined,
   optionallyUndefined,
 } from '../../common/schema/schema.js';
+import { UserIdSchema } from '../schema.js';
 
 export const VerifiableAttribute = {
   EMAIL: 'email',
@@ -56,9 +58,6 @@ export const UpdateUserNamePropertiesSchema = type({
 });
 // type UpsertUserNameProperties = typeof UpdateUserNamePropertiesSchema.inferOut;
 
-export const UserIdSchema = type.string;
-export type UserId = typeof UserIdSchema.inferOut;
-
 export const UserIdPropertySchema = type({
   id: UserIdSchema,
 });
@@ -79,10 +78,8 @@ export const EmailOrPhonePropertiesSchema = type({
   phoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
 });
 
-const UserRoleAssociationSchema = type('string[] | undefined');
-
 export const UserAssociationsSchema = type({
-  roles: UserRoleAssociationSchema.optional(),
+  roles: RoleIdAssociationsSchema.optional(),
 });
 export type UserAssociations = typeof UserAssociationsSchema.inferOut;
 
@@ -129,6 +126,10 @@ export const UpdateUserPayloadSchema = type({
   .and(UpsertMetadataPropertyPayloadSchema);
 export type UpdateUserInput = typeof UpdateUserPayloadSchema.inferIn;
 export type UpdateUserPayload = typeof UpdateUserPayloadSchema.inferOut;
+
+/**
+ * Association
+ */
 
 export const UserAssociationReferenceSchema = UserIdPropertySchema.and(
   UserNamePropertiesSchema

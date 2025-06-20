@@ -1,5 +1,5 @@
 import { type } from 'arktype';
-import { UserIdSchema } from '../../../customer/users/schema.js';
+import { UserIdSchema } from '../../../customer/schema.js';
 import { BasePayloadSchema, BaseSchema } from '../base.js';
 
 export const AuthorizationStatus = {

@@ -5,10 +5,12 @@ import {
   RequiredDatePayloadSchema,
   RequiredDateSchema,
 } from '../../../common/index.js';
+import { KSUIDSchema } from '../../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../../../common/schema/metadata.js';
+import { Model } from '../../utils.js';
 
 export const StrategyType = {
   EMAIL: 'email',
@@ -26,7 +28,7 @@ export const StrategyStatus = {
 export type AnyStrategyStatus =
   (typeof StrategyStatus)[keyof typeof StrategyStatus];
 
-export const StrategyIdSchema = type.string;
+export const StrategyIdSchema = KSUIDSchema(Model.Strategy.UIDPrefix);
 export type StrategyId = typeof StrategyIdSchema.inferOut;
 
 export const StrategyIdPropertySchema = type({

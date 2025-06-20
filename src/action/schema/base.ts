@@ -3,7 +3,9 @@ import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
 } from '../../common/schema/dates.js';
+import { KSUIDSchema } from '../../common/schema/id.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import { Model } from './utils.js';
 
 export const ActionOperation = {
   SET_PASSWORD: 'set-password',
@@ -17,7 +19,7 @@ export const ActionOperation = {
 export type AnyActionOperation =
   (typeof ActionOperation)[keyof typeof ActionOperation];
 
-export const ActionIdSchema = type.string;
+export const ActionIdSchema = KSUIDSchema(Model.Action.UIDPrefix);
 export type ActionId = typeof ActionIdSchema.inferOut;
 
 export const ActionIdPropertySchema = type({

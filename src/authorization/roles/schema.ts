@@ -1,4 +1,5 @@
 import { type } from 'arktype';
+import { AppIdAssociationsSchema } from '../../app/schema.js';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -11,7 +12,12 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
-import { generateRoleId } from '../utils.js';
+import { UserIdAssociationsSchema } from '../../customer/schema.js';
+import {
+  PermissionIdAssociationsSchema,
+  RoleIdSchema,
+  generateRoleId,
+} from '../schema.js';
 
 export const RoleStatus = {
   ENABLED: 'enabled',
@@ -20,8 +26,6 @@ export const RoleStatus = {
 
 export type AnyRoleStatus = (typeof RoleStatus)[keyof typeof RoleStatus];
 
-const RoleIdSchema = type.string;
-
 export const RoleIdPropertySchema = type({
   id: RoleIdSchema,
 });
@@ -29,12 +33,10 @@ export type RoleIdProperty = typeof RoleIdPropertySchema.inferOut;
 
 const StatusSchema = type.enumerated(RoleStatus.ENABLED, RoleStatus.DISABLED);
 
-const AssociationSchema = type('string[] | undefined');
-
 export const RoleAssociationsSchema = type({
-  apps: AssociationSchema.optional(),
-  permissions: AssociationSchema.optional(),
-  users: AssociationSchema.optional(),
+  apps: AppIdAssociationsSchema.optional(),
+  permissions: PermissionIdAssociationsSchema.optional(),
+  users: UserIdAssociationsSchema.optional(),
 });
 export type RoleAssociations = typeof RoleAssociationsSchema.inferOut;
 

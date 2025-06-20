@@ -3,9 +3,10 @@ import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
 } from '../../../common/schema/dates.js';
+import { KSUIDSchema } from '../../../common/schema/id.js';
 import { MetadataPayloadPropertySchema } from '../../../common/schema/metadata.js';
-import { UserIdSchema } from '../../../customer/users/schema.js';
-import { generateNotificationId } from '../../utils.js';
+import { UserIdSchema } from '../../../customer/schema.js';
+import { Model, generateNotificationId } from '../../utils.js';
 
 export const NotificationType = {
   INFO: 'info',
@@ -15,7 +16,9 @@ export const NotificationType = {
 export type AnyNotificationType =
   (typeof NotificationType)[keyof typeof NotificationType];
 
-export const UserNotificationIdSchema = type.string;
+export const UserNotificationIdSchema = KSUIDSchema(
+  Model.Notification.UIDPrefix
+);
 export type UserNotificationId = typeof UserNotificationIdSchema.inferOut;
 
 export const UserNotificationIdPropertySchema = type({

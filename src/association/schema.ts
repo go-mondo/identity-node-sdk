@@ -14,7 +14,7 @@ import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../common/schema/metadata.js';
-import { OrganizationAssociationReferenceSchema } from '../customer/schema/organization.js';
+import { OrganizationAssociationReferenceSchema } from '../customer/organization/schema.js';
 import { UserAssociationReferenceSchema } from '../customer/users/schema.js';
 
 export const AssociationObjectType = {

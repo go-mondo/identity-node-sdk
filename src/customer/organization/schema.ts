@@ -7,7 +7,7 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
-import { generateOrganizationId } from './utils.js';
+import { OrganizationIdSchema, generateOrganizationId } from '../schema.js';
 
 export const OrganizationStatus = {
   ACTIVE: 'active',
@@ -15,9 +15,6 @@ export const OrganizationStatus = {
 } as const;
 export type AnyOrganizationStatus =
   (typeof OrganizationStatus)[keyof typeof OrganizationStatus];
-
-export const OrganizationIdSchema = type.string;
-export type OrganizationId = typeof OrganizationIdSchema.inferOut;
 
 export const OrganizationIdPropertySchema = type({
   id: OrganizationIdSchema,
@@ -58,6 +55,10 @@ export const UpdateOrganizationPayloadSchema = type({
 }).and(UpsertMetadataPropertyPayloadSchema);
 export type UpdateOrganizationPayload =
   typeof UpdateOrganizationPayloadSchema.inferOut;
+
+/**
+ * Association
+ */
 
 export const OrganizationAssociationReferenceSchema =
   OrganizationIdPropertySchema.and(

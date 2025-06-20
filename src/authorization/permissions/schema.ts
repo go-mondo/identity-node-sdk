@@ -1,4 +1,5 @@
 import { type } from 'arktype';
+import { AppIdAssociationsSchema } from '../../app/schema.js';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -11,7 +12,11 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
-import { generatePermissionId } from '../utils.js';
+import {
+  PermissionIdSchema,
+  RoleIdAssociationsSchema,
+  generatePermissionId,
+} from '../schema.js';
 
 export const PermissionStatus = {
   ENABLED: 'enabled',
@@ -20,8 +25,6 @@ export const PermissionStatus = {
 
 export type AnyPermissionStatus =
   (typeof PermissionStatus)[keyof typeof PermissionStatus];
-
-export const PermissionIdSchema = type.string;
 
 export const PermissionIdPropertySchema = type({
   id: PermissionIdSchema,
@@ -33,11 +36,9 @@ const PermissionStatusSchema = type.enumerated(
   PermissionStatus.DISABLED
 );
 
-const AssociationSchema = type('string[] | undefined');
-
 export const PermissionAssociationsSchema = type({
-  apps: AssociationSchema.optional(),
-  roles: AssociationSchema.optional(),
+  apps: AppIdAssociationsSchema.optional(),
+  roles: RoleIdAssociationsSchema.optional(),
 });
 export type PermissionAssociations =
   typeof PermissionAssociationsSchema.inferOut;
@@ -101,6 +102,7 @@ export type UpdatePermissionPayload =
 /**
  * Association
  */
+
 export const PermissionAssociationReferenceSchema =
   PermissionIdPropertySchema.and({
     name: type('string'),

@@ -2,9 +2,6 @@ import KSUID from 'ksuid';
 import * as crypto from 'node:crypto';
 
 export const Model = {
-  Action: {
-    UIDPrefix: 'act',
-  },
   Notification: {
     UIDPrefix: 'ntf',
   },

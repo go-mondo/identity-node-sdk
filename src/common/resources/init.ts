@@ -7,13 +7,13 @@ const BaseConfigSchema = type({
 });
 
 const AccessTokenConfigSchema = BaseConfigSchema.and({
-  accessToken: type('string'),
+  accessToken: type('string').moreThanLength(0),
 });
 
 const ConfigSchema = AccessTokenConfigSchema;
 
-type ConfigProps = typeof ConfigSchema.inferIn;
-type Config = typeof ConfigSchema.inferOut;
+export type ConfigProps = typeof ConfigSchema.inferIn;
+export type Config = typeof ConfigSchema.inferOut;
 
 export class MondoIdentity {
   readonly config: Config;

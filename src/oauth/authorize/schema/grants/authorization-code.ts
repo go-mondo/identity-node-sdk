@@ -18,10 +18,32 @@ const ResponseTypeSchema = type.enumerated(ResponseType.CODE);
 const PKCESchema = type({
   code_challenge_method: CodeChallengeMethodSchema.optional(),
   code_challenge: type('string').optional(),
-}).or({
-  code_challenge_method: CodeChallengeMethodSchema,
-  code_challenge: type('string'),
-});
+})
+  .or({
+    code_challenge_method: CodeChallengeMethodSchema,
+    code_challenge: type('string').moreThanLength(0),
+  })
+  .narrow((data, ctx) => {
+    if (
+      (data.code_challenge_method && data.code_challenge) ||
+      (!data.code_challenge_method && !data.code_challenge)
+    ) {
+      return true;
+    }
+
+    if (data.code_challenge_method && !data.code_challenge) {
+      return ctx.reject({
+        expected: 'is required',
+        actual: '',
+        path: ['code_challenge'],
+      });
+    }
+    return ctx.reject({
+      expected: 'is required',
+      actual: '',
+      path: ['code_challenge_method'],
+    });
+  });
 
 const OAuthSchema = type({
   response_type: ResponseTypeSchema,
@@ -35,7 +57,7 @@ const OIDCSchema = type({
   nonce: type('string').optional(),
   display: AuthorizationDisplaySchema.optional(),
   prompt: AuthorizationPromptSchema.optional(),
-  max_age: type('number').optional(),
+  max_age: type.keywords.number.integer.atLeast(0).optional(),
 });
 
 export const AuthorizationCodeSchema = OAuthSchema.and(OIDCSchema)

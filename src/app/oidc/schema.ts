@@ -6,6 +6,7 @@ import {
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 
 export const OIDCSchema = type({
@@ -24,7 +25,7 @@ export const OIDCPayloadSchema = type({
 export type OIDCPayload = typeof OIDCPayloadSchema.inferOut;
 
 export const InsertOIDCPayloadSchema =
-  MetadataPayloadPropertySchema.or('undefined');
+  UpsertMetadataPropertyPayloadSchema.or('undefined');
 export type InsertOIDCInput = typeof InsertOIDCPayloadSchema.inferIn;
 export type InsertOIDCPayload = typeof InsertOIDCPayloadSchema.inferOut;
 

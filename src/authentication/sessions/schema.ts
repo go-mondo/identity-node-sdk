@@ -5,15 +5,17 @@ import {
   RequiredDatePayloadSchema,
   RequiredDateSchema,
 } from '../../common/schema/dates.js';
+import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
-import { UserIdSchema } from '../../customer/users/schema.js';
+import { UserIdSchema } from '../../customer/schema.js';
 import {
   StrategyIdSchema,
   StrategyTypeSchema,
 } from '../strategies/schema/base.js';
+import { Model } from '../utils.js';
 
 export const SessionStatus = {
   INITIATED: 'initiated', // Session was created, but no activity has been taken
@@ -24,7 +26,7 @@ export const SessionStatus = {
 export type AnySessionStatus =
   (typeof SessionStatus)[keyof typeof SessionStatus];
 
-export const SessionIdSchema = type.string;
+export const SessionIdSchema = KSUIDSchema(Model.Session.UIDPrefix);
 export type SessionId = typeof SessionIdSchema.inferOut;
 
 export const SessionIdPropertySchema = type({

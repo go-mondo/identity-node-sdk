@@ -1,6 +1,6 @@
 import { type } from 'arktype';
 import { PasswordPolicySchema } from '../../../authentication/strategies/schema/schema.js';
-import { UserIdSchema } from '../../../customer/users/schema.js';
+import { UserIdSchema } from '../../../customer/schema.js';
 import { IdentityIdentifierSchema } from '../../../identity/schema.js';
 import { BasePayloadSchema } from '../base.js';
 

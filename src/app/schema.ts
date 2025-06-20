@@ -5,11 +5,12 @@ import {
   RequiredDatePayloadSchema,
   RequiredDateSchema,
 } from '../common/index.js';
+import { KSUIDSchema } from '../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../common/schema/metadata.js';
-import { generateAppId } from './utils.js';
+import { Model, generateAppId } from './utils.js';
 
 export const AppStatus = {
   ENABLED: 'enabled',
@@ -18,7 +19,7 @@ export const AppStatus = {
 
 export type AnyAppStatus = (typeof AppStatus)[keyof typeof AppStatus];
 
-export const AppIdSchema = type.string;
+export const AppIdSchema = KSUIDSchema(Model.App.UIDPrefix);
 export type AppId = typeof AppIdSchema.inferOut;
 
 export const AppIdPropertySchema = type({
@@ -69,6 +70,13 @@ export const UpdateAppPayloadSchema = type({
 }).and(MetadataPayloadPropertySchema);
 export type UpdateAppInput = typeof UpdateAppPayloadSchema.inferIn;
 export type UpdateAppPayload = typeof UpdateAppPayloadSchema.inferOut;
+
+/**
+ * Association
+ */
+export const AppIdAssociationsSchema = type('undefined').or(
+  AppIdSchema.array()
+);
 
 export const AppAssociationReferenceSchema = AppIdPropertySchema.and(
   type({

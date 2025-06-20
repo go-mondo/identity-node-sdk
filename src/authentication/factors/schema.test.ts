@@ -1,5 +1,6 @@
 import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
+import { generateStrategyId } from '../utils.js';
 import {
   AuthenticationFactorPayloadSchema,
   AuthenticationFactorsPayloadSchema,
@@ -15,7 +16,7 @@ describe('Authentication - Factors', () => {
           updatedAt: new Date(),
           factors: [
             {
-              id: '123',
+              id: generateStrategyId(),
             },
           ],
         })
@@ -36,7 +37,7 @@ describe('Authentication - Factors', () => {
         UpsertAuthenticationFactorsPayloadSchema({
           factors: [
             {
-              id: '123',
+              id: generateStrategyId(),
             },
           ],
         })
@@ -63,7 +64,7 @@ describe('Authentication - Factors', () => {
         AuthenticationFactorsPayloadSchema({
           createdAt: new Date(),
           updatedAt: new Date(),
-          factors: { id: '123' },
+          factors: { id: generateStrategyId() },
         })
       ).toBeInstanceOf(type.errors);
 
@@ -72,7 +73,7 @@ describe('Authentication - Factors', () => {
         AuthenticationFactorsPayloadSchema({
           createdAt: new Date(),
           updatedAt: new Date(),
-          factors: ['123'],
+          factors: [generateStrategyId()],
         })
       ).toBeInstanceOf(type.errors);
     });
@@ -81,7 +82,7 @@ describe('Authentication - Factors', () => {
       // Undefined
       expect(
         AuthenticationFactorPayloadSchema({
-          id: '123',
+          id: generateStrategyId(),
           nextFactors: undefined,
         })
       ).not.toBeInstanceOf(type.errors);
@@ -89,10 +90,10 @@ describe('Authentication - Factors', () => {
       // Array
       expect(
         AuthenticationFactorPayloadSchema({
-          id: '123',
+          id: generateStrategyId(),
           nextFactors: [
             {
-              id: '456',
+              id: generateStrategyId(),
             },
           ],
         })
@@ -101,16 +102,16 @@ describe('Authentication - Factors', () => {
       // Deeply nested array
       expect(
         AuthenticationFactorPayloadSchema({
-          id: '123',
+          id: generateStrategyId(),
           nextFactors: [
             {
-              id: '456',
+              id: generateStrategyId(),
               nextFactors: [
                 {
-                  id: '456',
+                  id: generateStrategyId(),
                   nextFactors: [
                     {
-                      id: '456',
+                      id: generateStrategyId(),
                     },
                   ],
                 },
@@ -125,7 +126,7 @@ describe('Authentication - Factors', () => {
       // Number
       expect(
         AuthenticationFactorsPayloadSchema({
-          id: 123,
+          id: generateStrategyId(),
         })
       ).toBeInstanceOf(type.errors);
 
@@ -148,24 +149,24 @@ describe('Authentication - Factors', () => {
       // String
       expect(
         AuthenticationFactorsPayloadSchema({
-          id: '123',
-          nextFactors: '123',
+          id: generateStrategyId(),
+          nextFactors: generateStrategyId(),
         })
       ).toBeInstanceOf(type.errors);
 
       // Object
       expect(
         AuthenticationFactorsPayloadSchema({
-          id: '123',
-          nextFactors: { id: '123' },
+          id: generateStrategyId(),
+          nextFactors: { id: generateStrategyId() },
         })
       ).toBeInstanceOf(type.errors);
 
       // Array
       expect(
         AuthenticationFactorsPayloadSchema({
-          id: '123',
-          nextFactors: ['123'],
+          id: generateStrategyId(),
+          nextFactors: [generateStrategyId()],
         })
       ).toBeInstanceOf(type.errors);
     });

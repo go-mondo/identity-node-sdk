@@ -11,19 +11,37 @@ import {
 import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
 import { AuthorizationPayloadSchema as WorkspaceAuthorizationPayloadSchema } from '../../workspace/authorization/schema.js';
 
+const UrlSetSchema = type.instanceOf(Set<URL>);
+const UrlArrayScheama = type('string.url.parse').array();
+
 const StringSetSchema = type.instanceOf(Set<string>);
-const UrlStringSchema = type('string.url[]').pipe((v) => v?.filter((i) => !!i));
+// const UrlStringSchema = type('string.url[]').pipe((v) => v?.filter((i) => !!i));
 const StringSchema = type('string[]').pipe((v) => v?.filter((i) => !!i));
 
-const CallbackUrlsSchema = type('undefined')
-  .or(UrlStringSchema)
-  .or(StringSetSchema)
+// const CallbackUrlsSchema = type('undefined')
+//   .or(UrlArrayScheama)
+//   .or(UrlSetSchema)
+//   .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
+
+const CallbackUrlArraySchema = type('undefined')
+  .or(UrlArrayScheama)
+  .or(UrlSetSchema)
   .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
 
-const AvailableAudiencesSchema = type('undefined')
+const CallbackUrlSetSchema = type('undefined')
+  .or(UrlArrayScheama)
+  .or(UrlSetSchema)
+  .pipe((v) => (!v || v instanceof Set ? v : new Set(v)));
+
+const AvailableAudienceArraySchema = type('undefined')
   .or(StringSchema)
   .or(StringSetSchema)
   .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
+
+const AvailableAudienceSetSchema = type('undefined')
+  .or(StringSchema)
+  .or(StringSetSchema)
+  .pipe((v) => (!v || v instanceof Set ? v : new Set(v)));
 
 const GrantSetSchema = type.instanceOf(Set<AnyGrantType>);
 const GrantArraySchema = type
@@ -34,7 +52,12 @@ const GrantArraySchema = type
     GrantType.REFRESH_TOKEN
   )
   .array();
-const AvailableGrantsSchema = type.undefined
+
+const AvailableGrantSetSchema = type('undefined')
+  .or(GrantArraySchema)
+  .or(GrantSetSchema)
+  .pipe((v) => (!v || v instanceof Set ? v : new Set(v)));
+const AvailableGrantArraySchema = type('undefined')
   .or(GrantArraySchema)
   .or(GrantSetSchema)
   .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
@@ -43,22 +66,13 @@ const BaseAuthorization = WorkspaceAuthorizationPayloadSchema.pick(
   'refreshTokenDuration',
   'accessTokenDuration',
   'accessTokenSignatureAlgorithm'
-).and({
-  loginUri: type('string.url | undefined').optional(),
-  callbackUrls: CallbackUrlsSchema.optional(),
-  availableAudiences: AvailableAudiencesSchema.optional(),
-});
+);
 
 export const AuthorizationSchema = BaseAuthorization.and({
-  availableGrants: type.undefined
-    .or(GrantArraySchema)
-    .or(GrantSetSchema)
-    .pipe((v) => (v instanceof Set ? v : new Set(v)))
-    .optional(),
-  //   availableAudiences: type('string[] | undefined')
-  //     .or(StringSetSchema)
-  //     .pipe((v) => (v instanceof Set ? v : new Set(v)))
-  //     .optional(),
+  loginUri: type('string.url | undefined').optional(),
+  callbackUrls: CallbackUrlSetSchema.optional(),
+  availableAudiences: AvailableAudienceSetSchema.optional(),
+  availableGrants: AvailableGrantSetSchema.optional(),
   defaultAudience: type('string | undefined').optional(),
   'updatedAt?': OptionalDateSchema,
   'deletedAt?': OptionalDateSchema,
@@ -68,8 +82,10 @@ export type AuthorizationProperties = typeof AuthorizationSchema.inferIn;
 export type Authorization = typeof AuthorizationSchema.inferOut;
 
 export const AuthorizationPayloadSchema = BaseAuthorization.and({
-  availableGrants: AvailableGrantsSchema.optional(),
-  //   availableAudiences: AvailableAudiencesSchema.optional(),
+  loginUri: type('string.url | undefined').optional(),
+  callbackUrls: CallbackUrlArraySchema.optional(),
+  availableAudiences: AvailableAudienceArraySchema.optional(),
+  availableGrants: AvailableGrantArraySchema.optional(),
   defaultAudience: type('string | undefined').optional(),
   'updatedAt?': OptionalDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,
@@ -78,8 +94,10 @@ export const AuthorizationPayloadSchema = BaseAuthorization.and({
 export type AuthorizationPayload = typeof AuthorizationPayloadSchema.inferOut;
 
 export const UpsertAuthorizationPayloadSchema = BaseAuthorization.and({
-  availableGrants: AvailableGrantsSchema.optional(),
-  //   availableAudiences: type('string').array().optional(),
+  loginUri: type('string.url | undefined').optional(),
+  callbackUrls: CallbackUrlArraySchema.optional(),
+  availableAudiences: AvailableAudienceArraySchema.optional(),
+  availableGrants: AvailableGrantArraySchema.optional(),
   defaultAudience: type('string | undefined').optional(),
 }).and(UpsertMetadataPropertyPayloadSchema);
 export type UpsertAuthorizationInput =

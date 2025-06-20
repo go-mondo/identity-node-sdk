@@ -6,6 +6,7 @@ import {
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 
 export const SAMLSchema = type({
@@ -24,10 +25,10 @@ export const SAMLPayloadSchema = type({
 export type SAMLPayload = typeof SAMLPayloadSchema.inferOut;
 
 export const InsertSAMLPayloadSchema =
-  MetadataPayloadPropertySchema.or('undefined');
+  UpsertMetadataPropertyPayloadSchema.or('undefined');
 export type InsertSAMLInput = typeof InsertSAMLPayloadSchema.inferIn;
 export type InsertSAMLPayload = typeof InsertSAMLPayloadSchema.inferOut;
 
-export const UpdateSAMLPayloadSchema = MetadataPayloadPropertySchema;
+export const UpdateSAMLPayloadSchema = UpsertMetadataPropertyPayloadSchema;
 export type UpdateSAMLInput = typeof InsertSAMLPayloadSchema.inferIn;
 export type UpdateSAMLPayload = typeof InsertSAMLPayloadSchema.inferOut;

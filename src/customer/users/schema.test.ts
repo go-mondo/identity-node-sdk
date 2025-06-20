@@ -1,5 +1,6 @@
 import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
+import { generateUserId } from '../schema.js';
 import {
   InsertUserPayloadSchema,
   UserPayloadSchema,
@@ -11,7 +12,7 @@ describe('Customer - User', () => {
     test('should parse attributes successfully', async () => {
       const item = {
         foo: 'bar',
-        id: '123',
+        id: generateUserId(),
         phoneNumber: '123',
         status: UserStatus.ACTIVE,
         createdAt: new Date(),
@@ -35,7 +36,7 @@ describe('Customer - User', () => {
     test('should parse attributes successfully', async () => {
       const item = {
         foo: 'bar',
-        id: '123',
+        id: generateUserId(),
         familyName: 'Foo',
         phoneNumber: '123',
       };
@@ -56,7 +57,7 @@ describe('Customer - User', () => {
     test('should serialize successfully', async () => {
       const item = {
         foo: 'bar',
-        id: '123',
+        id: generateUserId(),
         phoneNumber: '123',
         metadata: new Map(),
         // status: UserStatus.ACTIVE,
@@ -78,7 +79,7 @@ describe('Customer - User', () => {
 
     test('should serialize nulls successfully', async () => {
       const payload = {
-        id: '123',
+        id: generateUserId(),
         status: 'unverified',
         givenName: null,
         middleName: null,
@@ -104,7 +105,7 @@ describe('Customer - User', () => {
 
     test('should serialize nulls successfully', async () => {
       const payload = {
-        id: '123',
+        id: generateUserId(),
         status: 'unverified',
         givenName: null,
         middleName: null,

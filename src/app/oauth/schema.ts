@@ -3,13 +3,14 @@ import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
 } from '../../common/schema/dates.js';
+import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
-import { generateOAuthId } from '../utils.js';
+import { Model, generateOAuthId } from '../utils.js';
 
-export const OAuthIdSchema = type.string;
+export const OAuthIdSchema = KSUIDSchema(Model.OAuth.UIDPrefix);
 export type OAuthId = typeof OAuthIdSchema.inferOut;
 
 export const OAuthIdPropertySchema = type({

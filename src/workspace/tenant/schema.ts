@@ -1,13 +1,15 @@
 import { type } from 'arktype';
+import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   InsertOrganizationPayloadSchema,
   OrganizationPayloadSchema,
   UpdateOrganizationPayloadSchema,
-} from '../../customer/schema/organization.js';
+} from '../../customer/organization/schema.js';
 import { MembershipPayloadSchema } from '../membership/schema.js';
-import { generateHandle, generateTenantId } from '../utils.js';
+import { Model, generateHandle, generateTenantId } from '../utils.js';
 
-export const TenantIdSchema = type.string;
+export const TenantIdSchema = KSUIDSchema(Model.Tenant.UIDPrefix);
+export type TenantId = typeof TenantIdSchema.inferOut;
 
 export const TenantIdPropertySchema = type({
   id: TenantIdSchema,
