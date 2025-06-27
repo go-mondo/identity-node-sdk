@@ -25,3 +25,4 @@ export * from './operations/set-password.js';
 export * from './operations/sign-up-verification.js';
 export * from './operations/sign-up.js';
 export * from './operations/user-attribute-verification.js';
+export * from './utils.js';

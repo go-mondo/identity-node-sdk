@@ -47,19 +47,19 @@ export const StrategyTypeSchema = type.enumerated(
 );
 export const StrategyLabelSchema = type('string');
 
-const BaseSchema = StrategyIdPropertySchema.and({
-  status: StrategyStatusSchema,
+export const BaseStrategySchema = type({
+  id: StrategyIdSchema,
+  status: StrategyStatusSchema.default(StrategyStatus.ENABLED),
   label: StrategyLabelSchema,
-});
-
-export const BaseStrategySchema = BaseSchema.and({
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
 }).and(MetadataMapPropertySchema);
 
-export const BaseStrategyPayloadSchema = BaseSchema.and({
+export const BaseStrategyPayloadSchema = type({
+  status: StrategyStatusSchema,
+  label: StrategyLabelSchema,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
   'deletedAt?': OptionalDatePayloadSchema,

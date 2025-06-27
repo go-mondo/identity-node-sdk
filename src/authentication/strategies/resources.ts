@@ -29,12 +29,12 @@ const RESOURCE = 'strategies';
 export class StrategyResources {
   public constructor(private readonly instance: MondoIdentity) {}
 
-  static buildPath(id?: string): string {
-    if (id?.startsWith(PATH)) {
-      return id;
-    }
+  static buildItemPath(id: string): string {
+    return [StrategyResources.buildPath(), id].filter(Boolean).join('/');
+  }
 
-    return [PATH, id].filter(Boolean).join('/');
+  static buildPath(): string {
+    return [PATH, RESOURCE].filter(Boolean).join('/');
   }
 
   public listItems(
@@ -83,7 +83,7 @@ export async function getStrategy(
   return parseEgressSchema(
     StrategySchema(
       await getItemWithAuthorization(
-        new URL(StrategyResources.buildPath(id), instance.config.host),
+        new URL(StrategyResources.buildItemPath(id), instance.config.host),
         instance.authorizer
       )
     )
@@ -115,7 +115,7 @@ export async function updateStrategy(
   return parseEgressSchema(
     StrategySchema(
       await updateItemWithAuthorization(
-        new URL(StrategyResources.buildPath(id), instance.config.host),
+        new URL(StrategyResources.buildItemPath(id), instance.config.host),
         instance.authorizer,
         parseEgressSchema(
           UpdateStrategyPayloadSchema.onUndeclaredKey('delete')(item)
@@ -132,7 +132,7 @@ export async function deleteStrategy(
   return parseEgressSchema(
     StrategySchema(
       await deleteItemWithAuthorization(
-        new URL(StrategyResources.buildPath(id), instance.config.host),
+        new URL(StrategyResources.buildItemPath(id), instance.config.host),
         instance.authorizer
       )
     )

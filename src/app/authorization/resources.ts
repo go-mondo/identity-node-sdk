@@ -1,7 +1,7 @@
 import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
-  insertItemWithAuthorization,
+  updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { parseEgressSchema } from '../../common/resources/utils.js';
 import { PATH } from '../resources.js';
@@ -18,10 +18,6 @@ export class AuthorizationResources {
   public constructor(private readonly instance: MondoIdentity) {}
 
   static buildPath(appId: string): string {
-    if (appId?.startsWith(PATH)) {
-      return appId;
-    }
-
     return [PATH, appId, RESOURCE].filter(Boolean).join('/');
   }
 
@@ -58,7 +54,7 @@ export async function upsertAuthorization(
 ): Promise<Authorization> {
   return parseEgressSchema(
     AuthorizationSchema(
-      await insertItemWithAuthorization(
+      await updateItemWithAuthorization(
         new URL(AuthorizationResources.buildPath(appId), instance.config.host),
         instance.authorizer,
         parseEgressSchema(

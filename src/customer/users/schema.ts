@@ -123,6 +123,7 @@ export const UpdateUserPayloadSchema = type({
   suspended: type.boolean.optional(),
 })
   .and(UpdateUserNamePropertiesSchema)
+  .and(VerifiedEmailOrPhonePropertiesSchema)
   .and(UpsertMetadataPropertyPayloadSchema);
 export type UpdateUserInput = typeof UpdateUserPayloadSchema.inferIn;
 export type UpdateUserPayload = typeof UpdateUserPayloadSchema.inferOut;

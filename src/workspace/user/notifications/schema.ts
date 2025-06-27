@@ -5,7 +5,6 @@ import {
 } from '../../../common/schema/dates.js';
 import { KSUIDSchema } from '../../../common/schema/id.js';
 import { MetadataPayloadPropertySchema } from '../../../common/schema/metadata.js';
-import { UserIdSchema } from '../../../customer/schema.js';
 import { Model, generateNotificationId } from '../../utils.js';
 
 export const NotificationType = {
@@ -52,7 +51,7 @@ export type UserNotificationPayload =
   typeof UserNotificationPayloadSchema.inferOut;
 
 export const InsertUserNotificationPayloadSchema = type({
-  id: UserIdSchema.default(() => generateNotificationId()),
+  id: UserNotificationIdSchema.default(() => generateNotificationId()),
   type: type.enumerated(NotificationType.INFO),
   action: ActionSchema.optional(),
 })

@@ -41,6 +41,7 @@ export type StrategyPayload = typeof StrategyPayloadSchema.inferOut;
 
 export const StrategySchema =
   PasswordStrategySchema.or(EmailStrategySchema).or(TOTPStrategySchema);
+export type StrategyProperties = typeof StrategySchema.inferIn;
 export type Strategy = typeof StrategySchema.inferOut;
 
 export {
