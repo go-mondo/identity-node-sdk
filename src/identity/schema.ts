@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 
 export const IdentityIdentifier = {
   EMAIL: 'email',
@@ -8,7 +8,7 @@ export const IdentityIdentifier = {
 export type AnyIdentityIdentifier =
   (typeof IdentityIdentifier)[keyof typeof IdentityIdentifier];
 
-export const IdentityIdentifierSchema = type.enumerated(
+export const IdentityIdentifierSchema = z.enum([
   IdentityIdentifier.EMAIL,
-  IdentityIdentifier.PHONE_NUMBER
-);
+  IdentityIdentifier.PHONE_NUMBER,
+] as const);

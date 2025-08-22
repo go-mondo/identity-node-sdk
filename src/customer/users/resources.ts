@@ -6,10 +6,7 @@ import {
   listItemsWithAuthorization,
   updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../../common/resources/utils.js';
+import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -69,10 +66,8 @@ export async function listUsers(
     pagination
   );
 
-  return parseEgressSchema(
-    PaginationCollectionSchema(UserSchema)(
-      await listItemsWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(UserSchema).parse(
+    await listItemsWithAuthorization(url, instance.authorizer)
   );
 }
 
@@ -80,12 +75,10 @@ export async function getUser(
   instance: MondoIdentity,
   id: string
 ): Promise<User> {
-  return parseEgressSchema(
-    UserSchema(
-      await getItemWithAuthorization(
-        new URL(UserResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return UserSchema.parse(
+    await getItemWithAuthorization(
+      new URL(UserResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -94,15 +87,11 @@ export async function insertUser(
   instance: MondoIdentity,
   item: InsertUserInput
 ): Promise<User> {
-  return parseEgressSchema(
-    UserSchema(
-      await insertItemWithAuthorization(
-        new URL(UserResources.buildPath(), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          InsertUserPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return UserSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(UserResources.buildPath(), instance.config.host),
+      instance.authorizer,
+      InsertUserPayloadSchema.parse(item)
     )
   );
 }
@@ -112,15 +101,11 @@ export async function updateUser(
   id: string,
   item: UpdateUserInput
 ): Promise<User> {
-  return parseEgressSchema(
-    UserSchema(
-      await updateItemWithAuthorization(
-        new URL(UserResources.buildPath(id), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpdateUserPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return UserSchema.parse(
+    await updateItemWithAuthorization(
+      new URL(UserResources.buildPath(id), instance.config.host),
+      instance.authorizer,
+      UpdateUserPayloadSchema.parse(item)
     )
   );
 }
@@ -129,12 +114,10 @@ export async function deleteUser(
   instance: MondoIdentity,
   id: string
 ): Promise<User> {
-  return parseEgressSchema(
-    UserSchema(
-      await deleteItemWithAuthorization(
-        new URL(UserResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return UserSchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(UserResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }

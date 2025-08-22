@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../../../customer/schema.js';
 import { generateActivityId } from '../utils.js';
@@ -19,25 +18,25 @@ describe('Activity Schema - Authorization', () => {
 
   describe('AuthorizationStatusSchema', () => {
     test('should accept success status', () => {
-      const result = AuthorizationStatusSchema('success');
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe('success');
+      const result = AuthorizationStatusSchema.safeParse('success');
+      // Parse succeeds for valid data
+      expect(result.data).toBe('success');
     });
 
     test('should accept fail status', () => {
-      const result = AuthorizationStatusSchema('fail');
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe('fail');
+      const result = AuthorizationStatusSchema.safeParse('fail');
+      // Parse succeeds for valid data
+      expect(result.data).toBe('fail');
     });
 
     test('should reject invalid status', () => {
-      const result = AuthorizationStatusSchema('invalid_status');
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationStatusSchema.safeParse('invalid_status');
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-string status', () => {
-      const result = AuthorizationStatusSchema(123);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationStatusSchema.safeParse(123);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -60,8 +59,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: { resource: 'users', action: 'read' },
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept authorization activity with fail status', () => {
@@ -82,8 +81,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: { required_role: 'admin', user_role: 'user' },
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept authorization activity without identity', () => {
@@ -103,8 +102,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: { reason: 'authentication_required' },
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept authorization activity with optional fields', () => {
@@ -127,8 +126,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: { service: 'payment-api', scope: 'read:transactions' },
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should reject authorization activity with wrong type', () => {
@@ -149,8 +148,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: {},
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject authorization activity with invalid status', () => {
@@ -171,8 +170,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: {},
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject authorization activity missing required fields', () => {
@@ -192,8 +191,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: {},
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject authorization activity with invalid identity ID', () => {
@@ -214,8 +213,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: {},
       };
 
-      const result = AuthorizationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -238,9 +237,9 @@ describe('Activity Schema - Authorization', () => {
         metadata: { policy: 'admin-access', resource_id: 'res_123' },
       };
 
-      const result = AuthorizationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = AuthorizationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept authorization payload with fail status', () => {
@@ -261,8 +260,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: { expected_role: 'manager', actual_role: 'employee' },
       };
 
-      const result = AuthorizationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthorizationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept payload without identity', () => {
@@ -282,8 +281,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: { endpoint: '/admin/users', method: 'GET' },
       };
 
-      const result = AuthorizationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthorizationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept payload with optional date fields', () => {
@@ -306,8 +305,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: { scheduled: true },
       };
 
-      const result = AuthorizationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthorizationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject payload with invalid date format', () => {
@@ -328,8 +327,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: {},
       };
 
-      const result = AuthorizationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with wrong type', () => {
@@ -350,8 +349,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: {},
       };
 
-      const result = AuthorizationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with invalid status', () => {
@@ -372,8 +371,8 @@ describe('Activity Schema - Authorization', () => {
         metadata: {},
       };
 
-      const result = AuthorizationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

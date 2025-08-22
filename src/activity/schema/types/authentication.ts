@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { UserIdSchema } from '../../../customer/schema.js';
 import { BasePayloadSchema, BaseSchema } from '../base.js';
 
@@ -10,28 +10,33 @@ export const AuthenticationStatus = {
 export type AnyAuthenticationStatus =
   (typeof AuthenticationStatus)[keyof typeof AuthenticationStatus];
 
-export const AuthenticationStatusSchema = type.enumerated(
+export const AuthenticationStatusSchema = z.enum([
   AuthenticationStatus.SUCESS,
-  AuthenticationStatus.FAIL
-);
+  AuthenticationStatus.FAIL,
+] as const);
 
-const BaseAuthenticationSchema = type({
-  type: type("'authentication'"),
+const BaseAuthenticationSchema = z.object({
+  type: z.literal('authentication'),
   status: AuthenticationStatusSchema,
   identity: UserIdSchema,
-  message: type('string'),
+  message: z.string(),
 });
 
-export const AuthenticationActivitySchema = BaseSchema.and(
-  BaseAuthenticationSchema
-);
-export type AuthenticationActivityProperties =
-  typeof AuthenticationActivitySchema.inferIn;
-export type AuthenticationActivity =
-  typeof AuthenticationActivitySchema.inferOut;
+export const AuthenticationActivitySchema = z.object({
+  ...BaseSchema.shape,
+  ...BaseAuthenticationSchema.shape,
+});
+export type AuthenticationActivityProperties = z.input<
+  typeof AuthenticationActivitySchema
+>;
+export type AuthenticationActivity = z.output<
+  typeof AuthenticationActivitySchema
+>;
 
-export const AuthenticationActivityPayloadSchema = BasePayloadSchema.and(
-  BaseAuthenticationSchema
-);
-export type AuthenticationActivityPayload =
-  typeof AuthenticationActivityPayloadSchema.inferOut;
+export const AuthenticationActivityPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  ...BaseAuthenticationSchema.shape,
+});
+export type AuthenticationActivityPayload = z.output<
+  typeof AuthenticationActivityPayloadSchema
+>;

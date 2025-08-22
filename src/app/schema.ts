@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -20,70 +20,74 @@ export const AppStatus = {
 export type AnyAppStatus = (typeof AppStatus)[keyof typeof AppStatus];
 
 export const AppIdSchema = KSUIDSchema(Model.App.UIDPrefix);
-export type AppId = typeof AppIdSchema.inferOut;
+export type AppId = z.output<typeof AppIdSchema>;
 
-export const AppIdPropertySchema = type({
+export const AppIdPropertySchema = z.object({
   id: AppIdSchema,
 });
-export type AppIdProperty = typeof AppIdPropertySchema.inferOut;
+export type AppIdProperty = z.output<typeof AppIdPropertySchema>;
 
-const StatusSchema = type.enumerated(AppStatus.ENABLED, AppStatus.DISABLED);
+const StatusSchema = z.enum([AppStatus.ENABLED, AppStatus.DISABLED] as const);
 
-const BaseSchema = AppIdPropertySchema.and({
+const BaseSchema = z.object({
+  ...AppIdPropertySchema.shape,
   status: StatusSchema,
-  label: type('string'),
-  description: type('string | undefined').optional(),
+  label: z.string(),
+  description: z.string().or(z.undefined()).optional(),
 });
 
-export const AppSchema = BaseSchema.and({
+export const AppSchema = z.object({
+  ...BaseSchema.shape,
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
-}).and(MetadataMapPropertySchema);
-export type AppProperties = typeof AppSchema.inferIn;
-export type App = typeof AppSchema.inferOut;
+  ...MetadataMapPropertySchema.shape,
+});
+export type AppProperties = z.input<typeof AppSchema>;
+export type App = z.output<typeof AppSchema>;
 
-export const AppPayloadSchema = BaseSchema.and({
+export const AppPayloadSchema = z.object({
+  ...BaseSchema.shape,
+  ...AppIdPropertySchema.shape,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-})
-  .and(AppIdPropertySchema)
-  .and(MetadataPayloadPropertySchema);
-export type AppPayload = typeof AppPayloadSchema.inferOut;
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type AppPayload = z.output<typeof AppPayloadSchema>;
 
-export const InsertAppPayloadSchema = type({
+export const InsertAppPayloadSchema = z.object({
   id: AppIdSchema.default(() => generateAppId()),
   status: StatusSchema.default(AppStatus.ENABLED),
-  label: type('string'),
-  description: type('string').optional(),
-}).and(MetadataPayloadPropertySchema);
-export type InsertAppInput = typeof InsertAppPayloadSchema.inferIn;
-export type InsertAppPayload = typeof InsertAppPayloadSchema.inferOut;
+  label: z.string(),
+  description: z.string().optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type InsertAppInput = z.input<typeof InsertAppPayloadSchema>;
+export type InsertAppPayload = z.output<typeof InsertAppPayloadSchema>;
 
-export const UpdateAppPayloadSchema = type({
+export const UpdateAppPayloadSchema = z.object({
   status: StatusSchema.optional(),
-  label: type('string').or(type.null).optional(),
-  description: type('string').or(type.null).optional(),
-}).and(MetadataPayloadPropertySchema);
-export type UpdateAppInput = typeof UpdateAppPayloadSchema.inferIn;
-export type UpdateAppPayload = typeof UpdateAppPayloadSchema.inferOut;
+  label: z.string().or(z.null()).optional(),
+  description: z.string().or(z.null()).optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UpdateAppInput = z.input<typeof UpdateAppPayloadSchema>;
+export type UpdateAppPayload = z.output<typeof UpdateAppPayloadSchema>;
 
 /**
  * Association
  */
-export const AppIdAssociationsSchema = type('undefined').or(
-  AppIdSchema.array()
-);
+export const AppIdAssociationsSchema = z.undefined().or(z.array(AppIdSchema));
 
-export const AppAssociationReferenceSchema = AppIdPropertySchema.and(
-  type({
-    status: StatusSchema.default('disabled'),
-    label: type('string'),
-    model: "'App'",
-  })
-);
-export type AppAssociationReference =
-  typeof AppAssociationReferenceSchema.inferOut;
+export const AppAssociationReferenceSchema = z.object({
+  ...AppIdPropertySchema.shape,
+  status: StatusSchema.default('disabled'),
+  label: z.string(),
+  model: z.literal('App'),
+});
+export type AppAssociationReference = z.output<
+  typeof AppAssociationReferenceSchema
+>;

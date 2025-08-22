@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   BaseInsertPayloadSchema,
   BasePayloadSchema,
@@ -6,28 +6,38 @@ import {
   BaseUpdatePayloadSchema,
 } from '../base.js';
 
-const BaseNoteSchema = type({
-  type: type("'note'"),
-  message: type('string'),
+const BaseNoteSchema = z.object({
+  type: z.literal('note'),
+  message: z.string(),
 });
 
-export const NoteActivitySchema = BaseSchema.and(BaseNoteSchema);
-export type NoteActivityProperties = typeof NoteActivitySchema.inferIn;
-export type NoteActivity = typeof NoteActivitySchema.inferOut;
-
-export const NoteActivityPayloadSchema = BasePayloadSchema.and(BaseNoteSchema);
-export type NoteActivityPayload = typeof NoteActivityPayloadSchema.inferOut;
-
-export const InsertNoteActivityPayloadSchema = BaseInsertPayloadSchema.and({
-  type: type("'note'"),
-  message: type('string'),
+export const NoteActivitySchema = z.object({
+  ...BaseSchema.shape,
+  ...BaseNoteSchema.shape,
 });
-export type InsertNoteActivityPayload =
-  typeof InsertNoteActivityPayloadSchema.inferOut;
+export type NoteActivityProperties = z.input<typeof NoteActivitySchema>;
+export type NoteActivity = z.output<typeof NoteActivitySchema>;
 
-export const UpdateNoteActivityPayloadSchema = BaseUpdatePayloadSchema.and({
-  type: type("'note'"),
-  message: type('string').optional(),
+export const NoteActivityPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  ...BaseNoteSchema.shape,
 });
-export type UpdateNoteActivityPayload =
-  typeof UpdateNoteActivityPayloadSchema.inferOut;
+export type NoteActivityPayload = z.output<typeof NoteActivityPayloadSchema>;
+
+export const InsertNoteActivityPayloadSchema = z.object({
+  ...BaseInsertPayloadSchema.shape,
+  type: z.literal('note'),
+  message: z.string(),
+});
+export type InsertNoteActivityPayload = z.output<
+  typeof InsertNoteActivityPayloadSchema
+>;
+
+export const UpdateNoteActivityPayloadSchema = z.object({
+  ...BaseUpdatePayloadSchema.shape,
+  type: z.literal('note'),
+  message: z.string().optional(),
+});
+export type UpdateNoteActivityPayload = z.output<
+  typeof UpdateNoteActivityPayloadSchema
+>;

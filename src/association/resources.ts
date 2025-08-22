@@ -4,10 +4,7 @@ import {
   getItemWithAuthorization,
   updateItemWithAuthorization,
 } from '../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../common/resources/utils.js';
+import { addPaginationToURL } from '../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -95,10 +92,8 @@ export async function listAssociations<O extends AssociationObject>(
     pagination
   );
 
-  return parseEgressSchema(
-    PaginationCollectionSchema(AssociationSchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(AssociationSchema).parse(
+    await getItemWithAuthorization(url, instance.authorizer)
   ) as unknown as Promise<PaginationCollection<Association<O>>>;
 }
 
@@ -108,20 +103,14 @@ export async function upsertAssociation<O extends AssociationObject>(
   toId: string,
   item?: UpsertAssociationInput
 ): Promise<Association<O>> {
-  return parseEgressSchema(
-    AssociationSchema(
-      await updateItemWithAuthorization(
-        new URL(
-          AssociationResources.buildPath(fromId, toId),
-          instance.config.host
-        ),
-        instance.authorizer,
-        item
-          ? parseEgressSchema(
-              UpsertAssociationPayloadSchema.onUndeclaredKey('delete')(item)
-            )
-          : undefined
-      )
+  return AssociationSchema.parse(
+    await updateItemWithAuthorization(
+      new URL(
+        AssociationResources.buildPath(fromId, toId),
+        instance.config.host
+      ),
+      instance.authorizer,
+      item ? UpsertAssociationPayloadSchema.parse(item) : undefined
     )
   ) as unknown as Promise<Association<O>>;
 }
@@ -131,15 +120,13 @@ export async function deleteAssociation<O extends AssociationObject>(
   fromId: string,
   toId: string
 ): Promise<Association<O>> {
-  return parseEgressSchema(
-    AssociationSchema(
-      await deleteItemWithAuthorization(
-        new URL(
-          AssociationResources.buildPath(fromId, toId),
-          instance.config.host
-        ),
-        instance.authorizer
-      )
+  return AssociationSchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(
+        AssociationResources.buildPath(fromId, toId),
+        instance.config.host
+      ),
+      instance.authorizer
     )
   ) as unknown as Promise<Association<O>>;
 }

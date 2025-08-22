@@ -1,16 +1,22 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { BasePayloadSchema, BaseSchema } from '../base.js';
 
-const BaseUnknownSchema = type({
-  type: type("'unknown'"),
-  message: type('string'),
+const BaseUnknownSchema = z.object({
+  type: z.literal('unknown'),
+  message: z.string(),
 });
 
-export const UnknownActivitySchema = BaseSchema.and(BaseUnknownSchema);
-export type UnknownActivityProperties = typeof UnknownActivitySchema.inferIn;
-export type UnknownActivity = typeof UnknownActivitySchema.inferOut;
+export const UnknownActivitySchema = z.object({
+  ...BaseSchema.shape,
+  ...BaseUnknownSchema.shape,
+});
+export type UnknownActivityProperties = z.input<typeof UnknownActivitySchema>;
+export type UnknownActivity = z.output<typeof UnknownActivitySchema>;
 
-export const UnknownActivityPayloadSchema =
-  BasePayloadSchema.and(BaseUnknownSchema);
-export type UnknownActivityPayload =
-  typeof UnknownActivityPayloadSchema.inferOut;
+export const UnknownActivityPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  ...BaseUnknownSchema.shape,
+});
+export type UnknownActivityPayload = z.output<
+  typeof UnknownActivityPayloadSchema
+>;

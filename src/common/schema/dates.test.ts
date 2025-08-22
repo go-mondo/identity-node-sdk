@@ -1,25 +1,26 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { RequiredDatePayloadSchema, RequiredDateSchema } from './dates.js';
 
 describe('Common - Dates', () => {
   describe('Date Schema', () => {
     test('should accept an iso string', async () => {
-      const result = RequiredDateSchema(
-        new Date().toISOString()
-      ) as typeof RequiredDateSchema.inferOut;
+      const result = RequiredDateSchema.safeParse(new Date().toISOString());
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBeInstanceOf(Date);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBeInstanceOf(Date);
+      }
     });
 
     test('should accept a Date object', async () => {
-      const result = RequiredDateSchema(
-        new Date()
-      ) as typeof RequiredDateSchema.inferOut;
+      const result = RequiredDateSchema.safeParse(new Date());
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBeInstanceOf(Date);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBeInstanceOf(Date);
+      }
     });
   });
 
@@ -27,23 +28,25 @@ describe('Common - Dates', () => {
     test('should parse a Date to an ISO string', async () => {
       const iso = new Date().toISOString();
 
-      const result = RequiredDatePayloadSchema(
-        new Date(iso)
-      ) as typeof RequiredDatePayloadSchema.inferOut;
+      const result = RequiredDatePayloadSchema.safeParse(new Date(iso));
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).to.equal(iso);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(iso);
+      }
     });
 
     test('should parse an ISO to an ISO string', async () => {
       const iso = new Date().toISOString();
 
-      const result = RequiredDatePayloadSchema(
-        iso
-      ) as typeof RequiredDatePayloadSchema.inferOut;
+      const result = RequiredDatePayloadSchema.safeParse(iso);
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).to.equal(iso);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(iso);
+      }
     });
   });
 });

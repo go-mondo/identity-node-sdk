@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import {
   type AnyAuthorizationDisplay,
@@ -99,16 +98,17 @@ describe('OAuth Common Schema', () => {
     });
 
     test('CodeChallengeMethodSchema should validate valid methods', () => {
-      const validResult1 = CodeChallengeMethodSchema('S256');
+      const validResult1 = CodeChallengeMethodSchema.parse('S256');
       expect(validResult1).toBe('S256');
 
-      const validResult2 = CodeChallengeMethodSchema('plain');
+      const validResult2 = CodeChallengeMethodSchema.parse('plain');
       expect(validResult2).toBe('plain');
     });
 
     test('CodeChallengeMethodSchema should reject invalid methods', () => {
-      const invalidResult = CodeChallengeMethodSchema('invalid_method');
-      expect(invalidResult).toBeInstanceOf(type.errors);
+      const invalidResult =
+        CodeChallengeMethodSchema.safeParse('invalid_method');
+      expect(invalidResult.success).toBe(false);
     });
 
     test('AnyCodeChallengeMethod type should work with valid values', () => {
@@ -132,14 +132,15 @@ describe('OAuth Common Schema', () => {
       const validDisplays = ['page', 'popup', 'touch', 'wap'];
 
       for (const display of validDisplays) {
-        const result = AuthorizationDisplaySchema(display);
+        const result = AuthorizationDisplaySchema.parse(display);
         expect(result).toBe(display);
       }
     });
 
     test('AuthorizationDisplaySchema should reject invalid display values', () => {
-      const invalidResult = AuthorizationDisplaySchema('invalid_display');
-      expect(invalidResult).toBeInstanceOf(type.errors);
+      const invalidResult =
+        AuthorizationDisplaySchema.safeParse('invalid_display');
+      expect(invalidResult.success).toBe(false);
     });
 
     test('AnyAuthorizationDisplay type should work with valid values', () => {
@@ -168,14 +169,15 @@ describe('OAuth Common Schema', () => {
       const validPrompts = ['none', 'login', 'consent', 'select_account'];
 
       for (const prompt of validPrompts) {
-        const result = AuthorizationPromptSchema(prompt);
+        const result = AuthorizationPromptSchema.parse(prompt);
         expect(result).toBe(prompt);
       }
     });
 
     test('AuthorizationPromptSchema should reject invalid prompt values', () => {
-      const invalidResult = AuthorizationPromptSchema('invalid_prompt');
-      expect(invalidResult).toBeInstanceOf(type.errors);
+      const invalidResult =
+        AuthorizationPromptSchema.safeParse('invalid_prompt');
+      expect(invalidResult.success).toBe(false);
     });
 
     test('AnyAuthorizationPrompt type should work with valid values', () => {
@@ -194,20 +196,20 @@ describe('OAuth Common Schema', () => {
 
   describe('OptionalSchema', () => {
     test('should validate object with optional audience', () => {
-      const validWithAudience = OptionalSchema({
+      const validWithAudience = OptionalSchema.parse({
         audience: 'https://api.example.com',
       });
       expect(validWithAudience).toEqual({
         audience: 'https://api.example.com',
       });
 
-      const validWithoutAudience = OptionalSchema({});
+      const validWithoutAudience = OptionalSchema.parse({});
       expect(validWithoutAudience).toEqual({});
     });
 
     test('should reject non-string audience values', () => {
-      const invalidResult = OptionalSchema({ audience: 123 });
-      expect(invalidResult).toBeInstanceOf(type.errors);
+      const invalidResult = OptionalSchema.safeParse({ audience: 123 });
+      expect(invalidResult.success).toBe(false);
     });
 
     test('should allow additional properties to be filtered', () => {
@@ -217,7 +219,7 @@ describe('OAuth Common Schema', () => {
         extraProperty: 'should be handled based on schema config',
       };
 
-      const result = OptionalSchema(input);
+      const result = OptionalSchema.parse(input);
       // The result depends on schema configuration (onUndeclaredKey behavior)
       expect(result).toHaveProperty('audience', 'https://api.example.com');
     });
@@ -293,7 +295,7 @@ describe('OAuth Common Schema', () => {
       ];
 
       for (const scope of validScopes) {
-        const result = ScopeSchema(scope);
+        const result = ScopeSchema.parse(scope);
         expect(result).toBe(scope);
       }
     });
@@ -302,8 +304,8 @@ describe('OAuth Common Schema', () => {
       const invalidValues = [123, true, null, undefined, {}, []];
 
       for (const value of invalidValues) {
-        const result = ScopeSchema(value);
-        expect(result).toBeInstanceOf(type.errors);
+        const result = ScopeSchema.safeParse(value);
+        expect(result.success).toBe(false);
       }
     });
   });
@@ -346,32 +348,30 @@ describe('OAuth Common Schema', () => {
     test('should handle empty strings appropriately', () => {
       const emptyString = '';
 
-      const scopeResult = ScopeSchema(emptyString);
+      const scopeResult = ScopeSchema.parse(emptyString);
       expect(scopeResult).toBe(emptyString); // Empty string is valid string
 
-      const challengeResult = CodeChallengeMethodSchema(emptyString);
-      expect(challengeResult).toBeInstanceOf(type.errors); // Empty string not valid enum
+      const challengeResult = CodeChallengeMethodSchema.safeParse(emptyString);
+      expect(challengeResult.success).toBe(false); // Empty string not valid enum
     });
 
     test('should handle whitespace and special characters', () => {
       const spacedScope = '  openid profile  ';
-      const result = ScopeSchema(spacedScope);
+      const result = ScopeSchema.parse(spacedScope);
       expect(result).toBe(spacedScope); // Preserves whitespace
 
       const specialScope = 'custom:read+write';
-      const specialResult = ScopeSchema(specialScope);
+      const specialResult = ScopeSchema.parse(specialScope);
       expect(specialResult).toBe(specialScope);
     });
 
     test('should validate complex optional schema scenarios', () => {
-      const complexValid = OptionalSchema({
+      const complexValid = OptionalSchema.parse({
         audience: 'urn:example:audience',
       });
-      expect((complexValid as typeof OptionalSchema.inferOut).audience).toBe(
-        'urn:example:audience'
-      );
+      expect(complexValid.audience).toBe('urn:example:audience');
 
-      const emptyValid = OptionalSchema({});
+      const emptyValid = OptionalSchema.parse({});
       expect(emptyValid).toEqual({});
     });
   });

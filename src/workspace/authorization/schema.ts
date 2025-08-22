@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
 import { Algorithm, AlgorithmSchema } from '../../common/schema/jwt.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
@@ -7,22 +7,26 @@ export const DEFAULT_SESSION_DURATION = 60 * 60 * 4; // 4 hour
 export const DEFAULT_REFRESH_TOKEN_DURATION = 60 * 60 * 24 * 14; // 14 days
 export const DEFAULT_ACCESS_TOKEN_DURATION = 60 * 60 * 2; // 2 hours
 
-const BaseAttributes = type({
-  sessionDuration: type('number').default(DEFAULT_SESSION_DURATION),
-  refreshTokenDuration: type('number').default(DEFAULT_REFRESH_TOKEN_DURATION),
-  accessTokenDuration: type('number').default(DEFAULT_ACCESS_TOKEN_DURATION),
+const BaseAttributes = z.object({
+  sessionDuration: z.number().default(DEFAULT_SESSION_DURATION),
+  refreshTokenDuration: z.number().default(DEFAULT_REFRESH_TOKEN_DURATION),
+  accessTokenDuration: z.number().default(DEFAULT_ACCESS_TOKEN_DURATION),
   accessTokenSignatureAlgorithm: AlgorithmSchema.default(Algorithm.DEFAULT),
 });
 
-export const AuthorizationPayloadSchema = BaseAttributes.and({
-  'updatedAt?': OptionalDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type AuthorizationPayload = typeof AuthorizationPayloadSchema.inferOut;
+export const AuthorizationPayloadSchema = z.object({
+  ...BaseAttributes.shape,
+  updatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;
 
-export const UpsertAuthorizationPayloadSchema = BaseAttributes.and(
-  MetadataPayloadPropertySchema
-);
-export type UpsertAuthorizationPayload =
-  typeof UpsertAuthorizationPayloadSchema.inferOut;
+export const UpsertAuthorizationPayloadSchema = z.object({
+  ...BaseAttributes.shape,
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UpsertAuthorizationPayload = z.output<
+  typeof UpsertAuthorizationPayloadSchema
+>;

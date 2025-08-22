@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import {
   SettingsPayloadSchema,
@@ -15,9 +14,9 @@ describe('Workspace Settings - Schema', () => {
         metadata: { version: '1.0', theme: 'dark' },
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept minimal settings payload', () => {
@@ -25,9 +24,9 @@ describe('Workspace Settings - Schema', () => {
         metadata: {},
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept payload with some optional dates', () => {
@@ -36,8 +35,8 @@ describe('Workspace Settings - Schema', () => {
         metadata: { lastModified: 'now' },
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept payload with only metadata', () => {
@@ -47,8 +46,8 @@ describe('Workspace Settings - Schema', () => {
         },
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid date format', () => {
@@ -57,8 +56,8 @@ describe('Workspace Settings - Schema', () => {
         metadata: {},
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -70,9 +69,9 @@ describe('Workspace Settings - Schema', () => {
         },
       };
 
-      const result = UpsertSettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpsertSettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept empty metadata', () => {
@@ -80,9 +79,9 @@ describe('Workspace Settings - Schema', () => {
         metadata: {},
       };
 
-      const result = UpsertSettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpsertSettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
   });
 });

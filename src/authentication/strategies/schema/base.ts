@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -29,25 +29,25 @@ export type AnyStrategyStatus =
   (typeof StrategyStatus)[keyof typeof StrategyStatus];
 
 export const StrategyIdSchema = KSUIDSchema(Model.Strategy.UIDPrefix);
-export type StrategyId = typeof StrategyIdSchema.inferOut;
+export type StrategyId = z.output<typeof StrategyIdSchema>;
 
-export const StrategyIdPropertySchema = type({
+export const StrategyIdPropertySchema = z.object({
   id: StrategyIdSchema,
 });
-export type StrategyIdProperty = typeof StrategyIdPropertySchema.inferOut;
+export type StrategyIdProperty = z.output<typeof StrategyIdPropertySchema>;
 
-export const StrategyStatusSchema = type.enumerated(
+export const StrategyStatusSchema = z.enum([
   StrategyStatus.ENABLED,
-  StrategyStatus.DISABLED
-);
-export const StrategyTypeSchema = type.enumerated(
+  StrategyStatus.DISABLED,
+] as const);
+export const StrategyTypeSchema = z.enum([
   StrategyType.EMAIL,
   StrategyType.PASSWORD,
-  StrategyType.TOTP
-);
-export const StrategyLabelSchema = type('string');
+  StrategyType.TOTP,
+] as const);
+export const StrategyLabelSchema = z.string();
 
-export const BaseStrategySchema = type({
+export const BaseStrategySchema = z.object({
   id: StrategyIdSchema,
   status: StrategyStatusSchema.default(StrategyStatus.ENABLED),
   label: StrategyLabelSchema,
@@ -55,24 +55,28 @@ export const BaseStrategySchema = type({
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
-}).and(MetadataMapPropertySchema);
+  ...MetadataMapPropertySchema.shape,
+});
 
-export const BaseStrategyPayloadSchema = type({
+export const BaseStrategyPayloadSchema = z.object({
   status: StrategyStatusSchema,
   label: StrategyLabelSchema,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
 
-export const BaseInsertStrategyPayloadSchema = type({
+export const BaseInsertStrategyPayloadSchema = z.object({
   id: StrategyIdSchema.optional(),
   label: StrategyLabelSchema,
   status: StrategyStatusSchema.default(StrategyStatus.ENABLED),
-}).and(MetadataPayloadPropertySchema);
+  ...MetadataPayloadPropertySchema.shape,
+});
 
-export const BaseUpdateStrategyPayloadSchema = type({
+export const BaseUpdateStrategyPayloadSchema = z.object({
   label: StrategyLabelSchema.optional(),
   status: StrategyStatusSchema.optional(),
-}).and(MetadataPayloadPropertySchema);
+  ...MetadataPayloadPropertySchema.shape,
+});

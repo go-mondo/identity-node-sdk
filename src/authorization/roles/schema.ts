@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { AppIdAssociationsSchema } from '../../app/schema.js';
 import {
   OptionalDatePayloadSchema,
@@ -26,82 +26,86 @@ export const RoleStatus = {
 
 export type AnyRoleStatus = (typeof RoleStatus)[keyof typeof RoleStatus];
 
-export const RoleIdPropertySchema = type({
+export const RoleIdPropertySchema = z.object({
   id: RoleIdSchema,
 });
-export type RoleIdProperty = typeof RoleIdPropertySchema.inferOut;
+export type RoleIdProperty = z.output<typeof RoleIdPropertySchema>;
 
-const StatusSchema = type.enumerated(RoleStatus.ENABLED, RoleStatus.DISABLED);
+const StatusSchema = z.enum([RoleStatus.ENABLED, RoleStatus.DISABLED] as const);
 
-export const RoleAssociationsSchema = type({
+export const RoleAssociationsSchema = z.object({
   apps: AppIdAssociationsSchema.optional(),
   permissions: PermissionIdAssociationsSchema.optional(),
   users: UserIdAssociationsSchema.optional(),
 });
-export type RoleAssociations = typeof RoleAssociationsSchema.inferOut;
+export type RoleAssociations = z.output<typeof RoleAssociationsSchema>;
 
-const BaseSchema = RoleIdPropertySchema.and({
-  name: type('string'),
+const BaseSchema = z.object({
+  ...RoleIdPropertySchema.shape,
+  name: z.string(),
   status: StatusSchema,
-  description: type('string').optional(),
+  description: z.string().optional(),
   apps: AggregateSchema.optional(),
   users: AggregateSchema.optional(),
   permissions: AggregateSchema.optional(),
 });
 
-export const RoleSchema = BaseSchema.and({
+export const RoleSchema = z.object({
+  ...BaseSchema.shape,
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  'deletedAt?': OptionalDateSchema,
-  'deactivatedAt?': OptionalDateSchema,
-})
-  .and(RoleIdPropertySchema)
-  .and(MetadataMapPropertySchema);
-export type RoleProperties = typeof RoleSchema.inferIn;
-export type Role = typeof RoleSchema.inferOut;
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+  ...MetadataMapPropertySchema.shape,
+});
+export type RoleProperties = z.input<typeof RoleSchema>;
+export type Role = z.output<typeof RoleSchema>;
 
-export const RolePayloadSchema = BaseSchema.and({
+export const RolePayloadSchema = z.object({
+  ...BaseSchema.shape,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-})
-  .and(RoleIdPropertySchema)
-  .and(MetadataPayloadPropertySchema);
-export type RolePayload = typeof RolePayloadSchema.inferOut;
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type RolePayload = z.output<typeof RolePayloadSchema>;
 
 /**
  * Insert
  */
-export const InsertRolePayloadSchema = type({
+export const InsertRolePayloadSchema = z.object({
   id: RoleIdSchema.default(() => generateRoleId()),
-  name: type('string'),
+  name: z.string(),
   status: StatusSchema.default(RoleStatus.ENABLED),
-  description: type('string').optional(),
-})
-  .and(RoleAssociationsSchema)
-  .and(UpsertMetadataPropertyPayloadSchema);
-export type InsertRoleInput = typeof InsertRolePayloadSchema.inferIn;
-export type InsertRolePayload = typeof InsertRolePayloadSchema.inferOut;
+  description: z.string().optional(),
+  ...RoleAssociationsSchema.shape,
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type InsertRoleInput = z.input<typeof InsertRolePayloadSchema>;
+export type InsertRolePayload = z.output<typeof InsertRolePayloadSchema>;
 
 /**
  * Update
  */
-export const UpdateRolePayloadSchema = type({
-  name: type('string').optional(),
+export const UpdateRolePayloadSchema = z.object({
+  name: z.string().optional(),
   status: StatusSchema.optional(),
-  description: type('string').optional(),
-}).and(UpsertMetadataPropertyPayloadSchema);
-export type UpdateRoleInput = typeof UpdateRolePayloadSchema.inferIn;
-export type UpdateRolePayload = typeof UpdateRolePayloadSchema.inferOut;
+  description: z.string().optional(),
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type UpdateRoleInput = z.input<typeof UpdateRolePayloadSchema>;
+export type UpdateRolePayload = z.output<typeof UpdateRolePayloadSchema>;
 
 /**
  * Association
  */
-export const RoleAssociationReferenceSchema = RoleIdPropertySchema.and({
-  name: type('string'),
+export const RoleAssociationReferenceSchema = z.object({
+  ...RoleIdPropertySchema.shape,
+  name: z.string(),
   status: StatusSchema.default('disabled'),
-  model: "'Role'",
+  model: z.literal('Role'),
 });
-export type RoleAssociationReference =
-  typeof RoleAssociationReferenceSchema.inferOut;
+export type RoleAssociationReference = z.output<
+  typeof RoleAssociationReferenceSchema
+>;

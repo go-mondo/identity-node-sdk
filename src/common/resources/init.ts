@@ -1,19 +1,21 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 
-const BaseConfigSchema = type({
-  host: type('string.url.parse').default(
-    'https://manage-api.mondoidentity.com'
-  ),
+const BaseConfigSchema = z.object({
+  host: z
+    .url()
+    .default('https://manage-api.mondoidentity.com')
+    .pipe(z.transform((v) => new URL(v))),
 });
 
-const AccessTokenConfigSchema = BaseConfigSchema.and({
-  accessToken: type('string').moreThanLength(0),
+const AccessTokenConfigSchema = z.object({
+  ...BaseConfigSchema.shape,
+  accessToken: z.string().min(1),
 });
 
 const ConfigSchema = AccessTokenConfigSchema;
 
-export type ConfigProps = typeof ConfigSchema.inferIn;
-export type Config = typeof ConfigSchema.inferOut;
+export type ConfigProps = z.input<typeof ConfigSchema>;
+export type Config = z.output<typeof ConfigSchema>;
 
 export class MondoIdentity {
   readonly config: Config;
@@ -61,11 +63,12 @@ export class MondoIdentity {
 }
 
 function initConfig(config: ConfigProps): Config {
-  const out = ConfigSchema(config);
-
-  if (out instanceof type.errors) {
-    throw new Error(`Invalid configuration: ${out.summary}`);
+  try {
+    return ConfigSchema.parse(config);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error(`Invalid configuration: ${error.message}`);
+    }
+    throw error;
   }
-
-  return out;
 }

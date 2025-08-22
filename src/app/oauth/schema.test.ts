@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateOAuthId } from '../utils.js';
 import {
@@ -14,38 +13,38 @@ describe('App OAuth - Schema', () => {
   describe('OAuthIdSchema', () => {
     test('should accept valid OAuth ID', () => {
       const id = generateOAuthId();
-      const result = OAuthIdSchema(id);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthIdSchema.parse(id);
+      // Parse succeeds for valid data
       expect(result).toBe(id);
     });
 
     test('should reject invalid OAuth ID format', () => {
-      expect(OAuthIdSchema('invalid_id')).toBeInstanceOf(type.errors);
-      expect(OAuthIdSchema('wrong_prefix_123')).toBeInstanceOf(type.errors);
+      expect(OAuthIdSchema.safeParse('invalid_id').success).toBe(false);
+      expect(OAuthIdSchema.safeParse('wrong_prefix_123').success).toBe(false);
     });
 
     test('should reject non-string values', () => {
-      expect(OAuthIdSchema(123)).toBeInstanceOf(type.errors);
-      expect(OAuthIdSchema(null)).toBeInstanceOf(type.errors);
+      expect(OAuthIdSchema.safeParse(123).success).toBe(false);
+      expect(OAuthIdSchema.safeParse(null).success).toBe(false);
     });
   });
 
   describe('OAuthIdPropertySchema', () => {
     test('should accept valid id property', () => {
       const payload = { id: generateOAuthId() };
-      const result = OAuthIdPropertySchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthIdPropertySchema.parse(payload);
+      // Parse succeeds for valid data
       expect(result).toEqual(payload);
     });
 
     test('should reject missing id', () => {
-      const result = OAuthIdPropertySchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OAuthIdPropertySchema.safeParse({});
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid id format', () => {
-      const result = OAuthIdPropertySchema({ id: 'invalid_id' });
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OAuthIdPropertySchema.safeParse({ id: 'invalid_id' });
+      expect(result.success).toBe(false);
     });
   });
 
@@ -59,8 +58,8 @@ describe('App OAuth - Schema', () => {
         metadata: { key: 'value' },
       };
 
-      const result = OAuthSchema(oauth);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthSchema.parse(oauth);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal OAuth object', () => {
@@ -71,8 +70,8 @@ describe('App OAuth - Schema', () => {
         metadata: {},
       };
 
-      const result = OAuthSchema(oauth);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthSchema.parse(oauth);
+      // Parse succeeds for valid data
     });
 
     test('should accept OAuth with optional dates', () => {
@@ -86,8 +85,8 @@ describe('App OAuth - Schema', () => {
         metadata: {},
       };
 
-      const result = OAuthSchema(oauth);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthSchema.parse(oauth);
+      // Parse succeeds for valid data
     });
 
     test('should reject missing required fields', () => {
@@ -96,8 +95,8 @@ describe('App OAuth - Schema', () => {
         // missing clientId, clientSecret, metadata
       };
 
-      const result = OAuthSchema(oauth);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OAuthSchema.safeParse(oauth);
+      expect(result.success).toBe(false);
     });
 
     test('should reject empty client credentials', () => {
@@ -108,8 +107,8 @@ describe('App OAuth - Schema', () => {
         metadata: {},
       };
 
-      const result = OAuthSchema(oauth);
-      expect(result).not.toBeInstanceOf(type.errors); // Empty strings are valid strings
+      const result = OAuthSchema.parse(oauth);
+      // Parse succeeds for valid data // Empty strings are valid strings
     });
   });
 
@@ -125,8 +124,8 @@ describe('App OAuth - Schema', () => {
         metadata: { version: '1.0' },
       };
 
-      const result = OAuthPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
       expect(result).toEqual(payload);
     });
 
@@ -138,8 +137,8 @@ describe('App OAuth - Schema', () => {
         metadata: {},
       };
 
-      const result = OAuthPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
       expect(result).toEqual(payload);
     });
 
@@ -152,8 +151,8 @@ describe('App OAuth - Schema', () => {
         metadata: {},
       };
 
-      const result = OAuthPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OAuthPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject missing required fields', () => {
@@ -162,8 +161,8 @@ describe('App OAuth - Schema', () => {
         // missing clientId, clientSecret, metadata
       };
 
-      const result = OAuthPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OAuthPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -174,18 +173,18 @@ describe('App OAuth - Schema', () => {
         metadata: { source: 'manual' },
       };
 
-      const result = InsertOAuthPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertOAuthPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
       expect(result).toEqual(payload);
     });
 
     test('should accept minimal insert payload', () => {
       const payload = {};
 
-      const result = InsertOAuthPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertOAuthPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
       // Should generate default ID
-      expect((result as InsertOAuthPayload).id).toMatch(/^aoa_/);
+      expect(result.id).toMatch(/^aoa_/);
     });
 
     test('should generate default ID when not provided', () => {
@@ -193,9 +192,9 @@ describe('App OAuth - Schema', () => {
         metadata: { auto: true },
       };
 
-      const result = InsertOAuthPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as InsertOAuthPayload).id).toMatch(/^aoa_/);
+      const result = InsertOAuthPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
+      expect(result.id).toMatch(/^aoa_/);
     });
 
     test('should accept payload with only metadata', () => {
@@ -203,8 +202,8 @@ describe('App OAuth - Schema', () => {
         metadata: { test: 'value' },
       };
 
-      const result = InsertOAuthPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertOAuthPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
     });
   });
 });

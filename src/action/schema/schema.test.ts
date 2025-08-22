@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { ActionPayloadSchema, ActionOperation } from './schema.js';
 import { generateActionId } from './utils.js';
@@ -19,8 +18,8 @@ describe('Action Schema - Main', () => {
         metadata: { source: 'user-initiated' },
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept sign-up-verification action payload', () => {
@@ -35,8 +34,8 @@ describe('Action Schema - Main', () => {
         metadata: { method: 'email' },
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept sign-up action payload', () => {
@@ -53,8 +52,8 @@ describe('Action Schema - Main', () => {
         metadata: { registration_source: 'web' },
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept user-attribute-verification action payload', () => {
@@ -69,8 +68,8 @@ describe('Action Schema - Main', () => {
         metadata: { verification_type: 'change_email' },
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid action operation', () => {
@@ -80,8 +79,8 @@ describe('Action Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload missing required fields for set-password', () => {
@@ -92,8 +91,8 @@ describe('Action Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload missing required fields for sign-up-verification', () => {
@@ -104,8 +103,8 @@ describe('Action Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload missing required fields for sign-up', () => {
@@ -116,8 +115,8 @@ describe('Action Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload missing required fields for user-attribute-verification', () => {
@@ -129,8 +128,8 @@ describe('Action Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should accept complex payloads with all optional fields', () => {
@@ -153,8 +152,8 @@ describe('Action Schema - Main', () => {
         },
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept user-attribute-verification with phone attribute', () => {
@@ -169,8 +168,8 @@ describe('Action Schema - Main', () => {
         metadata: { verification_method: 'sms' },
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject malformed user data in sign-up action', () => {
@@ -184,8 +183,8 @@ describe('Action Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid attribute type in user-attribute-verification', () => {
@@ -200,8 +199,8 @@ describe('Action Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 

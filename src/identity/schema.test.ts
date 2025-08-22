@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { IdentityIdentifier, IdentityIdentifierSchema } from './schema.js';
 
@@ -12,36 +11,44 @@ describe('Identity - Schema', () => {
 
   describe('IdentityIdentifierSchema', () => {
     test('should accept valid email identifier', () => {
-      const result = IdentityIdentifierSchema('email');
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe('email');
+      const result = IdentityIdentifierSchema.safeParse('email');
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe('email');
+      }
     });
 
     test('should accept valid phone number identifier', () => {
-      const result = IdentityIdentifierSchema('phoneNumber');
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe('phoneNumber');
+      const result = IdentityIdentifierSchema.safeParse('phoneNumber');
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe('phoneNumber');
+      }
     });
 
     test('should reject invalid identifiers', () => {
-      expect(IdentityIdentifierSchema('username')).toBeInstanceOf(type.errors);
-      expect(IdentityIdentifierSchema('invalid')).toBeInstanceOf(type.errors);
-      expect(IdentityIdentifierSchema('')).toBeInstanceOf(type.errors);
+      expect(IdentityIdentifierSchema.safeParse('invalid').success).toBe(false);
+      expect(IdentityIdentifierSchema.safeParse('username').success).toBe(
+        false
+      );
+      expect(IdentityIdentifierSchema.safeParse('sms').success).toBe(false);
     });
 
     test('should reject non-string values', () => {
-      expect(IdentityIdentifierSchema(123)).toBeInstanceOf(type.errors);
-      expect(IdentityIdentifierSchema(null)).toBeInstanceOf(type.errors);
-      expect(IdentityIdentifierSchema(undefined)).toBeInstanceOf(type.errors);
+      expect(IdentityIdentifierSchema.safeParse(123).success).toBe(false);
+      expect(IdentityIdentifierSchema.safeParse(null).success).toBe(false);
+      expect(IdentityIdentifierSchema.safeParse(undefined).success).toBe(false);
     });
 
     test('should be case sensitive', () => {
-      expect(IdentityIdentifierSchema('Email')).toBeInstanceOf(type.errors);
-      expect(IdentityIdentifierSchema('PHONE_NUMBER')).toBeInstanceOf(
-        type.errors
+      expect(IdentityIdentifierSchema.safeParse('EMAIL').success).toBe(false);
+      expect(IdentityIdentifierSchema.safeParse('PHONE_NUMBER').success).toBe(
+        false
       );
-      expect(IdentityIdentifierSchema('phonenumber')).toBeInstanceOf(
-        type.errors
+      expect(IdentityIdentifierSchema.safeParse('phonenumber').success).toBe(
+        false
       );
     });
   });

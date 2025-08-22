@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../../../customer/schema.js';
 import { generateActionId } from '../utils.js';
@@ -21,9 +20,9 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         metadata: { key: 'value' },
       };
 
-      const result = SignUpVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept phoneNumber identifier', () => {
@@ -38,9 +37,9 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         metadata: {},
       };
 
-      const result = SignUpVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept payload with optional dates', () => {
@@ -57,8 +56,8 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         metadata: {},
       };
 
-      const result = SignUpVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid operation', () => {
@@ -73,8 +72,8 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         metadata: {},
       };
 
-      const result = SignUpVerificationActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid identifier', () => {
@@ -89,8 +88,8 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         metadata: {},
       };
 
-      const result = SignUpVerificationActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -100,8 +99,8 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         // missing user, identifier, etc.
       };
 
-      const result = SignUpVerificationActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should delete undeclared keys', () => {
@@ -117,9 +116,9 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         extraField: 'should be removed',
       };
 
-      const result = SignUpVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).not.toHaveProperty('extraField');
+      const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).not.toHaveProperty('extraField');
     });
   });
 
@@ -129,14 +128,14 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         code: 'verification_code_123',
       };
 
-      const result = SignUpVerificationActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result = SignUpVerificationActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should reject missing code', () => {
-      const result = SignUpVerificationActionRequestSchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpVerificationActionRequestSchema.safeParse({});
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-string code', () => {
@@ -144,8 +143,8 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         code: 123456,
       };
 
-      const result = SignUpVerificationActionRequestSchema(request);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpVerificationActionRequestSchema.safeParse(request);
+      expect(result.success).toBe(false);
     });
 
     test('should delete undeclared keys', () => {
@@ -154,10 +153,10 @@ describe('Action Schema Operations - Sign Up Verification', () => {
         extraField: 'should be removed',
       };
 
-      const result = SignUpVerificationActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).not.toHaveProperty('extraField');
-      expect(result).toEqual({ code: 'verification_code_123' });
+      const result = SignUpVerificationActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).not.toHaveProperty('extraField');
+      expect(result.data).toEqual({ code: 'verification_code_123' });
     });
   });
 });

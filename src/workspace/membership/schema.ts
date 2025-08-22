@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
@@ -9,19 +9,19 @@ export const FeatureFlag = {
 } as const;
 export type AnyFeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag];
 
-export const FeaturePayloadSchema = type({
+export const FeaturePayloadSchema = z.object({
   expiresAt: RequiredDatePayloadSchema,
 });
-export type FeaturePayload = typeof FeaturePayloadSchema.inferOut;
+export type FeaturePayload = z.output<typeof FeaturePayloadSchema>;
 
-export const FeaturesPayloadSchema = type({
+export const FeaturesPayloadSchema = z.object({
   [FeatureFlag.REMOVE_BRANDING]: FeaturePayloadSchema.optional(),
 });
-export type FeaturesPayload = typeof FeaturesPayloadSchema.inferOut;
+export type FeaturesPayload = z.output<typeof FeaturesPayloadSchema>;
 
-export const MembershipPayloadSchema = type({
+export const MembershipPayloadSchema = z.object({
   features: FeaturesPayloadSchema.optional(),
-  'startAt?': OptionalDatePayloadSchema,
-  'endAt?': OptionalDatePayloadSchema,
+  startAt: OptionalDatePayloadSchema.optional(),
+  endAt: OptionalDatePayloadSchema.optional(),
 });
-export type MembershipPayload = typeof MembershipPayloadSchema.inferOut;
+export type MembershipPayload = z.output<typeof MembershipPayloadSchema>;

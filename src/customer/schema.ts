@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import KSUID from 'ksuid';
 import { KSUIDSchema } from '../common/schema/id.js';
 
@@ -20,15 +20,17 @@ export function generateOrganizationId() {
 }
 
 export const UserIdSchema = KSUIDSchema(Model.User.UIDPrefix);
-export type UserId = typeof UserIdSchema.inferOut;
+export type UserId = z.output<typeof UserIdSchema>;
 
-export const UserIdAssociationsSchema = type('undefined').or(
-  UserIdSchema.array()
-);
+export const UserIdAssociationsSchema = z.union([
+  z.undefined(),
+  z.array(UserIdSchema),
+]);
 
 export const OrganizationIdSchema = KSUIDSchema(Model.Organization.UIDPrefix);
-export type OrganizationId = typeof OrganizationIdSchema.inferOut;
+export type OrganizationId = z.output<typeof OrganizationIdSchema>;
 
-export const OrganizationIdAssociationsSchema = type('undefined').or(
-  OrganizationIdSchema.array()
-);
+export const OrganizationIdAssociationsSchema = z.union([
+  z.undefined(),
+  z.array(OrganizationIdSchema),
+]);

@@ -1,11 +1,10 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
-import {
-  OperationType,
-  OperationActivitySchema,
-  OperationActivityPayloadSchema,
-} from './operation.js';
 import { generateActivityId } from '../utils.js';
+import {
+  OperationActivityPayloadSchema,
+  OperationActivitySchema,
+  OperationType,
+} from './operation.js';
 
 describe('Activity Schema - Operation', () => {
   describe('OperationType', () => {
@@ -36,8 +35,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { entity: 'user', action: 'create' },
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation activity with update', () => {
@@ -58,8 +57,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { fields_updated: ['name', 'email'] },
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation activity with delete', () => {
@@ -80,8 +79,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { cascade: true, reason: 'retention_policy' },
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation activity with automation', () => {
@@ -102,8 +101,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { backup_size: '2.5GB', duration: '45min' },
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation activity with optional fields', () => {
@@ -126,8 +125,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { template: 'standard', auto_provision: true },
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should reject operation activity with wrong type', () => {
@@ -148,8 +147,8 @@ describe('Activity Schema - Operation', () => {
         metadata: {},
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject operation activity with invalid operation', () => {
@@ -170,8 +169,8 @@ describe('Activity Schema - Operation', () => {
         metadata: {},
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject operation activity missing required fields', () => {
@@ -191,8 +190,8 @@ describe('Activity Schema - Operation', () => {
         metadata: {},
       };
 
-      const result = OperationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OperationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -215,9 +214,9 @@ describe('Activity Schema - Operation', () => {
         metadata: { entity_type: 'project', owner: 'team-alpha' },
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept operation payload with update', () => {
@@ -238,8 +237,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { version: '2.1.0', changes: 3 },
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation payload with delete', () => {
@@ -260,8 +259,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { expired_at: '2024-01-01T00:00:00Z' },
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation payload with automation', () => {
@@ -282,8 +281,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { records_synced: 1500, status: 'success' },
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept payload with optional date fields', () => {
@@ -306,8 +305,8 @@ describe('Activity Schema - Operation', () => {
         metadata: { temporary: true, ttl: 3600 },
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject payload with invalid date format', () => {
@@ -328,8 +327,8 @@ describe('Activity Schema - Operation', () => {
         metadata: {},
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with wrong type', () => {
@@ -350,8 +349,8 @@ describe('Activity Schema - Operation', () => {
         metadata: {},
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with invalid operation', () => {
@@ -372,8 +371,8 @@ describe('Activity Schema - Operation', () => {
         metadata: {},
       };
 
-      const result = OperationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = OperationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

@@ -3,7 +3,6 @@ import {
   getItemWithAuthorization,
   insertItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import { parseEgressSchema } from '../../common/resources/utils.js';
 import { PATH } from '../resources.js';
 import {
   type Settings,
@@ -31,12 +30,10 @@ export class SettingsResources {
 }
 
 export async function getSettings(instance: MondoIdentity): Promise<Settings> {
-  return parseEgressSchema(
-    SettingsSchema(
-      await getItemWithAuthorization(
-        new URL(SettingsResources.buildPath(), instance.config.host),
-        instance.authorizer
-      )
+  return SettingsSchema.parse(
+    await getItemWithAuthorization(
+      new URL(SettingsResources.buildPath(), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -45,15 +42,11 @@ export async function upsertSettings(
   instance: MondoIdentity,
   item: UpsertSettingsInput
 ): Promise<Settings> {
-  return parseEgressSchema(
-    SettingsSchema(
-      await insertItemWithAuthorization(
-        new URL(SettingsResources.buildPath(), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpsertSettingsPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return SettingsSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(SettingsResources.buildPath(), instance.config.host),
+      instance.authorizer,
+      UpsertSettingsPayloadSchema.parse(item)
     )
   );
 }

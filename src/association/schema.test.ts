@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../app/utils.js';
 import {
@@ -27,20 +26,23 @@ describe('Association - Schema', () => {
   describe('AssociationIdReferenceSchema', () => {
     test('should accept valid id reference', () => {
       const reference = { id: 'any_string_id' };
-      const result = AssociationIdReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(reference);
+      const result = AssociationIdReferenceSchema.safeParse(reference);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(reference);
+      }
     });
 
     test('should reject missing id', () => {
-      const result = AssociationIdReferenceSchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AssociationIdReferenceSchema.safeParse({});
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-string id', () => {
       const reference = { id: 123 };
-      const result = AssociationIdReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AssociationIdReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -53,22 +55,28 @@ describe('Association - Schema', () => {
         metadata: { key: 'value' },
       };
 
-      const result = AssociationAttributesReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(reference);
+      const result = AssociationAttributesReferenceSchema.safeParse(reference);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(reference);
+      }
     });
 
     test('should accept minimal reference with just id', () => {
       const reference = { id: 'minimal_id' };
-      const result = AssociationAttributesReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(reference);
+      const result = AssociationAttributesReferenceSchema.safeParse(reference);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(reference);
+      }
     });
 
     test('should reject missing id', () => {
       const reference = { name: 'Test', status: 'active' };
-      const result = AssociationAttributesReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AssociationAttributesReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -84,8 +92,8 @@ describe('Association - Schema', () => {
         model: 'App' as const,
       };
 
-      const result = AssociationObjectSchema(appAssociation);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AssociationObjectSchema.safeParse(appAssociation);
+      // Parse succeeds for valid data
     });
 
     test('should accept Role association reference', () => {
@@ -96,8 +104,8 @@ describe('Association - Schema', () => {
         model: 'Role' as const,
       };
 
-      const result = AssociationObjectSchema(roleAssociation);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AssociationObjectSchema.safeParse(roleAssociation);
+      // Parse succeeds for valid data
     });
 
     test('should accept Permission association reference', () => {
@@ -108,8 +116,8 @@ describe('Association - Schema', () => {
         model: 'Permission' as const,
       };
 
-      const result = AssociationObjectSchema(permissionAssociation);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AssociationObjectSchema.safeParse(permissionAssociation);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid association object', () => {
@@ -119,8 +127,8 @@ describe('Association - Schema', () => {
         model: 'InvalidModel',
       };
 
-      const result = AssociationObjectSchema(invalidAssociation);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AssociationObjectSchema.safeParse(invalidAssociation);
+      expect(result.success).toBe(false);
     });
 
     test('should reject association missing required fields', () => {
@@ -129,8 +137,8 @@ describe('Association - Schema', () => {
         // missing required fields for any valid association type
       };
 
-      const result = AssociationObjectSchema(incompleteAssociation);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AssociationObjectSchema.safeParse(incompleteAssociation);
+      expect(result.success).toBe(false);
     });
 
     test('should reject association with mismatched model and data', () => {
@@ -141,8 +149,8 @@ describe('Association - Schema', () => {
         model: 'User' as const, // but missing user fields
       };
 
-      const result = AssociationObjectSchema(mismatchedAssociation);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AssociationObjectSchema.safeParse(mismatchedAssociation);
+      expect(result.success).toBe(false);
     });
   });
 });

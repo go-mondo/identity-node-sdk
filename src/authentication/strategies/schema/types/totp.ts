@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   BaseInsertStrategyPayloadSchema,
   BaseStrategyPayloadSchema,
@@ -9,8 +9,8 @@ import {
 export const DEFAULT_DIGITS = 6;
 export const DEFAULT_PERIOD = 30;
 
-const TypeSchema = type({
-  type: "'totp'",
+const TypeSchema = z.object({
+  type: z.literal('totp'),
 });
 
 export const TOTPAlgorithm = {
@@ -29,11 +29,24 @@ export const TOTPAlgorithm = {
 export type AnyTOTPAlgorithm =
   (typeof TOTPAlgorithm)[keyof typeof TOTPAlgorithm];
 
-export const TOTPStrategySettingsSchema = type({
-  digits: type.enumerated(6, 7, 8).default(DEFAULT_DIGITS),
-  period: type.enumerated(15, 30, 60).default(DEFAULT_PERIOD),
-  algorithm: type
-    .enumerated(
+const allowedDigits = new Set([6, 7, 8]);
+const allowedPeriods = new Set([15, 30, 60]);
+
+export const TOTPStrategySettingsSchema = z.object({
+  digits: z
+    .number()
+    .default(DEFAULT_DIGITS)
+    .refine((val) => allowedDigits.has(val), {
+      message: 'Digit must be 6, 7, or 8',
+    }),
+  period: z
+    .number()
+    .default(DEFAULT_PERIOD)
+    .refine((val) => allowedPeriods.has(val), {
+      message: 'Period must be 15, 30, or 60',
+    }),
+  algorithm: z
+    .enum([
       TOTPAlgorithm.SHA1,
       TOTPAlgorithm.SHA224,
       TOTPAlgorithm.SHA256,
@@ -42,62 +55,63 @@ export const TOTPStrategySettingsSchema = type({
       TOTPAlgorithm['SHA3-224'],
       TOTPAlgorithm['SHA3-256'],
       TOTPAlgorithm['SHA3-384'],
-      TOTPAlgorithm['SHA3-512']
-    )
+      TOTPAlgorithm['SHA3-512'],
+    ] as const)
     .default(TOTPAlgorithm.DEFAULT),
 });
-export type TOTPStrategySettings = typeof TOTPStrategySettingsSchema.inferOut;
+export type TOTPStrategySettings = z.output<typeof TOTPStrategySettingsSchema>;
 
-export const TOTPStrategySettingsPropertySchema = type({
+export const TOTPStrategySettingsPropertySchema = z.object({
   settings: TOTPStrategySettingsSchema,
 });
-export type TOTPStrategySettingsProperty =
-  typeof TOTPStrategySettingsPropertySchema.inferOut;
+export type TOTPStrategySettingsProperty = z.output<
+  typeof TOTPStrategySettingsPropertySchema
+>;
 
-export const TOTPStrategySchema = BaseStrategySchema.and(TypeSchema).and({
+export const TOTPStrategySchema = z.object({
+  ...BaseStrategySchema.shape,
+  ...TypeSchema.shape,
   settings: TOTPStrategySettingsSchema,
 });
-export type TOTPStrategyProperties = typeof TOTPStrategySchema.inferIn;
-export type TOTPStrategy = typeof TOTPStrategySchema.inferOut;
+export type TOTPStrategyProperties = z.input<typeof TOTPStrategySchema>;
+export type TOTPStrategy = z.output<typeof TOTPStrategySchema>;
 
-export const TOTPStrategyPayloadSchema = BaseStrategyPayloadSchema.and(
-  TypeSchema
-).and(TOTPStrategySettingsPropertySchema);
-export type TOTPStrategyPayload = typeof TOTPStrategyPayloadSchema.inferOut;
+export const TOTPStrategyPayloadSchema = z.object({
+  ...BaseStrategyPayloadSchema.shape,
+  ...TypeSchema.shape,
+  ...TOTPStrategySettingsPropertySchema.shape,
+});
+export type TOTPStrategyPayload = z.output<typeof TOTPStrategyPayloadSchema>;
 
-export const InsertTOTPStrategyPayloadSchema = TypeSchema.and(
-  BaseInsertStrategyPayloadSchema
-)
-  .and(TypeSchema)
-  .and({
-    settings: TOTPStrategySettingsSchema.optional(),
-  });
-export type InsertTOTPStrategyInput =
-  typeof InsertTOTPStrategyPayloadSchema.inferIn;
-export type InsertTOTPStrategyPayload =
-  typeof InsertTOTPStrategyPayloadSchema.inferOut;
-
-export const UpdateTOTPStrategyPayloadSchema = TypeSchema.and(
-  BaseUpdateStrategyPayloadSchema
-).and({
+export const InsertTOTPStrategyPayloadSchema = z.object({
+  ...TypeSchema.shape,
+  ...BaseInsertStrategyPayloadSchema.shape,
   settings: TOTPStrategySettingsSchema.optional(),
 });
-export type UpdateTOTPStrategyInput =
-  typeof UpdateTOTPStrategyPayloadSchema.inferIn;
-export type UpdateTOTPStrategyPayload =
-  typeof UpdateTOTPStrategyPayloadSchema.inferOut;
+export type InsertTOTPStrategyInput = z.input<
+  typeof InsertTOTPStrategyPayloadSchema
+>;
+export type InsertTOTPStrategyPayload = z.output<
+  typeof InsertTOTPStrategyPayloadSchema
+>;
 
-export const RegisterTOTPSchema = type({
-  uri: type('string.url').configure({
-    message: 'An authenticator uri is required',
-  }),
-  token: type('string').configure({
-    message: 'An authenticator token is required',
-  }),
+export const UpdateTOTPStrategyPayloadSchema = z.object({
+  ...TypeSchema.shape,
+  ...BaseUpdateStrategyPayloadSchema.shape,
+  settings: TOTPStrategySettingsSchema.optional(),
+});
+export type UpdateTOTPStrategyInput = z.input<
+  typeof UpdateTOTPStrategyPayloadSchema
+>;
+export type UpdateTOTPStrategyPayload = z.output<
+  typeof UpdateTOTPStrategyPayloadSchema
+>;
+
+export const RegisterTOTPSchema = z.object({
+  uri: z.url('An authenticator uri is required'),
+  token: z.string('An authenticator token is required'),
 });
 
-export const VerifyTOTPSchema = type({
-  token: type('string').configure({
-    message: 'An authenticator token is required',
-  }),
+export const VerifyTOTPSchema = z.object({
+  token: z.string({ message: 'An authenticator token is required' }),
 });

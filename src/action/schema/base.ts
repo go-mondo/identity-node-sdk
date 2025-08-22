@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
@@ -20,24 +20,26 @@ export type AnyActionOperation =
   (typeof ActionOperation)[keyof typeof ActionOperation];
 
 export const ActionIdSchema = KSUIDSchema(Model.Action.UIDPrefix);
-export type ActionId = typeof ActionIdSchema.inferOut;
+export type ActionId = z.output<typeof ActionIdSchema>;
 
-export const ActionIdPropertySchema = type({
+export const ActionIdPropertySchema = z.object({
   id: ActionIdSchema,
 });
-export type ActionIdProperty = typeof ActionIdPropertySchema.inferOut;
+export type ActionIdProperty = z.output<typeof ActionIdPropertySchema>;
 
-export const OperationSchema = type.enumerated(
+export const OperationSchema = z.enum([
   ActionOperation.SIGN_UP,
   ActionOperation.SIGN_UP_VERIFICATION,
   ActionOperation.SET_PASSWORD,
-  ActionOperation.USER_ATTRIBUTE_VERIFICATION
-);
+  ActionOperation.USER_ATTRIBUTE_VERIFICATION,
+] as const);
 
-export const BasePayloadSchema = ActionIdPropertySchema.and({
-  attempt: type('number'),
+export const BasePayloadSchema = z.object({
+  ...ActionIdPropertySchema.shape,
+  attempt: z.number(),
   expiresAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});

@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { GrantType } from '../../../common/schema.js';
 
 /**
@@ -6,17 +6,18 @@ import { GrantType } from '../../../common/schema.js';
  * @see https://openid.net/specs/openid-connect-core-1_0.html#rfc.section.3.1.3.1
  */
 
-const GrantTypeSchema = type.enumerated(GrantType.AUTHORIZATION_CODE);
+const GrantTypeSchema = z.enum([GrantType.AUTHORIZATION_CODE] as const);
 
-const PKCESchema = type({
-  code_verifier: type('string').optional(),
+const PKCESchema = z.object({
+  code_verifier: z.string().optional(),
 });
 
-export const AuthorizationCodeSchema = type({
+export const AuthorizationCodeSchema = z.object({
   grant_type: GrantTypeSchema,
-  code: type('string'),
-  client_id: type('string'),
-  client_secret: type('string').optional(),
-  redirect_uri: type('string.url'),
-}).and(PKCESchema);
-export type AuthorizationCodePayload = typeof AuthorizationCodeSchema.inferOut;
+  code: z.string(),
+  client_id: z.string(),
+  client_secret: z.string().optional(),
+  redirect_uri: z.url(),
+  ...PKCESchema.shape,
+});
+export type AuthorizationCodePayload = z.output<typeof AuthorizationCodeSchema>;

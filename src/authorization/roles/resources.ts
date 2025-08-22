@@ -5,10 +5,7 @@ import {
   insertItemWithAuthorization,
   updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../../common/resources/utils.js';
+import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -67,11 +64,8 @@ export async function listRoles(
     new URL(RoleResources.buildPath(), instance.config.host),
     pagination
   );
-
-  return parseEgressSchema(
-    PaginationCollectionSchema(RoleSchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(RoleSchema).parse(
+    await getItemWithAuthorization(url, instance.authorizer)
   );
 }
 
@@ -79,12 +73,10 @@ export async function getRole(
   instance: MondoIdentity,
   id: string
 ): Promise<Role> {
-  return parseEgressSchema(
-    RoleSchema(
-      await getItemWithAuthorization(
-        new URL(RoleResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return RoleSchema.parse(
+    await getItemWithAuthorization(
+      new URL(RoleResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -93,15 +85,11 @@ export async function insertRole(
   instance: MondoIdentity,
   item: InsertRoleInput
 ): Promise<Role> {
-  return parseEgressSchema(
-    RoleSchema(
-      await insertItemWithAuthorization(
-        new URL(RoleResources.buildPath(), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          InsertRolePayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return RoleSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(RoleResources.buildPath(), instance.config.host),
+      instance.authorizer,
+      InsertRolePayloadSchema.parse(item)
     )
   );
 }
@@ -111,15 +99,11 @@ export async function updateRole(
   id: string,
   item: UpdateRoleInput
 ): Promise<Role> {
-  return parseEgressSchema(
-    RoleSchema(
-      await updateItemWithAuthorization(
-        new URL(RoleResources.buildPath(id), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpdateRolePayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return RoleSchema.parse(
+    await updateItemWithAuthorization(
+      new URL(RoleResources.buildPath(id), instance.config.host),
+      instance.authorizer,
+      UpdateRolePayloadSchema.parse(item)
     )
   );
 }
@@ -128,12 +112,10 @@ export async function deleteRole(
   instance: MondoIdentity,
   id: string
 ): Promise<Role> {
-  return parseEgressSchema(
-    RoleSchema(
-      await deleteItemWithAuthorization(
-        new URL(RoleResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return RoleSchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(RoleResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }

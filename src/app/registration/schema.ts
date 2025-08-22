@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -8,31 +8,40 @@ import {
   MetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
 
-const AllowSelfRegistrationSchema = type('boolean');
+const AllowSelfRegistrationSchema = z.boolean();
 
-const BaseSchema = type({
+const BaseSchema = z.object({
   allowSelfRegistration: AllowSelfRegistrationSchema.default(false),
 });
 
-export const RegistrationSchema = BaseSchema.and({
-  'updatedAt?': OptionalDateSchema,
-  'deletedAt?': OptionalDateSchema,
-  'deactivatedAt?': OptionalDateSchema,
-}).and(MetadataMapPropertySchema);
-export type RegistrationProperties = typeof RegistrationSchema.inferIn;
-export type Registration = typeof RegistrationSchema.inferOut;
+export const RegistrationSchema = z.object({
+  ...BaseSchema.shape,
+  updatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+  ...MetadataMapPropertySchema.shape,
+});
+export type RegistrationProperties = z.input<typeof RegistrationSchema>;
+export type Registration = z.output<typeof RegistrationSchema>;
 
-export const RegistrationPayloadSchema = BaseSchema.and({
-  'updatedAt?': OptionalDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type RegistrationPayload = typeof RegistrationPayloadSchema.inferOut;
+export const RegistrationPayloadSchema = z.object({
+  ...BaseSchema.shape,
+  updatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type RegistrationPayload = z.output<typeof RegistrationPayloadSchema>;
 
-export const UpsertRegistrationPayloadSchema = type({
-  allowSelfRegistration: AllowSelfRegistrationSchema.or('undefined').optional(),
-}).and(MetadataPayloadPropertySchema);
-export type UpsertRegistrationInput =
-  typeof UpsertRegistrationPayloadSchema.inferIn;
-export type UpsertRegistrationPayload =
-  typeof UpsertRegistrationPayloadSchema.inferOut;
+export const UpsertRegistrationPayloadSchema = z.object({
+  allowSelfRegistration: z
+    .union([AllowSelfRegistrationSchema, z.undefined()])
+    .optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UpsertRegistrationInput = z.input<
+  typeof UpsertRegistrationPayloadSchema
+>;
+export type UpsertRegistrationPayload = z.output<
+  typeof UpsertRegistrationPayloadSchema
+>;

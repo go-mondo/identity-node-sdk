@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -11,96 +11,102 @@ import {
 import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
 import { AuthorizationPayloadSchema as WorkspaceAuthorizationPayloadSchema } from '../../workspace/authorization/schema.js';
 
-const UrlSetSchema = type.instanceOf(Set<URL>);
-const UrlArrayScheama = type('string.url.parse').array();
+const UrlSetSchema = z.instanceof(Set<URL>);
+const UrlArrayScheama = z.array(
+  z.url().pipe(z.transform((url) => new URL(url)))
+);
 
-const StringSetSchema = type.instanceOf(Set<string>);
+const StringSetSchema = z.instanceof(Set<string>);
 // const UrlStringSchema = type('string.url[]').pipe((v) => v?.filter((i) => !!i));
-const StringSchema = type('string[]').pipe((v) => v?.filter((i) => !!i));
+const StringSchema = z
+  .array(z.string())
+  .pipe(z.transform((v) => v?.filter((i) => !!i)));
 
 // const CallbackUrlsSchema = type('undefined')
 //   .or(UrlArrayScheama)
 //   .or(UrlSetSchema)
 //   .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
 
-const CallbackUrlArraySchema = type('undefined')
-  .or(UrlArrayScheama)
-  .or(UrlSetSchema)
-  .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
+const CallbackUrlArraySchema = z
+  .union([z.undefined(), UrlArrayScheama, UrlSetSchema])
+  .pipe(z.transform((v) => (v instanceof Set ? Array.from(v.values()) : v)));
 
-const CallbackUrlSetSchema = type('undefined')
-  .or(UrlArrayScheama)
-  .or(UrlSetSchema)
-  .pipe((v) => (!v || v instanceof Set ? v : new Set(v)));
+const CallbackUrlSetSchema = z
+  .union([z.undefined(), UrlArrayScheama, UrlSetSchema])
+  .pipe(z.transform((v) => (!v || v instanceof Set ? v : new Set(v))));
 
-const AvailableAudienceArraySchema = type('undefined')
-  .or(StringSchema)
-  .or(StringSetSchema)
-  .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
+const AvailableAudienceArraySchema = z
+  .union([z.undefined(), StringSchema, StringSetSchema])
+  .pipe(z.transform((v) => (v instanceof Set ? Array.from(v.values()) : v)));
 
-const AvailableAudienceSetSchema = type('undefined')
-  .or(StringSchema)
-  .or(StringSetSchema)
-  .pipe((v) => (!v || v instanceof Set ? v : new Set(v)));
+const AvailableAudienceSetSchema = z
+  .union([z.undefined(), StringSchema, StringSetSchema])
+  .pipe(z.transform((v) => (!v || v instanceof Set ? v : new Set(v))));
 
-const GrantSetSchema = type.instanceOf(Set<AnyGrantType>);
-const GrantArraySchema = type
-  .enumerated(
+const GrantSetSchema = z.instanceof(Set<AnyGrantType>);
+const GrantArraySchema = z.array(
+  z.enum([
     GrantType.AUTHORIZATION_CODE,
     GrantType.CLIENT_CREDENTIALS,
     GrantType.IMPLICIT,
-    GrantType.REFRESH_TOKEN
-  )
-  .array();
-
-const AvailableGrantSetSchema = type('undefined')
-  .or(GrantArraySchema)
-  .or(GrantSetSchema)
-  .pipe((v) => (!v || v instanceof Set ? v : new Set(v)));
-const AvailableGrantArraySchema = type('undefined')
-  .or(GrantArraySchema)
-  .or(GrantSetSchema)
-  .pipe((v) => (v instanceof Set ? Array.from(v.values()) : v));
-
-const BaseAuthorization = WorkspaceAuthorizationPayloadSchema.pick(
-  'refreshTokenDuration',
-  'accessTokenDuration',
-  'accessTokenSignatureAlgorithm'
+    GrantType.REFRESH_TOKEN,
+  ] as const)
 );
 
-export const AuthorizationSchema = BaseAuthorization.and({
-  loginUri: type('string.url | undefined').optional(),
+const AvailableGrantSetSchema = z
+  .union([z.undefined(), GrantArraySchema, GrantSetSchema])
+  .pipe(z.transform((v) => (!v || v instanceof Set ? v : new Set(v))));
+const AvailableGrantArraySchema = z
+  .union([z.undefined(), GrantArraySchema, GrantSetSchema])
+  .pipe(z.transform((v) => (v instanceof Set ? Array.from(v.values()) : v)));
+
+const BaseAuthorization = WorkspaceAuthorizationPayloadSchema.pick({
+  refreshTokenDuration: true,
+  accessTokenDuration: true,
+  accessTokenSignatureAlgorithm: true,
+});
+
+export const AuthorizationSchema = z.object({
+  ...BaseAuthorization.shape,
+  loginUri: z.union([z.url(), z.undefined()]).optional(),
   callbackUrls: CallbackUrlSetSchema.optional(),
   availableAudiences: AvailableAudienceSetSchema.optional(),
   availableGrants: AvailableGrantSetSchema.optional(),
-  defaultAudience: type('string | undefined').optional(),
-  'updatedAt?': OptionalDateSchema,
-  'deletedAt?': OptionalDateSchema,
-  'deactivatedAt?': OptionalDateSchema,
-}).and(MetadataMapPropertySchema);
-export type AuthorizationProperties = typeof AuthorizationSchema.inferIn;
-export type Authorization = typeof AuthorizationSchema.inferOut;
+  defaultAudience: z.union([z.string(), z.undefined()]).optional(),
+  updatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+  ...MetadataMapPropertySchema.shape,
+});
+export type AuthorizationProperties = z.input<typeof AuthorizationSchema>;
+export type Authorization = z.output<typeof AuthorizationSchema>;
 
-export const AuthorizationPayloadSchema = BaseAuthorization.and({
-  loginUri: type('string.url | undefined').optional(),
+export const AuthorizationPayloadSchema = z.object({
+  ...BaseAuthorization.shape,
+  loginUri: z.union([z.url(), z.undefined()]).optional(),
   callbackUrls: CallbackUrlArraySchema.optional(),
   availableAudiences: AvailableAudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
-  defaultAudience: type('string | undefined').optional(),
-  'updatedAt?': OptionalDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type AuthorizationPayload = typeof AuthorizationPayloadSchema.inferOut;
+  defaultAudience: z.union([z.string(), z.undefined()]).optional(),
+  updatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;
 
-export const UpsertAuthorizationPayloadSchema = BaseAuthorization.and({
-  loginUri: type('string.url | undefined').optional(),
+export const UpsertAuthorizationPayloadSchema = z.object({
+  ...BaseAuthorization.shape,
+  loginUri: z.union([z.url(), z.undefined()]).optional(),
   callbackUrls: CallbackUrlArraySchema.optional(),
   availableAudiences: AvailableAudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
-  defaultAudience: type('string | undefined').optional(),
-}).and(UpsertMetadataPropertyPayloadSchema);
-export type UpsertAuthorizationInput =
-  typeof UpsertAuthorizationPayloadSchema.inferIn;
-export type UpsertAuthorizationPayload =
-  typeof UpsertAuthorizationPayloadSchema.inferOut;
+  defaultAudience: z.union([z.string(), z.undefined()]).optional(),
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type UpsertAuthorizationInput = z.input<
+  typeof UpsertAuthorizationPayloadSchema
+>;
+export type UpsertAuthorizationPayload = z.output<
+  typeof UpsertAuthorizationPayloadSchema
+>;

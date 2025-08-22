@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateStrategyId } from '../utils.js';
 import {
@@ -11,7 +10,7 @@ describe('Authentication - Factors', () => {
   describe('Schema', () => {
     test('should parse response payload successfully', async () => {
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorsPayloadSchema.safeParse({
           createdAt: new Date(),
           updatedAt: new Date(),
           factors: [
@@ -19,89 +18,89 @@ describe('Authentication - Factors', () => {
               id: generateStrategyId(),
             },
           ],
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
 
       // Undefined factors
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorsPayloadSchema.safeParse({
           createdAt: new Date(),
           updatedAt: new Date(),
           factors: undefined,
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
     });
 
     test('should parse upsert payload successfully', async () => {
       expect(
-        UpsertAuthenticationFactorsPayloadSchema({
+        UpsertAuthenticationFactorsPayloadSchema.safeParse({
           factors: [
             {
               id: generateStrategyId(),
             },
           ],
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
 
       // Null factors
       expect(
-        UpsertAuthenticationFactorsPayloadSchema({
+        UpsertAuthenticationFactorsPayloadSchema.safeParse({
           factors: null,
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
 
       // Undefined factors
       expect(
-        UpsertAuthenticationFactorsPayloadSchema({
+        UpsertAuthenticationFactorsPayloadSchema.safeParse({
           factors: undefined,
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
     });
 
     test('should throw error for invalid factors', async () => {
       // Factor object
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorsPayloadSchema.safeParse({
           createdAt: new Date(),
           updatedAt: new Date(),
           factors: { id: generateStrategyId() },
-        })
-      ).toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(false);
 
       // Factor array of string
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorsPayloadSchema.safeParse({
           createdAt: new Date(),
           updatedAt: new Date(),
           factors: [generateStrategyId()],
-        })
-      ).toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(false);
     });
 
     test('should accept various next factors types', async () => {
       // Undefined
       expect(
-        AuthenticationFactorPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: generateStrategyId(),
           nextFactors: undefined,
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
 
       // Array
       expect(
-        AuthenticationFactorPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: generateStrategyId(),
           nextFactors: [
             {
               id: generateStrategyId(),
             },
           ],
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
 
       // Deeply nested array
       expect(
-        AuthenticationFactorPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: generateStrategyId(),
           nextFactors: [
             {
@@ -118,57 +117,57 @@ describe('Authentication - Factors', () => {
               ],
             },
           ],
-        })
-      ).not.toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(true);
     });
 
     test('should throw error for invalid factor id', async () => {
       // Number
       expect(
-        AuthenticationFactorsPayloadSchema({
-          id: generateStrategyId(),
-        })
-      ).toBeInstanceOf(type.errors);
+        AuthenticationFactorPayloadSchema.safeParse({
+          id: 123,
+        }).success
+      ).toBe(false);
 
       // Null
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: null,
-        })
-      ).toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(false);
 
       // Undefined
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: undefined,
-        })
-      ).toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(false);
     });
 
     test('should throw error for invalid next factors', async () => {
       // String
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: generateStrategyId(),
           nextFactors: generateStrategyId(),
-        })
-      ).toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(false);
 
       // Object
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: generateStrategyId(),
           nextFactors: { id: generateStrategyId() },
-        })
-      ).toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(false);
 
       // Array
       expect(
-        AuthenticationFactorsPayloadSchema({
+        AuthenticationFactorPayloadSchema.safeParse({
           id: generateStrategyId(),
           nextFactors: [generateStrategyId()],
-        })
-      ).toBeInstanceOf(type.errors);
+        }).success
+      ).toBe(false);
     });
   });
 });

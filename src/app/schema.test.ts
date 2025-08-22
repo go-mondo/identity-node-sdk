@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import {
   type AppAssociationReference,
@@ -22,38 +21,36 @@ describe('App - Schema', () => {
   describe('AppIdSchema', () => {
     test('should accept valid app ID', () => {
       const id = generateAppId();
-      const result = AppIdSchema(id);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AppIdSchema.parse(id);
       expect(result).toBe(id);
     });
 
     test('should reject invalid app ID format', () => {
-      expect(AppIdSchema('invalid_id')).toBeInstanceOf(type.errors);
-      expect(AppIdSchema('wrong_prefix_123')).toBeInstanceOf(type.errors);
+      expect(AppIdSchema.safeParse('invalid_id').success).toBe(false);
+      expect(AppIdSchema.safeParse('wrong_prefix_123').success).toBe(false);
     });
 
     test('should reject non-string values', () => {
-      expect(AppIdSchema(123)).toBeInstanceOf(type.errors);
-      expect(AppIdSchema(null)).toBeInstanceOf(type.errors);
+      expect(AppIdSchema.safeParse(123).success).toBe(false);
+      expect(AppIdSchema.safeParse(null).success).toBe(false);
     });
   });
 
   describe('AppIdPropertySchema', () => {
     test('should accept valid id property', () => {
       const payload = { id: generateAppId() };
-      const result = AppIdPropertySchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AppIdPropertySchema.parse(payload);
       expect(result).toEqual(payload);
     });
 
     test('should reject missing id', () => {
-      const result = AppIdPropertySchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AppIdPropertySchema.safeParse({});
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid id format', () => {
-      const result = AppIdPropertySchema({ id: 'invalid_id' });
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AppIdPropertySchema.safeParse({ id: 'invalid_id' });
+      expect(result.success).toBe(false);
     });
   });
 
@@ -69,8 +66,8 @@ describe('App - Schema', () => {
         metadata: { key: 'value' },
       };
 
-      const result = AppSchema(app);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AppSchema.parse(app);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal app object', () => {
@@ -83,8 +80,8 @@ describe('App - Schema', () => {
         metadata: {},
       };
 
-      const result = AppSchema(app);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AppSchema.parse(app);
+      // Parse succeeds for valid data
     });
 
     test('should accept app with optional dates', () => {
@@ -100,8 +97,8 @@ describe('App - Schema', () => {
         metadata: {},
       };
 
-      const result = AppSchema(app);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AppSchema.parse(app);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid status', () => {
@@ -114,8 +111,8 @@ describe('App - Schema', () => {
         metadata: {},
       };
 
-      const result = AppSchema(app);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AppSchema.safeParse(app);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -125,8 +122,8 @@ describe('App - Schema', () => {
         // missing label, createdAt, updatedAt, metadata
       };
 
-      const result = AppSchema(app);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AppSchema.safeParse(app);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -139,21 +136,21 @@ describe('App - Schema', () => {
         metadata: { updated: true },
       };
 
-      const result = UpdateAppPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateAppPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
       expect(result).toEqual(payload);
     });
 
     test('should accept empty update payload', () => {
-      const result = UpdateAppPayloadSchema({});
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateAppPayloadSchema.parse({});
+      // Parse succeeds for valid data
       expect(result).toEqual({});
     });
 
     test('should accept partial updates', () => {
       const payload = { label: 'New Label' };
-      const result = UpdateAppPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateAppPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
       expect(result).toEqual(payload);
     });
 
@@ -163,15 +160,15 @@ describe('App - Schema', () => {
         description: null,
       };
 
-      const result = UpdateAppPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateAppPayloadSchema.parse(payload);
+      // Parse succeeds for valid data
       expect(result).toEqual(payload);
     });
 
     test('should reject invalid status', () => {
       const payload = { status: 'invalid-status' };
-      const result = UpdateAppPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpdateAppPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -184,8 +181,8 @@ describe('App - Schema', () => {
         model: 'App' as const,
       };
 
-      const result = AppAssociationReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AppAssociationReferenceSchema.parse(reference);
+      // Parse succeeds for valid data
       expect(result).toEqual(reference);
     });
 
@@ -196,15 +193,15 @@ describe('App - Schema', () => {
         model: 'App' as const,
       };
 
-      const result = AppAssociationReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as AppAssociationReference).status).toBe('disabled'); // default value
+      const result = AppAssociationReferenceSchema.parse(reference);
+      // Parse succeeds for valid data
+      expect(result.status).toBe('disabled'); // default value
     });
 
     test('should reject missing required fields', () => {
       const reference = { id: generateAppId() };
-      const result = AppAssociationReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AppAssociationReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid model value', () => {
@@ -214,8 +211,8 @@ describe('App - Schema', () => {
         model: 'InvalidModel',
       };
 
-      const result = AppAssociationReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AppAssociationReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
   });
 });

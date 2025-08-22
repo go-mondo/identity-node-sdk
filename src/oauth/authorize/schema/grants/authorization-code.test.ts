@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../../../../app/utils.js';
 import { CodeChallengeMethod, ResponseType } from '../../../common/schema.js';
@@ -12,7 +11,7 @@ describe('OAuth Authorization Code Schema', () => {
         client_id: generateAppId(),
       };
 
-      const result = AuthorizationCodeSchema(minimalPayload);
+      const result = AuthorizationCodeSchema.parse(minimalPayload);
       expect(result).toEqual(minimalPayload);
     });
 
@@ -32,7 +31,7 @@ describe('OAuth Authorization Code Schema', () => {
         audience: 'https://api.example.com',
       };
 
-      const result = AuthorizationCodeSchema(completePayload);
+      const result = AuthorizationCodeSchema.parse(completePayload);
       expect(result).toEqual(completePayload);
     });
 
@@ -47,7 +46,7 @@ describe('OAuth Authorization Code Schema', () => {
         state: 'xyz',
       };
 
-      const result = AuthorizationCodeSchema(pkcePayload);
+      const result = AuthorizationCodeSchema.parse(pkcePayload);
       expect(result).toEqual(pkcePayload);
     });
 
@@ -59,7 +58,7 @@ describe('OAuth Authorization Code Schema', () => {
         code_challenge_method: CodeChallengeMethod.PLAIN,
       };
 
-      const result = AuthorizationCodeSchema(plainPkcePayload);
+      const result = AuthorizationCodeSchema.parse(plainPkcePayload);
       expect(result).toEqual(plainPkcePayload);
     });
 
@@ -72,7 +71,7 @@ describe('OAuth Authorization Code Schema', () => {
         state: 'legacy-state',
       };
 
-      const result = AuthorizationCodeSchema(noPkcePayload);
+      const result = AuthorizationCodeSchema.parse(noPkcePayload);
       expect(result).toEqual(noPkcePayload);
     });
 
@@ -87,7 +86,7 @@ describe('OAuth Authorization Code Schema', () => {
         scope: 'openid profile email address phone',
       };
 
-      const result = AuthorizationCodeSchema(oidcPayload);
+      const result = AuthorizationCodeSchema.parse(oidcPayload);
       expect(result).toEqual(oidcPayload);
     });
 
@@ -98,7 +97,7 @@ describe('OAuth Authorization Code Schema', () => {
         audience: 'https://api.myservice.com',
       };
 
-      const result = AuthorizationCodeSchema(audiencePayload);
+      const result = AuthorizationCodeSchema.parse(audiencePayload);
       expect(result).toEqual(audiencePayload);
     });
   });
@@ -109,8 +108,8 @@ describe('OAuth Authorization Code Schema', () => {
         client_id: generateAppId(),
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid response_type', () => {
@@ -119,8 +118,8 @@ describe('OAuth Authorization Code Schema', () => {
         client_id: generateAppId(),
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing client_id', () => {
@@ -128,8 +127,8 @@ describe('OAuth Authorization Code Schema', () => {
         response_type: ResponseType.CODE,
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid client_id format', () => {
@@ -138,8 +137,8 @@ describe('OAuth Authorization Code Schema', () => {
         client_id: 'invalid-client-id',
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid redirect_uri format', () => {
@@ -149,8 +148,8 @@ describe('OAuth Authorization Code Schema', () => {
         redirect_uri: 'not-a-url',
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid code_challenge_method', () => {
@@ -161,8 +160,8 @@ describe('OAuth Authorization Code Schema', () => {
         code_challenge_method: 'invalid_method',
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid display value', () => {
@@ -172,8 +171,8 @@ describe('OAuth Authorization Code Schema', () => {
         display: 'invalid_display',
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid prompt value', () => {
@@ -183,8 +182,8 @@ describe('OAuth Authorization Code Schema', () => {
         prompt: 'invalid_prompt',
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-number max_age', () => {
@@ -194,8 +193,8 @@ describe('OAuth Authorization Code Schema', () => {
         max_age: 'not-a-number',
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject negative max_age', () => {
@@ -205,8 +204,8 @@ describe('OAuth Authorization Code Schema', () => {
         max_age: -100,
       };
 
-      const result = AuthorizationCodeSchema(invalidPayload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthorizationCodeSchema.safeParse(invalidPayload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -218,8 +217,8 @@ describe('OAuth Authorization Code Schema', () => {
         code_challenge: 'challenge-without-method',
       };
 
-      const result1 = AuthorizationCodeSchema(onlyChallenge);
-      expect(result1).toBeInstanceOf(type.errors);
+      const result1 = AuthorizationCodeSchema.safeParse(onlyChallenge);
+      expect(result1.success).toBe(false);
 
       const onlyMethod = {
         response_type: ResponseType.CODE,
@@ -227,8 +226,8 @@ describe('OAuth Authorization Code Schema', () => {
         code_challenge_method: CodeChallengeMethod.S256,
       };
 
-      const result2 = AuthorizationCodeSchema(onlyMethod);
-      expect(result2).toBeInstanceOf(type.errors);
+      const result2 = AuthorizationCodeSchema.safeParse(onlyMethod);
+      expect(result2.success).toBe(false);
     });
 
     test('should allow neither code_challenge nor code_challenge_method', () => {
@@ -238,7 +237,7 @@ describe('OAuth Authorization Code Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = AuthorizationCodeSchema(noPkce);
+      const result = AuthorizationCodeSchema.parse(noPkce);
       expect(result).toEqual(noPkce);
     });
 
@@ -250,7 +249,7 @@ describe('OAuth Authorization Code Schema', () => {
         code_challenge_method: CodeChallengeMethod.S256,
       };
 
-      const result = AuthorizationCodeSchema(s256Pkce);
+      const result = AuthorizationCodeSchema.parse(s256Pkce);
       expect(result).toEqual(s256Pkce);
     });
 
@@ -258,11 +257,11 @@ describe('OAuth Authorization Code Schema', () => {
       const plainPkce = {
         response_type: ResponseType.CODE,
         client_id: generateAppId(),
-        code_challenge: 'plain-text-challenge',
+        code_challenge: 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM',
         code_challenge_method: CodeChallengeMethod.PLAIN,
       };
 
-      const result = AuthorizationCodeSchema(plainPkce);
+      const result = AuthorizationCodeSchema.parse(plainPkce);
       expect(result).toEqual(plainPkce);
     });
   });
@@ -280,7 +279,7 @@ describe('OAuth Authorization Code Schema', () => {
         nonce: 'xyz789',
       };
 
-      const result = AuthorizationCodeSchema(spaRequest);
+      const result = AuthorizationCodeSchema.parse(spaRequest);
       expect(result).toEqual(spaRequest);
     });
 
@@ -293,7 +292,7 @@ describe('OAuth Authorization Code Schema', () => {
         state: 'secure-random-state-12345',
       };
 
-      const result = AuthorizationCodeSchema(webAppRequest);
+      const result = AuthorizationCodeSchema.parse(webAppRequest);
       expect(result).toEqual(webAppRequest);
     });
 
@@ -309,7 +308,7 @@ describe('OAuth Authorization Code Schema', () => {
         display: 'touch',
       };
 
-      const result = AuthorizationCodeSchema(mobileRequest);
+      const result = AuthorizationCodeSchema.parse(mobileRequest);
       expect(result).toEqual(mobileRequest);
     });
 
@@ -325,7 +324,7 @@ describe('OAuth Authorization Code Schema', () => {
         audience: 'https://api.enterprise.example.com',
       };
 
-      const result = AuthorizationCodeSchema(enterpriseRequest);
+      const result = AuthorizationCodeSchema.parse(enterpriseRequest);
       expect(result).toEqual(enterpriseRequest);
     });
 
@@ -338,7 +337,7 @@ describe('OAuth Authorization Code Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = AuthorizationCodeSchema(multiScopeRequest);
+      const result = AuthorizationCodeSchema.parse(multiScopeRequest);
       expect(result).toEqual(multiScopeRequest);
     });
   });
@@ -353,7 +352,7 @@ describe('OAuth Authorization Code Schema', () => {
         nonce: '',
       };
 
-      const result = AuthorizationCodeSchema(emptyStringsPayload);
+      const result = AuthorizationCodeSchema.parse(emptyStringsPayload);
       expect(result).toEqual(emptyStringsPayload);
     });
 
@@ -366,7 +365,7 @@ describe('OAuth Authorization Code Schema', () => {
         scope: `openid profile email ${'custom:scope'.repeat(100)}`,
       };
 
-      const result = AuthorizationCodeSchema(longValuesPayload);
+      const result = AuthorizationCodeSchema.parse(longValuesPayload);
       expect(result).toEqual(longValuesPayload);
     });
 
@@ -377,7 +376,7 @@ describe('OAuth Authorization Code Schema', () => {
         max_age: 0,
       };
 
-      const result = AuthorizationCodeSchema(zeroMaxAge);
+      const result = AuthorizationCodeSchema.parse(zeroMaxAge);
       expect(result).toEqual(zeroMaxAge);
     });
 
@@ -388,7 +387,7 @@ describe('OAuth Authorization Code Schema', () => {
         max_age: 31536000, // 1 year in seconds
       };
 
-      const result = AuthorizationCodeSchema(largeMaxAge);
+      const result = AuthorizationCodeSchema.parse(largeMaxAge);
       expect(result).toEqual(largeMaxAge);
     });
   });

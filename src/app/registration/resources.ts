@@ -3,7 +3,6 @@ import {
   getItemWithAuthorization,
   insertItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import { parseEgressSchema } from '../../common/resources/utils.js';
 import { PATH } from '../resources.js';
 import {
   type Registration,
@@ -41,12 +40,10 @@ export async function getRegistration(
   instance: MondoIdentity,
   id: string
 ): Promise<Registration> {
-  return parseEgressSchema(
-    RegistrationSchema(
-      await getItemWithAuthorization(
-        new URL(RegistrationResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return RegistrationSchema.parse(
+    await getItemWithAuthorization(
+      new URL(RegistrationResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -56,15 +53,11 @@ export async function upsertRegistration(
   id: string,
   item: UpsertRegistrationInput
 ): Promise<Registration> {
-  return parseEgressSchema(
-    RegistrationSchema(
-      await insertItemWithAuthorization(
-        new URL(RegistrationResources.buildPath(id), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpsertRegistrationPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return RegistrationSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(RegistrationResources.buildPath(id), instance.config.host),
+      instance.authorizer,
+      UpsertRegistrationPayloadSchema.parse(item)
     )
   );
 }

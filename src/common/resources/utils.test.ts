@@ -6,50 +6,11 @@ import {
   defaultMutationRequestHeaders,
   defaultRequestHeaders,
   jsonBody,
-  parseEgressSchema,
-  parseIngressSchema,
   responseToHttpError,
   toHttpError,
 } from './utils.js';
 
 describe('Common Resources - Utils', () => {
-  describe('parseEgressSchema', () => {
-    test('should return output when valid', () => {
-      const validOutput = { data: 'test' };
-      const result = parseEgressSchema(validOutput);
-      expect(result).toEqual(validOutput);
-    });
-
-    // test('should throw when output is type.errors', () => {
-    //   const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    //   const errorOutput = new type.errors([]);
-
-    //   expect(() => parseEgressSchema(errorOutput)).toThrow();
-    //   expect(consoleSpy).toHaveBeenCalled();
-
-    //   consoleSpy.mockRestore();
-    // });
-  });
-
-  describe('parseIngressSchema', () => {
-    test('should return output when valid', () => {
-      const validOutput = { data: 'test' };
-      const result = parseIngressSchema(validOutput);
-      expect(result).toEqual(validOutput);
-    });
-
-    // test('should return output as type S when type.errors', () => {
-    //   const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    //   const errorOutput = new type.errors([]);
-
-    //   const result = parseIngressSchema(errorOutput);
-    //   expect(result).toBe(errorOutput);
-    //   expect(consoleSpy).toHaveBeenCalled();
-
-    //   consoleSpy.mockRestore();
-    // });
-  });
-
   describe('defaultRequestHeaders', () => {
     test('should return headers with accept application/json', () => {
       const headers = defaultRequestHeaders();

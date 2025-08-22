@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 
 export const KSUIDSchema = (prefix: string) =>
-  type(`/^${prefix}_[A-Za-z0-9]{27}$/`);
+  z.string().regex(new RegExp(`^${prefix}_[A-Za-z0-9]{27}$`));

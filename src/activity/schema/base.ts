@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { AppIdSchema } from '../../app/schema.js';
 import {
   OptionalDatePayloadSchema,
@@ -36,54 +36,60 @@ export type AnyPerformerType =
   (typeof PerformerType)[keyof typeof PerformerType];
 
 export const ActivityIdSchema = KSUIDSchema(Model.Activity.UIDPrefix);
-export type ActivityId = typeof ActivityIdSchema.inferOut;
+export type ActivityId = z.output<typeof ActivityIdSchema>;
 
-export const ActivityIdPropertySchema = type({
+export const ActivityIdPropertySchema = z.object({
   id: ActivityIdSchema,
 });
-export type ActivityIdProperty = typeof ActivityIdPropertySchema.inferOut;
+export type ActivityIdProperty = z.output<typeof ActivityIdPropertySchema>;
 
-export const SourceSchema = type('string');
+export const SourceSchema = z.string();
 
-export const PerformedBySchema = type({
-  type: type.enumerated(
+export const PerformedBySchema = z.object({
+  type: z.enum([
     PerformerType.SYSTEM,
     PerformerType.GUEST,
     PerformerType.IDENTITY,
     PerformerType.AUTOMATION,
-    PerformerType.INTEGRATION
-  ),
-  identifier: type('string'),
+    PerformerType.INTEGRATION,
+  ] as const),
+  identifier: z.string(),
 });
-export type PerformedBy = typeof PerformedBySchema.inferOut;
+export type PerformedBy = z.output<typeof PerformedBySchema>;
 
-const CommonSchema = type({
+const CommonSchema = z.object({
   id: ActivityIdSchema,
   performedBy: PerformedBySchema,
   source: SourceSchema,
   app: AppIdSchema.optional(),
-  isMutateable: type('boolean'),
+  isMutateable: z.boolean(),
 });
 
-export const BaseSchema = CommonSchema.and({
+export const BaseSchema = z.object({
+  ...CommonSchema.shape,
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
-}).and(MetadataMapPropertySchema);
+  ...MetadataMapPropertySchema.shape,
+});
 
-export const BasePayloadSchema = CommonSchema.and({
+export const BasePayloadSchema = z.object({
+  ...CommonSchema.shape,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
 
-export const BaseInsertPayloadSchema = type({
+export const BaseInsertPayloadSchema = z.object({
   id: ActivityIdSchema.default(() => generateActivityId()),
   performedBy: PerformedBySchema.optional(),
-}).and(UpsertMetadataPropertyPayloadSchema);
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
 
-export const BaseUpdatePayloadSchema = type({
+export const BaseUpdatePayloadSchema = z.object({
   performedBy: PerformedBySchema.optional(),
-}).and(UpsertMetadataPropertyPayloadSchema);
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});

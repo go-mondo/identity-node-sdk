@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -11,26 +11,31 @@ import {
 } from '../../common/schema/metadata.js';
 import { AuthenticationFactorsSchema } from '../factors/schema.js';
 
-export const SettingsSchema = type({
+export const SettingsSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
-}).and(MetadataMapPropertySchema);
-export type SettingsProperties = typeof SettingsSchema.inferIn;
-export type Settings = typeof SettingsSchema.inferOut;
+  ...MetadataMapPropertySchema.shape,
+});
+export type SettingsProperties = z.input<typeof SettingsSchema>;
+export type Settings = z.output<typeof SettingsSchema>;
 
-export const SettingsPayloadSchema = type({
+export const SettingsPayloadSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
-  'updatedAt?': OptionalDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type SettingsPayload = typeof SettingsPayloadSchema.inferOut;
+  updatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type SettingsPayload = z.output<typeof SettingsPayloadSchema>;
 
-export const UpsertSettingsPayloadSchema = type({
+export const UpsertSettingsPayloadSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
-}).and(UpsertMetadataPropertyPayloadSchema);
-export type UpsertSettingsInput = typeof UpsertSettingsPayloadSchema.inferIn;
-export type UpsertSettingsPayload = typeof UpsertSettingsPayloadSchema.inferOut;
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type UpsertSettingsInput = z.input<typeof UpsertSettingsPayloadSchema>;
+export type UpsertSettingsPayload = z.output<
+  typeof UpsertSettingsPayloadSchema
+>;

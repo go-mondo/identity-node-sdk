@@ -1,45 +1,63 @@
-import { scope, type } from 'arktype';
+import { z } from 'zod';
 import { StrategyIdSchema } from '../strategies/schema/base.js';
 
-const factorScope = scope({
-  factor: {
-    id: StrategyIdSchema,
-    'nextFactors?': 'childFactors',
-  },
-  childFactors: 'factor[] | undefined | null',
-  'nextFactors?': 'factor[] | undefined | null',
-});
+// Define the recursive factor schema
+export type AuthenticationFactorType = {
+  id: string;
+  nextFactors?: AuthenticationFactorType[] | undefined | null;
+};
 
-export const AuthenticationFactorSchema = type({
-  id: StrategyIdSchema,
-  ...factorScope.export('nextFactors?'),
-});
-export type AuthenticationFactorProperties =
-  typeof AuthenticationFactorPayloadSchema.inferIn;
-export type AuthenticationFactor =
-  typeof AuthenticationFactorPayloadSchema.inferOut;
+const AuthenticationFactorBaseSchema: z.ZodType<AuthenticationFactorType> =
+  z.lazy(() =>
+    z.object({
+      id: StrategyIdSchema,
+      nextFactors: z
+        .array(AuthenticationFactorBaseSchema)
+        .or(z.undefined())
+        .or(z.null())
+        .optional(),
+    })
+  );
 
-export const AuthenticationFactorPayloadSchema = type({
-  id: StrategyIdSchema,
-  ...factorScope.export('nextFactors?'),
-});
-export type AuthenticationFactorPayload =
-  typeof AuthenticationFactorPayloadSchema.inferOut;
+export const AuthenticationFactorSchema = AuthenticationFactorBaseSchema;
+export type AuthenticationFactorProperties = z.input<
+  typeof AuthenticationFactorPayloadSchema
+>;
+export type AuthenticationFactor = z.output<
+  typeof AuthenticationFactorPayloadSchema
+>;
 
-export const AuthenticationFactorsSchema =
-  AuthenticationFactorPayloadSchema.array()
-    .or('undefined | null')
-    .pipe((f) => (f == null ? undefined : f));
-export type AuthenticationFactors = typeof AuthenticationFactorsSchema.inferOut;
+export const AuthenticationFactorPayloadSchema = AuthenticationFactorBaseSchema;
+export type AuthenticationFactorPayload = z.output<
+  typeof AuthenticationFactorPayloadSchema
+>;
 
-export const AuthenticationFactorsPayloadSchema = type({
+export const AuthenticationFactorsSchema = z
+  .union([z.undefined(), z.null(), z.array(AuthenticationFactorPayloadSchema)])
+  .pipe(z.transform((f) => (f == null ? undefined : f)));
+
+// export const AuthenticationFactorsSchema =
+//   z.array(AuthenticationFactorPayloadSchema)
+//     .or(z.undefined())
+//     .or(z.null())
+//     .pipe(z.transform((f) => (f == null ? undefined : f)));
+export type AuthenticationFactors = z.output<
+  typeof AuthenticationFactorsSchema
+>;
+
+export const AuthenticationFactorsPayloadSchema = z.object({
   factors: AuthenticationFactorsSchema,
 });
-export type AuthenticationFactorsPayload =
-  typeof AuthenticationFactorsPayloadSchema.inferOut;
+export type AuthenticationFactorsPayload = z.output<
+  typeof AuthenticationFactorsPayloadSchema
+>;
 
-export const UpsertAuthenticationFactorsPayloadSchema = type({
-  factors: AuthenticationFactorPayloadSchema.array()
-    .or('undefined | null')
+export const UpsertAuthenticationFactorsPayloadSchema = z.object({
+  factors: z
+    .union([
+      z.array(AuthenticationFactorPayloadSchema),
+      z.undefined(),
+      z.null(),
+    ])
     .optional(),
 });

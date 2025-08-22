@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../../../customer/schema.js';
 import { generateActionId } from '../utils.js';
@@ -22,8 +21,8 @@ describe('Action Schema Operations - Set Password', () => {
         metadata: { key: 'value' },
       };
 
-      const result = SetPasswordActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SetPasswordActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(true);
       // Policy defaults are applied, so we don't compare exact equality
     });
 
@@ -40,8 +39,8 @@ describe('Action Schema Operations - Set Password', () => {
         metadata: {},
       };
 
-      const result = SetPasswordActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SetPasswordActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(true);
       // Policy defaults are applied, so we don't compare exact equality
     });
 
@@ -60,8 +59,8 @@ describe('Action Schema Operations - Set Password', () => {
         metadata: {},
       };
 
-      const result = SetPasswordActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SetPasswordActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(true);
     });
 
     test('should reject invalid operation', () => {
@@ -77,8 +76,8 @@ describe('Action Schema Operations - Set Password', () => {
         metadata: {},
       };
 
-      const result = SetPasswordActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SetPasswordActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid identifier', () => {
@@ -94,8 +93,8 @@ describe('Action Schema Operations - Set Password', () => {
         metadata: {},
       };
 
-      const result = SetPasswordActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SetPasswordActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -105,8 +104,8 @@ describe('Action Schema Operations - Set Password', () => {
         // missing user, identifier, policy, etc.
       };
 
-      const result = SetPasswordActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SetPasswordActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should delete undeclared keys', () => {
@@ -123,9 +122,9 @@ describe('Action Schema Operations - Set Password', () => {
         extraField: 'should be removed',
       };
 
-      const result = SetPasswordActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).not.toHaveProperty('extraField');
+      const result = SetPasswordActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).not.toHaveProperty('extraField');
     });
   });
 
@@ -136,9 +135,9 @@ describe('Action Schema Operations - Set Password', () => {
         password: 'NewPassword123!',
       };
 
-      const result = SetPasswordActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result = SetPasswordActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should reject missing code', () => {
@@ -146,8 +145,8 @@ describe('Action Schema Operations - Set Password', () => {
         password: 'NewPassword123!',
       };
 
-      const result = SetPasswordActionRequestSchema(request);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SetPasswordActionRequestSchema.safeParse(request);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing password', () => {
@@ -155,8 +154,8 @@ describe('Action Schema Operations - Set Password', () => {
         code: 'reset_code_123',
       };
 
-      const result = SetPasswordActionRequestSchema(request);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SetPasswordActionRequestSchema.safeParse(request);
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-string values', () => {
@@ -170,12 +169,10 @@ describe('Action Schema Operations - Set Password', () => {
         password: 123456,
       };
 
-      expect(SetPasswordActionRequestSchema(request1)).toBeInstanceOf(
-        type.errors
-      );
-      expect(SetPasswordActionRequestSchema(request2)).toBeInstanceOf(
-        type.errors
-      );
+      const result1 = SetPasswordActionRequestSchema.safeParse(request1);
+      expect(result1.success).toBe(false);
+      const result2 = SetPasswordActionRequestSchema.safeParse(request2);
+      expect(result2.success).toBe(false);
     });
 
     test('should delete undeclared keys', () => {
@@ -185,10 +182,10 @@ describe('Action Schema Operations - Set Password', () => {
         extraField: 'should be removed',
       };
 
-      const result = SetPasswordActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).not.toHaveProperty('extraField');
-      expect(result).toEqual({
+      const result = SetPasswordActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).not.toHaveProperty('extraField');
+      expect(result.data).toEqual({
         code: 'reset_code_123',
         password: 'NewPassword123!',
       });

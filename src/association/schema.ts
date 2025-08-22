@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { AppAssociationReferenceSchema } from '../app/schema.js';
 import {
   PermissionAssociationReferenceSchema,
@@ -27,28 +27,31 @@ export const AssociationObjectType = {
 export type AnyAssociationObjectType =
   (typeof AssociationObjectType)[keyof typeof AssociationObjectType];
 
-export const AssociationIdReferenceSchema = type({
-  id: type('string'),
+export const AssociationIdReferenceSchema = z.object({
+  id: z.string(),
 });
-export type AssociationIdReference =
-  typeof AssociationIdReferenceSchema.inferOut;
+export type AssociationIdReference = z.output<
+  typeof AssociationIdReferenceSchema
+>;
 
 export const AssociationAttributesReferenceSchema =
-  AssociationIdReferenceSchema.and('Record<string, unknown>');
-export type AssociationAttributesReference =
-  typeof AssociationAttributesReferenceSchema.inferOut;
+  AssociationIdReferenceSchema.and(z.record(z.string(), z.unknown()));
+export type AssociationAttributesReference = z.output<
+  typeof AssociationAttributesReferenceSchema
+>;
 
 export type AssociationReference =
   | AssociationIdReference
   | AssociationAttributesReference;
 
-export const AssociationObjectSchema = UserAssociationReferenceSchema.or(
-  OrganizationAssociationReferenceSchema
-)
-  .or(AppAssociationReferenceSchema)
-  .or(RoleAssociationReferenceSchema)
-  .or(PermissionAssociationReferenceSchema);
-export type AssociationObject = typeof AssociationObjectSchema.inferOut;
+export const AssociationObjectSchema = z.union([
+  UserAssociationReferenceSchema,
+  OrganizationAssociationReferenceSchema,
+  AppAssociationReferenceSchema,
+  RoleAssociationReferenceSchema,
+  PermissionAssociationReferenceSchema,
+]);
+export type AssociationObject = z.output<typeof AssociationObjectSchema>;
 // export type AssociationObject =
 //   | UserAssociationReference
 //   | OrganizationAssociationReference
@@ -56,39 +59,41 @@ export type AssociationObject = typeof AssociationObjectSchema.inferOut;
 //   | RoleAssociationReference
 //   | PermissionAssociationReference;
 
-export const ObjectPropertySchema = type({
+export const ObjectPropertySchema = z.object({
   object: AssociationObjectSchema,
 });
 
-export const AssociationSchema = ObjectPropertySchema.and({
+export const AssociationSchema = z.object({
+  ...ObjectPropertySchema.shape,
   expiresAt: RequiredDateSchema.optional(),
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
-}).and(MetadataMapPropertySchema);
-const RootAssociationProperties = AssociationSchema.omit('object');
-type RootAssociationProperties = typeof RootAssociationProperties.inferIn;
+  ...MetadataMapPropertySchema.shape,
+});
+const RootAssociationProperties = AssociationSchema.omit({ object: true });
+type RootAssociationProperties = z.input<typeof RootAssociationProperties>;
 export type AssociationProperties<
   O extends AssociationObject = AssociationObject,
 > = RootAssociationProperties & {
   object: O;
 };
-const RootAssociation = AssociationSchema.omit('object');
-type RootAssociation = typeof RootAssociation.inferOut;
+const RootAssociation = AssociationSchema.omit({ object: true });
+type RootAssociation = z.output<typeof RootAssociation>;
 export type Association<O extends AssociationObject = AssociationObject> =
   RootAssociation & {
     object: O;
   };
 
-export const AssociationPayloadSchema = type({
-  'expiresAt?': OptionalDatePayloadSchema,
+export const AssociationPayloadSchema = z.object({
+  ...ObjectPropertySchema.shape,
+  expiresAt: OptionalDatePayloadSchema.optional(),
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-})
-  .and(ObjectPropertySchema)
-  .and(MetadataPayloadPropertySchema);
-type RootAssociationPayload = typeof AssociationPayloadSchema.inferOut;
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+type RootAssociationPayload = z.output<typeof AssociationPayloadSchema>;
 
 export type AssociationPayload<
   O extends AssociationObject = AssociationObject,
@@ -96,10 +101,13 @@ export type AssociationPayload<
   object: O;
 };
 
-export const UpsertAssociationPayloadSchema = type({
+export const UpsertAssociationPayloadSchema = z.object({
   expiresAt: OptionalDatePayloadSchema.optional(),
-}).and(MetadataPayloadPropertySchema);
-export type UpsertAssociationInput =
-  typeof UpsertAssociationPayloadSchema.inferIn;
-export type UpsertAssociationPayload =
-  typeof UpsertAssociationPayloadSchema.inferOut;
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UpsertAssociationInput = z.input<
+  typeof UpsertAssociationPayloadSchema
+>;
+export type UpsertAssociationPayload = z.output<
+  typeof UpsertAssociationPayloadSchema
+>;

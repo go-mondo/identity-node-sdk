@@ -1,27 +1,32 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
 import { IdentityIdentifierSchema } from '../../identity/schema.js';
 
-const IdentityIdentifierPropertySchema = type({
-  type: IdentityIdentifierSchema,
-}).array();
+const IdentityIdentifierPropertySchema = z.array(
+  z.object({
+    type: IdentityIdentifierSchema,
+  })
+);
 
-const AllowSelfRegistrationSchema = type('boolean');
+const AllowSelfRegistrationSchema = z.boolean();
 
-export const RegistrationPayloadSchema = type({
+export const RegistrationPayloadSchema = z.object({
   allowSelfRegistration: AllowSelfRegistrationSchema,
   identifiers: IdentityIdentifierPropertySchema,
 
-  'updatedAt?': OptionalDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type RegistrationPayload = typeof RegistrationPayloadSchema.inferOut;
+  updatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type RegistrationPayload = z.output<typeof RegistrationPayloadSchema>;
 
-export const UpsertRegistrationPayloadSchema = type({
+export const UpsertRegistrationPayloadSchema = z.object({
   allowSelfRegistration: AllowSelfRegistrationSchema.optional(),
   identifiers: IdentityIdentifierPropertySchema.optional(),
-}).and(MetadataPayloadPropertySchema);
-export type UpsertRegistrationPayload =
-  typeof UpsertRegistrationPayloadSchema.inferOut;
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UpsertRegistrationPayload = z.output<
+  typeof UpsertRegistrationPayloadSchema
+>;

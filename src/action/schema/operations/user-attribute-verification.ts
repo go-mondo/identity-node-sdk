@@ -1,19 +1,19 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { UserIdSchema } from '../../../customer/schema.js';
 import { IdentityIdentifierSchema } from '../../../identity/schema.js';
 import { BasePayloadSchema } from '../base.js';
 
-export const UserAttributeVerificationActionPayloadSchema =
-  BasePayloadSchema.and({
-    operation: type("'user-attribute-verification'"),
-    user: UserIdSchema,
-    attribute: IdentityIdentifierSchema,
-  }).onUndeclaredKey('delete');
-export type UserAttributeVerificationActionPayload =
-  typeof UserAttributeVerificationActionPayloadSchema.inferOut;
+export const UserAttributeVerificationActionPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  operation: z.literal('user-attribute-verification'),
+  user: UserIdSchema,
+  attribute: IdentityIdentifierSchema,
+});
+export type UserAttributeVerificationActionPayload = z.output<
+  typeof UserAttributeVerificationActionPayloadSchema
+>;
 
-export const UserAttributeVerificationActionRequestSchema = type(
-  {}
-).onUndeclaredKey('delete');
-export type UserAttributeVerificationActionRequest =
-  typeof UserAttributeVerificationActionRequestSchema.inferOut;
+export const UserAttributeVerificationActionRequestSchema = z.object({});
+export type UserAttributeVerificationActionRequest = z.output<
+  typeof UserAttributeVerificationActionRequestSchema
+>;

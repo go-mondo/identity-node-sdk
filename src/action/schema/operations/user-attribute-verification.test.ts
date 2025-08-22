@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../../../customer/schema.js';
 import { generateActionId } from '../utils.js';
@@ -21,9 +20,10 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         metadata: { key: 'value' },
       };
 
-      const result = UserAttributeVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result =
+        UserAttributeVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept payload with phoneNumber attribute', () => {
@@ -38,9 +38,10 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         metadata: {},
       };
 
-      const result = UserAttributeVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result =
+        UserAttributeVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept payload with optional dates', () => {
@@ -57,8 +58,9 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         metadata: {},
       };
 
-      const result = UserAttributeVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result =
+        UserAttributeVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid operation', () => {
@@ -73,8 +75,9 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         metadata: {},
       };
 
-      const result = UserAttributeVerificationActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result =
+        UserAttributeVerificationActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid attribute', () => {
@@ -89,8 +92,9 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         metadata: {},
       };
 
-      const result = UserAttributeVerificationActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result =
+        UserAttributeVerificationActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -100,8 +104,9 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         // missing user, attribute, attempt, etc.
       };
 
-      const result = UserAttributeVerificationActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result =
+        UserAttributeVerificationActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should delete undeclared keys', () => {
@@ -117,9 +122,10 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         extraField: 'should be removed',
       };
 
-      const result = UserAttributeVerificationActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).not.toHaveProperty('extraField');
+      const result =
+        UserAttributeVerificationActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).not.toHaveProperty('extraField');
     });
   });
 
@@ -127,9 +133,10 @@ describe('Action Schema Operations - User Attribute Verification', () => {
     test('should accept empty request', () => {
       const request = {};
 
-      const result = UserAttributeVerificationActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result =
+        UserAttributeVerificationActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should delete undeclared keys', () => {
@@ -138,11 +145,12 @@ describe('Action Schema Operations - User Attribute Verification', () => {
         anotherField: 'also removed',
       };
 
-      const result = UserAttributeVerificationActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).not.toHaveProperty('extraField');
-      expect(result).not.toHaveProperty('anotherField');
-      expect(result).toEqual({});
+      const result =
+        UserAttributeVerificationActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).not.toHaveProperty('extraField');
+      expect(result.data).not.toHaveProperty('anotherField');
+      expect(result.data).toEqual({});
     });
   });
 });

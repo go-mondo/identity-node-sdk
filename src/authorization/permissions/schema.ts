@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { AppIdAssociationsSchema } from '../../app/schema.js';
 import {
   OptionalDatePayloadSchema,
@@ -26,88 +26,100 @@ export const PermissionStatus = {
 export type AnyPermissionStatus =
   (typeof PermissionStatus)[keyof typeof PermissionStatus];
 
-export const PermissionIdPropertySchema = type({
+export const PermissionIdPropertySchema = z.object({
   id: PermissionIdSchema,
 });
-export type PermissionIdProperty = typeof PermissionIdPropertySchema.inferOut;
+export type PermissionIdProperty = z.output<typeof PermissionIdPropertySchema>;
 
-const PermissionStatusSchema = type.enumerated(
+const PermissionStatusSchema = z.enum([
   PermissionStatus.ENABLED,
-  PermissionStatus.DISABLED
-);
+  PermissionStatus.DISABLED,
+] as const);
 
-export const PermissionAssociationsSchema = type({
+export const PermissionAssociationsSchema = z.object({
   apps: AppIdAssociationsSchema.optional(),
   roles: RoleIdAssociationsSchema.optional(),
 });
-export type PermissionAssociations =
-  typeof PermissionAssociationsSchema.inferOut;
+export type PermissionAssociations = z.output<
+  typeof PermissionAssociationsSchema
+>;
 
-const BaseSchema = PermissionIdPropertySchema.and({
-  name: type('string'),
+const BaseSchema = z.object({
+  ...PermissionIdPropertySchema.shape,
+  name: z.string(),
   status: PermissionStatusSchema,
-  description: type('string').optional(),
+  description: z.string().optional(),
 });
 
-export const PermissionSchema = BaseSchema.and({
+export const PermissionSchema = z.object({
+  ...BaseSchema.shape,
   apps: AggregateSchema.optional(),
   roles: AggregateSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  'deletedAt?': OptionalDateSchema,
-  'deactivatedAt?': OptionalDateSchema,
-}).and(MetadataMapPropertySchema);
-export type PermissionProperties = typeof PermissionSchema.inferIn;
-export type Permission = typeof PermissionSchema.inferOut;
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+  ...MetadataMapPropertySchema.shape,
+});
+export type PermissionProperties = z.input<typeof PermissionSchema>;
+export type Permission = z.output<typeof PermissionSchema>;
 
-export const PermissionPayloadSchema = BaseSchema.and({
+export const PermissionPayloadSchema = z.object({
+  ...BaseSchema.shape,
   apps: AggregateSchema.optional(),
   roles: AggregateSchema.optional(),
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type PermissionPayload = typeof PermissionPayloadSchema.inferOut;
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type PermissionPayload = z.output<typeof PermissionPayloadSchema>;
 
 /**
  * Insert
  */
-export const InsertPermissionPayloadSchema = type({
+export const InsertPermissionPayloadSchema = z.object({
   id: PermissionIdSchema.default(() => generatePermissionId()),
-  name: type('string'),
+  name: z.string(),
   status: PermissionStatusSchema.default(PermissionStatus.ENABLED),
-  description: type('string').optional(),
-})
-  .and(PermissionAssociationsSchema)
-  .and(UpsertMetadataPropertyPayloadSchema);
-export type InsertPermissionInput =
-  typeof InsertPermissionPayloadSchema.inferIn;
-export type InsertPermissionPayload =
-  typeof InsertPermissionPayloadSchema.inferOut;
+  description: z.string().optional(),
+  ...PermissionAssociationsSchema.shape,
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type InsertPermissionInput = z.input<
+  typeof InsertPermissionPayloadSchema
+>;
+export type InsertPermissionPayload = z.output<
+  typeof InsertPermissionPayloadSchema
+>;
 
 /**
  * Update
  */
-export const UpdatePermissionPayloadSchema = type({
-  name: type('string').optional(),
+export const UpdatePermissionPayloadSchema = z.object({
+  name: z.string().optional(),
   status: PermissionStatusSchema.optional(),
-  description: type('string').optional(),
-}).and(UpsertMetadataPropertyPayloadSchema);
-export type UpdatePermissionInput =
-  typeof UpdatePermissionPayloadSchema.inferIn;
-export type UpdatePermissionPayload =
-  typeof UpdatePermissionPayloadSchema.inferOut;
+  description: z.string().optional(),
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type UpdatePermissionInput = z.input<
+  typeof UpdatePermissionPayloadSchema
+>;
+export type UpdatePermissionPayload = z.output<
+  typeof UpdatePermissionPayloadSchema
+>;
 
 /**
  * Association
  */
 
-export const PermissionAssociationReferenceSchema =
-  PermissionIdPropertySchema.and({
-    name: type('string'),
-    status: PermissionStatusSchema.default('disabled'),
-    model: "'Permission'",
-  });
-export type PermissionAssociationReference =
-  typeof PermissionAssociationReferenceSchema.inferOut;
+export const PermissionAssociationReferenceSchema = z.object({
+  ...PermissionIdPropertySchema.shape,
+  name: z.string(),
+  status: PermissionStatusSchema.default('disabled'),
+  model: z.literal('Permission'),
+});
+export type PermissionAssociationReference = z.output<
+  typeof PermissionAssociationReferenceSchema
+>;

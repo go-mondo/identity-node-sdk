@@ -5,10 +5,7 @@ import {
   insertItemWithAuthorization,
   updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../../common/resources/utils.js';
+import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -68,11 +65,8 @@ export async function listStrategies(
     new URL(StrategyResources.buildPath(), instance.config.host),
     pagination
   );
-
-  return parseEgressSchema(
-    PaginationCollectionSchema(StrategySchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(StrategySchema).parse(
+    await getItemWithAuthorization(url, instance.authorizer)
   );
 }
 
@@ -80,12 +74,10 @@ export async function getStrategy(
   instance: MondoIdentity,
   id: string
 ): Promise<Strategy> {
-  return parseEgressSchema(
-    StrategySchema(
-      await getItemWithAuthorization(
-        new URL(StrategyResources.buildItemPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return StrategySchema.parse(
+    await getItemWithAuthorization(
+      new URL(StrategyResources.buildItemPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -94,15 +86,11 @@ export async function insertStrategy(
   instance: MondoIdentity,
   item: InsertStrategyInput
 ): Promise<Strategy> {
-  return parseEgressSchema(
-    StrategySchema(
-      await insertItemWithAuthorization(
-        new URL(StrategyResources.buildPath(), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          InsertStrategyPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return StrategySchema.parse(
+    await insertItemWithAuthorization(
+      new URL(StrategyResources.buildPath(), instance.config.host),
+      instance.authorizer,
+      InsertStrategyPayloadSchema.parse(item)
     )
   );
 }
@@ -112,15 +100,11 @@ export async function updateStrategy(
   id: string,
   item: UpdateStrategyInput
 ): Promise<Strategy> {
-  return parseEgressSchema(
-    StrategySchema(
-      await updateItemWithAuthorization(
-        new URL(StrategyResources.buildItemPath(id), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpdateStrategyPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return StrategySchema.parse(
+    await updateItemWithAuthorization(
+      new URL(StrategyResources.buildItemPath(id), instance.config.host),
+      instance.authorizer,
+      UpdateStrategyPayloadSchema.parse(item)
     )
   );
 }
@@ -129,12 +113,10 @@ export async function deleteStrategy(
   instance: MondoIdentity,
   id: string
 ): Promise<Strategy> {
-  return parseEgressSchema(
-    StrategySchema(
-      await deleteItemWithAuthorization(
-        new URL(StrategyResources.buildItemPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return StrategySchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(StrategyResources.buildItemPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }

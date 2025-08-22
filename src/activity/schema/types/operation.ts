@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { BasePayloadSchema, BaseSchema } from '../base.js';
 
 export const OperationType = {
@@ -11,26 +11,33 @@ export const OperationType = {
 export type AnyOperationType =
   (typeof OperationType)[keyof typeof OperationType];
 
-const OperationSchema = type.enumerated(
+const OperationSchema = z.enum([
   OperationType.CREATE,
   OperationType.UPDATE,
   OperationType.DELETE,
-  OperationType.AUTOMATION
-);
+  OperationType.AUTOMATION,
+] as const);
 
-const BaseOperationSchema = type({
-  type: type("'operation'"),
+const BaseOperationSchema = z.object({
+  type: z.literal('operation'),
   operation: OperationSchema,
-  message: type('string'),
-  target: type('string'),
+  message: z.string(),
+  target: z.string(),
 });
 
-export const OperationActivitySchema = BaseSchema.and(BaseOperationSchema);
-export type OperationActivityProperties =
-  typeof OperationActivitySchema.inferIn;
-export type OperationActivity = typeof OperationActivitySchema.inferOut;
+export const OperationActivitySchema = z.object({
+  ...BaseSchema.shape,
+  ...BaseOperationSchema.shape,
+});
+export type OperationActivityProperties = z.input<
+  typeof OperationActivitySchema
+>;
+export type OperationActivity = z.output<typeof OperationActivitySchema>;
 
-export const OperationActivityPayloadSchema =
-  BasePayloadSchema.and(BaseOperationSchema);
-export type OperationActivityPayload =
-  typeof OperationActivityPayloadSchema.inferOut;
+export const OperationActivityPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  ...BaseOperationSchema.shape,
+});
+export type OperationActivityPayload = z.output<
+  typeof OperationActivityPayloadSchema
+>;

@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import {
   MetadataMapPropertySchema,
@@ -9,102 +8,100 @@ import {
 describe('Common - Metadata', () => {
   describe('Map Property Schema', () => {
     test('should parse a record to a map', async () => {
-      const result = MetadataMapPropertySchema({
+      const result = MetadataMapPropertySchema.safeParse({
         metadata: { foo: 'bar' },
-      }) as typeof MetadataMapPropertySchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).toBeInstanceOf(Map);
+      // Parse succeeds for valid data
+      expect(result.data?.metadata).toBeInstanceOf(Map);
     });
 
     test('should parse undefined property to a map', async () => {
-      const result = MetadataMapPropertySchema({
+      const result = MetadataMapPropertySchema.safeParse({
         metadata: undefined,
-      }) as typeof MetadataMapPropertySchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).toBeInstanceOf(Map);
+      // Parse succeeds for valid data
+      expect(result.data?.metadata).toBeInstanceOf(Map);
     });
 
     test('should parse undefined to a map', async () => {
-      const result = MetadataMapPropertySchema(
-        {}
-      ) as typeof MetadataMapPropertySchema.inferOut;
+      const result = MetadataMapPropertySchema.safeParse({});
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).toBeInstanceOf(Map);
+      // Parse succeeds for valid data
+      expect(result.data?.metadata).toBeInstanceOf(Map);
     });
 
     test('should parse map to a map', async () => {
-      const result = MetadataMapPropertySchema({
+      const result = MetadataMapPropertySchema.safeParse({
         metadata: new Map([['foo', 'bar']]),
-      }) as typeof MetadataMapPropertySchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).toBeInstanceOf(Map);
+      // Parse succeeds for valid data
+      expect(result.data?.metadata).toBeInstanceOf(Map);
     });
 
     test('should parse null to a map', async () => {
-      const result = MetadataMapPropertySchema({
+      const result = MetadataMapPropertySchema.safeParse({
         metadata: null,
-      }) as typeof MetadataMapPropertySchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).toBeInstanceOf(Map);
+      // Parse succeeds for valid data
+      expect(result.data?.metadata).toBeInstanceOf(Map);
     });
   });
 
   describe('Payload', () => {
     test('should parse map to record', async () => {
-      const result = MetadataPayloadPropertySchema({
+      const result = MetadataPayloadPropertySchema.safeParse({
         metadata: new Map<string, string | number>([
           ['foo', 'bar'],
           ['baz', 0],
         ]),
-      }) as typeof MetadataPayloadPropertySchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata?.foo).to.equal('bar');
-      expect(result?.metadata?.baz).to.equal(0);
+      // Parse succeeds for valid data
+      expect(result.data?.metadata?.foo).to.equal('bar');
+      expect(result.data?.metadata?.baz).to.equal(0);
     });
 
     test('should return undefined if map is empty', async () => {
-      const result = MetadataPayloadPropertySchema({
+      const result = MetadataPayloadPropertySchema.safeParse({
         metadata: new Map(),
-      }) as typeof MetadataPayloadPropertySchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).is.undefined;
+      // Parse succeeds for valid data
+      expect(result.data?.metadata).is.undefined;
     });
   });
 
   describe('Upsert Metadata Payload Schema', () => {
     test('should handle incoming record', async () => {
-      const result = UpsertMetadataPayloadSchema({
+      const result = UpsertMetadataPayloadSchema.safeParse({
         foo: 'bar',
         bar: 'baz',
-      }) as typeof UpsertMetadataPayloadSchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.foo).to.equal('bar');
-      expect(result?.bar).to.equal('baz');
+      // Parse succeeds for valid data
+      expect(result.data?.foo).to.equal('bar');
+      expect(result.data?.bar).to.equal('baz');
     });
 
     test('should handle incoming map', async () => {
-      const result = UpsertMetadataPayloadSchema(
+      const result = UpsertMetadataPayloadSchema.safeParse(
         new Map([
           ['foo', 'bar'],
           ['bar', 'baz'],
         ])
-      ) as typeof UpsertMetadataPayloadSchema.inferOut;
+      );
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.foo).to.equal('bar');
-      expect(result?.bar).to.equal('baz');
+      // Parse succeeds for valid data
+      expect(result.data?.foo).to.equal('bar');
+      expect(result.data?.bar).to.equal('baz');
     });
 
     test('should only allow 10 items', async () => {
-      const result = UpsertMetadataPayloadSchema(
+      const result = UpsertMetadataPayloadSchema.safeParse(
         new Map([
           ['1', '1'],
           ['2', '2'],
@@ -118,24 +115,24 @@ describe('Common - Metadata', () => {
           ['10', '10'],
           ['11', '11'],
         ])
-      ) as typeof UpsertMetadataPayloadSchema.inferOut;
+      );
 
-      expect(result).toBeInstanceOf(type.errors);
+      expect(result.success).toBe(false);
     });
   });
 
   describe('Map Property Schema', () => {
     test('should parse map to record', async () => {
-      const result = MetadataMapPropertySchema({
+      const result = MetadataMapPropertySchema.safeParse({
         metadata: {
           foo: 'bar',
           bar: 'baz',
         },
-      }) as typeof MetadataMapPropertySchema.inferOut;
+      });
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata?.get('foo')).to.equal('bar');
-      expect(result?.metadata?.get('bar')).to.equal('baz');
+      // Parse succeeds for valid data
+      expect(result.data?.metadata?.get('foo')).to.equal('bar');
+      expect(result.data?.metadata?.get('bar')).to.equal('baz');
     });
   });
 });

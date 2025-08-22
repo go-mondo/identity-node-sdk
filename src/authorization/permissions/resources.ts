@@ -5,10 +5,7 @@ import {
   insertItemWithAuthorization,
   updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../../common/resources/utils.js';
+import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -71,10 +68,8 @@ export async function listPermissions(
     pagination
   );
 
-  return parseEgressSchema(
-    PaginationCollectionSchema(PermissionSchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(PermissionSchema).parse(
+    await getItemWithAuthorization(url, instance.authorizer)
   );
 }
 
@@ -82,12 +77,10 @@ export async function getPermission(
   instance: MondoIdentity,
   id: string
 ): Promise<Permission> {
-  return parseEgressSchema(
-    PermissionSchema(
-      await getItemWithAuthorization(
-        new URL(PermissionResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return PermissionSchema.parse(
+    await getItemWithAuthorization(
+      new URL(PermissionResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -96,15 +89,11 @@ export async function insertPermission(
   instance: MondoIdentity,
   item: InsertPermissionInput
 ): Promise<Permission> {
-  return parseEgressSchema(
-    PermissionSchema(
-      await insertItemWithAuthorization(
-        new URL(PermissionResources.buildPath(), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          InsertPermissionPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return PermissionSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(PermissionResources.buildPath(), instance.config.host),
+      instance.authorizer,
+      InsertPermissionPayloadSchema.parse(item)
     )
   );
 }
@@ -114,15 +103,11 @@ export async function updatePermission(
   id: string,
   item: UpdatePermissionInput
 ): Promise<Permission> {
-  return parseEgressSchema(
-    PermissionSchema(
-      await updateItemWithAuthorization(
-        new URL(PermissionResources.buildPath(id), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpdatePermissionPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return PermissionSchema.parse(
+    await updateItemWithAuthorization(
+      new URL(PermissionResources.buildPath(id), instance.config.host),
+      instance.authorizer,
+      UpdatePermissionPayloadSchema.parse(item)
     )
   );
 }
@@ -131,12 +116,10 @@ export async function deletePermission(
   instance: MondoIdentity,
   id: string
 ): Promise<Permission> {
-  return parseEgressSchema(
-    PermissionSchema(
-      await deleteItemWithAuthorization(
-        new URL(PermissionResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return PermissionSchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(PermissionResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }

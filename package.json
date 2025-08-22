@@ -133,8 +133,8 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "arktype": "^2.1.20",
-    "ksuid": "^3.0.0"
+    "ksuid": "^3.0.0",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

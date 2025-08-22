@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { Algorithm, AlgorithmSchema } from './jwt.js';
 
@@ -23,39 +22,46 @@ describe('Common Schema - JWT', () => {
 
   describe('AlgorithmSchema', () => {
     test('should accept valid HMAC algorithms', () => {
-      expect(AlgorithmSchema('HS256')).not.toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('HS384')).not.toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('HS512')).not.toBeInstanceOf(type.errors);
+      expect(AlgorithmSchema.safeParse('HS256').success).toBe(true);
+      expect(AlgorithmSchema.safeParse('HS384').success).toBe(true);
+      expect(AlgorithmSchema.safeParse('HS512').success).toBe(true);
     });
 
     test('should accept valid RSA algorithms', () => {
-      expect(AlgorithmSchema('RS256')).not.toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('RS384')).not.toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('RS512')).not.toBeInstanceOf(type.errors);
+      expect(AlgorithmSchema.safeParse('RS256').success).toBe(true);
+      expect(AlgorithmSchema.safeParse('RS384').success).toBe(true);
+      expect(AlgorithmSchema.safeParse('RS512').success).toBe(true);
     });
 
     test('should accept valid ECDSA algorithms', () => {
-      expect(AlgorithmSchema('ES256')).not.toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('ES384')).not.toBeInstanceOf(type.errors);
+      expect(AlgorithmSchema.safeParse('ES256').success).toBe(true);
+      expect(AlgorithmSchema.safeParse('ES384').success).toBe(true);
     });
 
     test('should accept valid PSS algorithms', () => {
-      expect(AlgorithmSchema('PS256')).not.toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('PS384')).not.toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('PS512')).not.toBeInstanceOf(type.errors);
+      expect(AlgorithmSchema.safeParse('PS256').success).toBe(true);
+      expect(AlgorithmSchema.safeParse('PS384').success).toBe(true);
+      expect(AlgorithmSchema.safeParse('PS512').success).toBe(true);
     });
 
     test('should reject invalid algorithms', () => {
-      expect(AlgorithmSchema('INVALID')).toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('HS128')).toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('RS128')).toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema('')).toBeInstanceOf(type.errors);
+      const result1 = AlgorithmSchema.safeParse('INVALID');
+      expect(result1.success).toBe(false);
+      const result2 = AlgorithmSchema.safeParse('HS128');
+      expect(result2.success).toBe(false);
+      const result3 = AlgorithmSchema.safeParse('RS128');
+      expect(result3.success).toBe(false);
+      const result4 = AlgorithmSchema.safeParse('');
+      expect(result4.success).toBe(false);
     });
 
     test('should reject non-string values', () => {
-      expect(AlgorithmSchema(123)).toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema(null)).toBeInstanceOf(type.errors);
-      expect(AlgorithmSchema(undefined)).toBeInstanceOf(type.errors);
+      const result1 = AlgorithmSchema.safeParse(123);
+      expect(result1.success).toBe(false);
+      const result2 = AlgorithmSchema.safeParse(null);
+      expect(result2.success).toBe(false);
+      const result3 = AlgorithmSchema.safeParse(undefined);
+      expect(result3.success).toBe(false);
     });
   });
 });

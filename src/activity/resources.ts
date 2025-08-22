@@ -1,9 +1,6 @@
 import type { MondoIdentity } from '../common/resources/init.js';
 import { getItemWithAuthorization } from '../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../common/resources/utils.js';
+import { addPaginationToURL } from '../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -42,9 +39,7 @@ export async function listActivities(
     pagination
   );
 
-  return parseEgressSchema(
-    PaginationCollectionSchema(ActivitySchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(ActivitySchema).parse(
+    await getItemWithAuthorization(url, instance.authorizer)
   );
 }

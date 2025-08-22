@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../../app/utils.js';
 import {
@@ -7,9 +6,7 @@ import {
   generateRoleId,
 } from '../schema.js';
 import {
-  type InsertPermissionPayload,
   InsertPermissionPayloadSchema,
-  type PermissionAssociationReference,
   PermissionAssociationReferenceSchema,
   PermissionAssociationsSchema,
   PermissionIdPropertySchema,
@@ -28,27 +25,28 @@ describe('Authorization Permissions - Schema', () => {
 
   describe('PermissionIdSchema', () => {
     test('should accept valid string ID', () => {
-      const result = PermissionIdSchema(generatePermissionId());
-      expect(result).not.toBeInstanceOf(type.errors);
+      expect(PermissionIdSchema.safeParse(generatePermissionId()).success).toBe(
+        true
+      );
     });
 
     test('should reject non-string values', () => {
-      expect(PermissionIdSchema(123)).toBeInstanceOf(type.errors);
-      expect(PermissionIdSchema(null)).toBeInstanceOf(type.errors);
+      expect(PermissionIdSchema.safeParse(123).success).toBe(false);
+      expect(PermissionIdSchema.safeParse(null).success).toBe(false);
     });
   });
 
   describe('PermissionIdPropertySchema', () => {
     test('should accept valid id property', () => {
       const payload = { id: generatePermissionId() };
-      const result = PermissionIdPropertySchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({ id: payload.id });
+      const result = PermissionIdPropertySchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({ id: payload.id });
     });
 
     test('should reject missing id', () => {
-      const result = PermissionIdPropertySchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = PermissionIdPropertySchema.safeParse({});
+      expect(result.success).toBe(false);
     });
   });
 
@@ -58,33 +56,33 @@ describe('Authorization Permissions - Schema', () => {
       roles: [generateRoleId(), generateRoleId()],
     };
     test('should accept valid associations', () => {
-      const result = PermissionAssociationsSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({
+      const result = PermissionAssociationsSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({
         apps: payload.apps,
         roles: payload.roles,
       });
     });
 
     test('should accept optional associations', () => {
-      const result = PermissionAssociationsSchema({});
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({});
+      const result = PermissionAssociationsSchema.safeParse({});
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({});
     });
 
     test('should accept undefined associations', () => {
-      const result = PermissionAssociationsSchema({
+      const result = PermissionAssociationsSchema.safeParse({
         apps: undefined,
         roles: [generateRoleId()],
       });
-      expect(result).not.toBeInstanceOf(type.errors);
+      // Parse succeeds for valid data
     });
 
     test('should reject non-array associations', () => {
-      const result = PermissionAssociationsSchema({
+      const result = PermissionAssociationsSchema.safeParse({
         apps: 'not-an-array',
       });
-      expect(result).toBeInstanceOf(type.errors);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -102,8 +100,8 @@ describe('Authorization Permissions - Schema', () => {
         metadata: { key: 'value' },
       };
 
-      const result = PermissionSchema(permission);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = PermissionSchema.safeParse(permission);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal permission object', () => {
@@ -116,8 +114,8 @@ describe('Authorization Permissions - Schema', () => {
         metadata: {},
       };
 
-      const result = PermissionSchema(permission);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = PermissionSchema.safeParse(permission);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid status', () => {
@@ -130,8 +128,8 @@ describe('Authorization Permissions - Schema', () => {
         metadata: {},
       };
 
-      const result = PermissionSchema(permission);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = PermissionSchema.safeParse(permission);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -140,8 +138,8 @@ describe('Authorization Permissions - Schema', () => {
         name: 'read:users',
       };
 
-      const result = PermissionSchema(permission);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = PermissionSchema.safeParse(permission);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -157,8 +155,8 @@ describe('Authorization Permissions - Schema', () => {
         metadata: { key: 'value' },
       };
 
-      const result = InsertPermissionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertPermissionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal insert payload', () => {
@@ -166,22 +164,22 @@ describe('Authorization Permissions - Schema', () => {
         name: 'read:users',
       };
 
-      const result = InsertPermissionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as InsertPermissionPayload).status).toBe('enabled'); // default value
+      const result = InsertPermissionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data?.status).toBe('enabled'); // default value
     });
 
     test('should generate default ID when not provided', () => {
       const payload = { name: 'read:users' };
-      const result = InsertPermissionPayloadSchema(payload);
+      const result = InsertPermissionPayloadSchema.safeParse(payload);
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as InsertPermissionPayload).id).toMatch(/^per_/);
+      // Parse succeeds for valid data
+      expect(result.data?.id).toMatch(/^per_/);
     });
 
     test('should reject missing name', () => {
-      const result = InsertPermissionPayloadSchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertPermissionPayloadSchema.safeParse({});
+      expect(result.success).toBe(false);
     });
   });
 
@@ -194,28 +192,28 @@ describe('Authorization Permissions - Schema', () => {
         metadata: { updated: true },
       };
 
-      const result = UpdatePermissionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdatePermissionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept empty update payload', () => {
-      const result = UpdatePermissionPayloadSchema({});
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({});
+      const result = UpdatePermissionPayloadSchema.safeParse({});
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({});
     });
 
     test('should accept partial updates', () => {
       const payload = { name: 'new:name' };
-      const result = UpdatePermissionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdatePermissionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should reject invalid status', () => {
       const payload = { status: 'invalid-status' };
-      const result = UpdatePermissionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpdatePermissionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -228,9 +226,9 @@ describe('Authorization Permissions - Schema', () => {
         model: 'Permission' as const,
       };
 
-      const result = PermissionAssociationReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(reference);
+      const result = PermissionAssociationReferenceSchema.safeParse(reference);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(reference);
     });
 
     test('should use default status when not provided', () => {
@@ -240,17 +238,15 @@ describe('Authorization Permissions - Schema', () => {
         model: 'Permission' as const,
       };
 
-      const result = PermissionAssociationReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as PermissionAssociationReference).status).toBe(
-        'disabled'
-      ); // default value
+      const result = PermissionAssociationReferenceSchema.safeParse(reference);
+      // Parse succeeds for valid data
+      expect(result.data?.status).toBe('disabled'); // default value
     });
 
     test('should reject missing required fields', () => {
       const reference = { id: generatePermissionId() };
-      const result = PermissionAssociationReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = PermissionAssociationReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid model value', () => {
@@ -260,8 +256,8 @@ describe('Authorization Permissions - Schema', () => {
         model: 'InvalidModel',
       };
 
-      const result = PermissionAssociationReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = PermissionAssociationReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
   });
 });

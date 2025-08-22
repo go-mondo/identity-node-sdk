@@ -3,10 +3,7 @@ import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../../common/resources/utils.js';
+import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -70,10 +67,8 @@ export async function listSessions(
     pagination
   );
 
-  return parseEgressSchema(
-    PaginationCollectionSchema(SessionSchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(SessionSchema).parse(
+    await getItemWithAuthorization(url, instance.authorizer)
   );
 }
 
@@ -81,12 +76,10 @@ export async function deleteSession(
   instance: MondoIdentity,
   id: string
 ): Promise<Session> {
-  return parseEgressSchema(
-    SessionSchema(
-      await deleteItemWithAuthorization(
-        new URL(SessionResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return SessionSchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(SessionResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }

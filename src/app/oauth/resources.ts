@@ -3,7 +3,6 @@ import {
   getItemWithAuthorization,
   insertItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import { parseEgressSchema } from '../../common/resources/utils.js';
 import { PATH } from '../resources.js';
 import {
   type InsertOAuthInput,
@@ -38,12 +37,10 @@ export async function getOAuth(
   instance: MondoIdentity,
   appId: string
 ): Promise<OAuth> {
-  return parseEgressSchema(
-    OAuthSchema(
-      await getItemWithAuthorization(
-        new URL(OAuthResources.buildPath(appId), instance.config.host),
-        instance.authorizer
-      )
+  return OAuthSchema.parse(
+    await getItemWithAuthorization(
+      new URL(OAuthResources.buildPath(appId), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -53,15 +50,11 @@ export async function rotateOAuthSecret(
   appId: string,
   item?: InsertOAuthInput
 ): Promise<OAuth> {
-  return parseEgressSchema(
-    OAuthSchema(
-      await insertItemWithAuthorization(
-        new URL(OAuthResources.buildPath(appId), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          InsertOAuthPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return OAuthSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(OAuthResources.buildPath(appId), instance.config.host),
+      instance.authorizer,
+      InsertOAuthPayloadSchema.parse(item)
     )
   );
 }

@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../../../customer/schema.js';
 import { generateActivityId } from '../utils.js';
@@ -19,25 +18,25 @@ describe('Activity Schema - Authentication', () => {
 
   describe('AuthenticationStatusSchema', () => {
     test('should accept success status', () => {
-      const result = AuthenticationStatusSchema('success');
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe('success');
+      const result = AuthenticationStatusSchema.safeParse('success');
+      // Parse succeeds for valid data
+      expect(result.data).toBe('success');
     });
 
     test('should accept fail status', () => {
-      const result = AuthenticationStatusSchema('fail');
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe('fail');
+      const result = AuthenticationStatusSchema.safeParse('fail');
+      // Parse succeeds for valid data
+      expect(result.data).toBe('fail');
     });
 
     test('should reject invalid status', () => {
-      const result = AuthenticationStatusSchema('invalid_status');
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationStatusSchema.safeParse('invalid_status');
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-string status', () => {
-      const result = AuthenticationStatusSchema(123);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationStatusSchema.safeParse(123);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -60,8 +59,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: { method: 'email', ip: '192.168.1.1' },
       };
 
-      const result = AuthenticationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthenticationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept authentication activity with fail status', () => {
@@ -82,8 +81,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: { reason: 'invalid_password', attempts: 3 },
       };
 
-      const result = AuthenticationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthenticationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept authentication activity with optional fields', () => {
@@ -106,8 +105,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: { provider: 'google', token_type: 'bearer' },
       };
 
-      const result = AuthenticationActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthenticationActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should reject authentication activity with wrong type', () => {
@@ -128,8 +127,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: {},
       };
 
-      const result = AuthenticationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject authentication activity with invalid status', () => {
@@ -150,8 +149,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: {},
       };
 
-      const result = AuthenticationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject authentication activity missing required fields', () => {
@@ -171,8 +170,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: {},
       };
 
-      const result = AuthenticationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject authentication activity with invalid identity ID', () => {
@@ -193,8 +192,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: {},
       };
 
-      const result = AuthenticationActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -217,9 +216,9 @@ describe('Activity Schema - Authentication', () => {
         metadata: { device: 'iPhone', os: 'iOS 17' },
       };
 
-      const result = AuthenticationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = AuthenticationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept authentication payload with fail status', () => {
@@ -240,8 +239,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: { error_code: 'INVALID_CREDENTIALS' },
       };
 
-      const result = AuthenticationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthenticationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept payload with optional date fields', () => {
@@ -264,8 +263,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: { automated: true },
       };
 
-      const result = AuthenticationActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = AuthenticationActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject payload with invalid date format', () => {
@@ -286,8 +285,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: {},
       };
 
-      const result = AuthenticationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with wrong type', () => {
@@ -308,8 +307,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: {},
       };
 
-      const result = AuthenticationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with invalid status', () => {
@@ -330,8 +329,8 @@ describe('Activity Schema - Authentication', () => {
         metadata: {},
       };
 
-      const result = AuthenticationActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = AuthenticationActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

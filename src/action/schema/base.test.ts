@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import {
   ActionOperation,
@@ -24,62 +23,77 @@ describe('Action Schema - Base', () => {
   describe('ActionIdSchema', () => {
     test('should accept valid action ID', () => {
       const id = generateActionId();
-      const result = ActionIdSchema(id);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe(id);
+      const result = ActionIdSchema.safeParse(id);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(id);
+      }
     });
 
     test('should reject invalid action ID format', () => {
-      expect(ActionIdSchema('invalid_id')).toBeInstanceOf(type.errors);
-      expect(ActionIdSchema('wrong_prefix_123')).toBeInstanceOf(type.errors);
+      const result1 = ActionIdSchema.safeParse('invalid_id');
+      expect(result1.success).toBe(false);
+      const result2 = ActionIdSchema.safeParse('act_');
+      expect(result2.success).toBe(false);
     });
 
     test('should reject non-string values', () => {
-      expect(ActionIdSchema(123)).toBeInstanceOf(type.errors);
-      expect(ActionIdSchema(null)).toBeInstanceOf(type.errors);
+      const result1 = ActionIdSchema.safeParse(123);
+      expect(result1.success).toBe(false);
+      const result2 = ActionIdSchema.safeParse(null);
+      expect(result2.success).toBe(false);
     });
   });
 
   describe('ActionIdPropertySchema', () => {
     test('should accept valid id property', () => {
       const payload = { id: generateActionId() };
-      const result = ActionIdPropertySchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = ActionIdPropertySchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should reject missing id', () => {
-      const result = ActionIdPropertySchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionIdPropertySchema.safeParse({});
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid id format', () => {
-      const result = ActionIdPropertySchema({ id: 'invalid_id' });
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActionIdPropertySchema.safeParse({ id: 'invalid_id' });
+      expect(result.success).toBe(false);
     });
   });
 
   describe('OperationSchema', () => {
     test('should accept valid operations', () => {
-      expect(OperationSchema('sign-up')).not.toBeInstanceOf(type.errors);
-      expect(OperationSchema('sign-up-verification')).not.toBeInstanceOf(
-        type.errors
+      // Parse succeeds for valid data
+      expect(OperationSchema.safeParse('sign-up-verification').success).toBe(
+        true
       );
-      expect(OperationSchema('set-password')).not.toBeInstanceOf(type.errors);
-      expect(OperationSchema('user-attribute-verification')).not.toBeInstanceOf(
-        type.errors
-      );
+      // Parse succeeds for valid data
+      expect(
+        OperationSchema.safeParse('user-attribute-verification').success
+      ).toBe(true);
     });
 
     test('should reject invalid operations', () => {
-      expect(OperationSchema('invalid-operation')).toBeInstanceOf(type.errors);
-      expect(OperationSchema('signup')).toBeInstanceOf(type.errors);
-      expect(OperationSchema('')).toBeInstanceOf(type.errors);
+      const result1 = OperationSchema.safeParse('invalid-operation');
+      expect(result1.success).toBe(false);
+      const result2 = OperationSchema.safeParse('another-invalid');
+      expect(result2.success).toBe(false);
+      const result3 = OperationSchema.safeParse('');
+      expect(result3.success).toBe(false);
     });
 
     test('should reject non-string values', () => {
-      expect(OperationSchema(123)).toBeInstanceOf(type.errors);
-      expect(OperationSchema(null)).toBeInstanceOf(type.errors);
+      const result1 = OperationSchema.safeParse(123);
+      expect(result1.success).toBe(false);
+      const result2 = OperationSchema.safeParse(null);
+      expect(result2.success).toBe(false);
     });
   });
 
@@ -93,8 +107,9 @@ describe('Action Schema - Base', () => {
         metadata: { key: 'value' },
       };
 
-      const result = BasePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = BasePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should accept base payload with optional dates', () => {
@@ -108,8 +123,9 @@ describe('Action Schema - Base', () => {
         metadata: {},
       };
 
-      const result = BasePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = BasePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should reject missing required fields', () => {
@@ -119,8 +135,8 @@ describe('Action Schema - Base', () => {
         // missing expiresAt, updatedAt, metadata
       };
 
-      const result = BasePayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = BasePayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid attempt type', () => {
@@ -132,8 +148,8 @@ describe('Action Schema - Base', () => {
         metadata: {},
       };
 
-      const result = BasePayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = BasePayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid date formats', () => {
@@ -145,8 +161,8 @@ describe('Action Schema - Base', () => {
         metadata: {},
       };
 
-      const result = BasePayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = BasePayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

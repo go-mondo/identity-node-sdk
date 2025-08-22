@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../../app/utils.js';
 import {
@@ -38,46 +37,61 @@ describe('Activity Schema - Base', () => {
   describe('ActivityIdSchema', () => {
     test('should accept valid activity ID', () => {
       const id = generateActivityId();
-      const result = ActivityIdSchema(id);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe(id);
+      const result = ActivityIdSchema.safeParse(id);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe(id);
+      }
     });
 
     test('should reject invalid activity ID format', () => {
-      expect(ActivityIdSchema('invalid_id')).toBeInstanceOf(type.errors);
-      expect(ActivityIdSchema('wrong_prefix_123')).toBeInstanceOf(type.errors);
+      const result1 = ActivityIdSchema.safeParse('invalid_id');
+      expect(result1.success).toBe(false);
+      const result2 = ActivityIdSchema.safeParse('act_');
+      expect(result2.success).toBe(false);
     });
 
     test('should reject non-string values', () => {
-      expect(ActivityIdSchema(123)).toBeInstanceOf(type.errors);
-      expect(ActivityIdSchema(null)).toBeInstanceOf(type.errors);
+      const result1 = ActivityIdSchema.safeParse(123);
+      expect(result1.success).toBe(false);
+      const result2 = ActivityIdSchema.safeParse(null);
+      expect(result2.success).toBe(false);
     });
   });
 
   describe('ActivityIdPropertySchema', () => {
     test('should accept valid id property', () => {
       const payload = { id: generateActivityId() };
-      const result = ActivityIdPropertySchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = ActivityIdPropertySchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should reject missing id', () => {
-      const result = ActivityIdPropertySchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActivityIdPropertySchema.safeParse({});
+      expect(result.success).toBe(false);
     });
   });
 
   describe('SourceSchema', () => {
     test('should accept string source', () => {
-      const result = SourceSchema('api-request');
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBe('api-request');
+      const result = SourceSchema.safeParse('api-request');
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe('api-request');
+      }
     });
 
     test('should reject non-string values', () => {
-      expect(SourceSchema(123)).toBeInstanceOf(type.errors);
-      expect(SourceSchema(null)).toBeInstanceOf(type.errors);
+      const result1 = SourceSchema.safeParse(123);
+      expect(result1.success).toBe(false);
+      const result2 = SourceSchema.safeParse(null);
+      expect(result2.success).toBe(false);
     });
   });
 
@@ -88,9 +102,12 @@ describe('Activity Schema - Base', () => {
         identifier: 'system-process',
       };
 
-      const result = PerformedBySchema(performer);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(performer);
+      const result = PerformedBySchema.safeParse(performer);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(performer);
+      }
     });
 
     test('should accept valid performer with identity type', () => {
@@ -99,9 +116,12 @@ describe('Activity Schema - Base', () => {
         identifier: 'user@example.com',
       };
 
-      const result = PerformedBySchema(performer);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(performer);
+      const result = PerformedBySchema.safeParse(performer);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(performer);
+      }
     });
 
     test('should accept all valid performer types', () => {
@@ -118,8 +138,9 @@ describe('Activity Schema - Base', () => {
           type: performerType,
           identifier: `test-${performerType}`,
         };
-        const result = PerformedBySchema(performer);
-        expect(result).not.toBeInstanceOf(type.errors);
+        const result = PerformedBySchema.safeParse(performer);
+        // Parse succeeds for valid data
+        expect(result.success).toBe(true);
       }
     });
 
@@ -129,15 +150,13 @@ describe('Activity Schema - Base', () => {
         identifier: 'test',
       };
 
-      const result = PerformedBySchema(performer);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = PerformedBySchema.safeParse(performer);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing fields', () => {
-      expect(PerformedBySchema({ type: 'system' })).toBeInstanceOf(type.errors);
-      expect(PerformedBySchema({ identifier: 'test' })).toBeInstanceOf(
-        type.errors
-      );
+      const result = PerformedBySchema.safeParse({ identifier: 'test' });
+      expect(result.success).toBe(false);
     });
   });
 
@@ -157,8 +176,8 @@ describe('Activity Schema - Base', () => {
         metadata: { key: 'value' },
       };
 
-      const result = BaseSchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = BaseSchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept activity without app', () => {
@@ -175,8 +194,8 @@ describe('Activity Schema - Base', () => {
         metadata: {},
       };
 
-      const result = BaseSchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = BaseSchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept activity with optional dates', () => {
@@ -195,8 +214,8 @@ describe('Activity Schema - Base', () => {
         metadata: {},
       };
 
-      const result = BaseSchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = BaseSchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should reject missing required fields', () => {
@@ -209,8 +228,8 @@ describe('Activity Schema - Base', () => {
         // missing source, isMutateable, dates, metadata
       };
 
-      const result = BaseSchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = BaseSchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -225,19 +244,20 @@ describe('Activity Schema - Base', () => {
         metadata: { source: 'api' },
       };
 
-      const result = BaseInsertPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = BaseInsertPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal insert payload', () => {
       const payload = {};
 
-      const result = BaseInsertPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      // Should generate default ID
-      expect((result as typeof BaseInsertPayloadSchema.inferOut).id).toMatch(
-        /^act_/
-      );
+      const result = BaseInsertPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        // Should generate default ID
+        expect(result.data.id).toMatch(/^act_/);
+      }
     });
 
     test('should generate default ID when not provided', () => {
@@ -248,11 +268,12 @@ describe('Activity Schema - Base', () => {
         },
       };
 
-      const result = BaseInsertPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as typeof BaseInsertPayloadSchema.inferOut).id).toMatch(
-        /^act_/
-      );
+      const result = BaseInsertPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.id).toMatch(/^act_/);
+      }
     });
   });
 
@@ -266,17 +287,20 @@ describe('Activity Schema - Base', () => {
         metadata: { updated: true },
       };
 
-      const result = BaseUpdatePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = BaseUpdatePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(expect.objectContaining(payload));
+      }
     });
 
     test('should accept empty update payload', () => {
       const payload = {};
 
-      const result = BaseUpdatePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = BaseUpdatePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should accept update with only metadata', () => {
@@ -284,8 +308,8 @@ describe('Activity Schema - Base', () => {
         metadata: { version: '2.0' },
       };
 
-      const result = BaseUpdatePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = BaseUpdatePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
   });
 });

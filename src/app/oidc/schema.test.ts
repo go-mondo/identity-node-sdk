@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import {
   InsertOIDCPayloadSchema,
@@ -17,8 +16,9 @@ describe('App OIDC - Schema', () => {
         metadata: { provider: 'auth0' },
       };
 
-      const result = OIDCSchema(oidc);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OIDCSchema.safeParse(oidc);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should accept minimal OIDC object', () => {
@@ -26,8 +26,9 @@ describe('App OIDC - Schema', () => {
         metadata: {},
       };
 
-      const result = OIDCSchema(oidc);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OIDCSchema.safeParse(oidc);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should accept OIDC with only some optional dates', () => {
@@ -36,8 +37,9 @@ describe('App OIDC - Schema', () => {
         metadata: { configured: true },
       };
 
-      const result = OIDCSchema(oidc);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OIDCSchema.safeParse(oidc);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
   });
 
@@ -50,9 +52,12 @@ describe('App OIDC - Schema', () => {
         metadata: { issuer: 'https://auth.example.com' },
       };
 
-      const result = OIDCPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = OIDCPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept minimal payload', () => {
@@ -60,9 +65,12 @@ describe('App OIDC - Schema', () => {
         metadata: {},
       };
 
-      const result = OIDCPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = OIDCPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept payload with optional dates', () => {
@@ -71,8 +79,9 @@ describe('App OIDC - Schema', () => {
         metadata: { clientId: 'oidc_client_123' },
       };
 
-      const result = OIDCPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = OIDCPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
   });
 
@@ -82,15 +91,21 @@ describe('App OIDC - Schema', () => {
         metadata: { setup: 'initial' },
       };
 
-      const result = InsertOIDCPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = InsertOIDCPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept undefined', () => {
-      const result = InsertOIDCPayloadSchema(undefined);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toBeUndefined();
+      const result = InsertOIDCPayloadSchema.safeParse(undefined);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBeUndefined();
+      }
     });
 
     test('should accept empty metadata', () => {
@@ -98,8 +113,9 @@ describe('App OIDC - Schema', () => {
         metadata: {},
       };
 
-      const result = InsertOIDCPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertOIDCPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
   });
 
@@ -109,9 +125,12 @@ describe('App OIDC - Schema', () => {
         metadata: { version: '2.0' },
       };
 
-      const result = UpdateOIDCPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdateOIDCPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
   });
 });

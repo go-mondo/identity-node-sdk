@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { IdentityIdentifierSchema } from '../../../../identity/schema.js';
 import {
   BaseInsertStrategyPayloadSchema,
@@ -16,68 +16,75 @@ export const PasswordPolicyDefaults = {
   minimumSpecial: 1,
 };
 
-const TypeSchema = type({
-  type: "'password'",
+const TypeSchema = z.object({
+  type: z.literal('password'),
 });
 
-export const PasswordPolicySchema = type({
-  minimumLength: type.number.default(PasswordPolicyDefaults.minimumLength),
-  maximumLength: type.number.default(PasswordPolicyDefaults.maximumLength),
-  minimumCapital: type.number.default(PasswordPolicyDefaults.minimumCapital),
-  minimumLower: type.number.default(PasswordPolicyDefaults.minimumLower),
-  minimumNumber: type.number.default(PasswordPolicyDefaults.minimumNumber),
-  minimumSpecial: type.number.default(PasswordPolicyDefaults.minimumSpecial),
+export const PasswordPolicySchema = z.object({
+  minimumLength: z.number().default(PasswordPolicyDefaults.minimumLength),
+  maximumLength: z.number().default(PasswordPolicyDefaults.maximumLength),
+  minimumCapital: z.number().default(PasswordPolicyDefaults.minimumCapital),
+  minimumLower: z.number().default(PasswordPolicyDefaults.minimumLower),
+  minimumNumber: z.number().default(PasswordPolicyDefaults.minimumNumber),
+  minimumSpecial: z.number().default(PasswordPolicyDefaults.minimumSpecial),
 });
 
-const SettingsSchema = type({
+const SettingsSchema = z.object({
   passwordPolicy: PasswordPolicySchema,
 });
 
-export const PasswordStrategySettingsPropertySchema = type({
+export const PasswordStrategySettingsPropertySchema = z.object({
   settings: SettingsSchema,
 });
 
-export const PasswordStrategySchema = BaseStrategySchema.and(TypeSchema).and({
+export const PasswordStrategySchema = z.object({
+  ...BaseStrategySchema.shape,
+  ...TypeSchema.shape,
   settings: SettingsSchema,
 });
-export type PasswordStrategyProperties = typeof PasswordStrategySchema.inferIn;
-export type PasswordStrategy = typeof PasswordStrategySchema.inferOut;
+export type PasswordStrategyProperties = z.input<typeof PasswordStrategySchema>;
+export type PasswordStrategy = z.output<typeof PasswordStrategySchema>;
 
-export const PasswordStrategyPayloadSchema = BaseStrategyPayloadSchema.and(
-  TypeSchema
-).and(PasswordStrategySettingsPropertySchema);
-export type PasswordStrategyPayload =
-  typeof PasswordStrategyPayloadSchema.inferOut;
+export const PasswordStrategyPayloadSchema = z.object({
+  ...BaseStrategyPayloadSchema.shape,
+  ...TypeSchema.shape,
+  ...PasswordStrategySettingsPropertySchema.shape,
+});
+export type PasswordStrategyPayload = z.output<
+  typeof PasswordStrategyPayloadSchema
+>;
 
-export const InsertPasswordStrategyPayloadSchema = TypeSchema.and(
-  BaseInsertStrategyPayloadSchema
-)
-  .and(TypeSchema)
-  .and({
-    settings: SettingsSchema.optional(),
-  });
-export type InsertPasswordStrategyInput =
-  typeof InsertPasswordStrategyPayloadSchema.inferIn;
-export type InsertPasswordStrategyPayload =
-  typeof InsertPasswordStrategyPayloadSchema.inferOut;
-
-export const UpdatePasswordStrategyPayloadSchema = TypeSchema.and(
-  BaseUpdateStrategyPayloadSchema
-).and({
+export const InsertPasswordStrategyPayloadSchema = z.object({
+  ...TypeSchema.shape,
+  ...BaseInsertStrategyPayloadSchema.shape,
   settings: SettingsSchema.optional(),
 });
-export type UpdatePasswordStrategyInput =
-  typeof UpdatePasswordStrategyPayloadSchema.inferIn;
-export type UpdatePasswordStrategyPayload =
-  typeof UpdatePasswordStrategyPayloadSchema.inferOut;
+export type InsertPasswordStrategyInput = z.input<
+  typeof InsertPasswordStrategyPayloadSchema
+>;
+export type InsertPasswordStrategyPayload = z.output<
+  typeof InsertPasswordStrategyPayloadSchema
+>;
 
-export const ForgotPasswordSchema = type({
-  identifier: type('string').optional(),
+export const UpdatePasswordStrategyPayloadSchema = z.object({
+  ...TypeSchema.shape,
+  ...BaseUpdateStrategyPayloadSchema.shape,
+  settings: SettingsSchema.optional(),
+});
+export type UpdatePasswordStrategyInput = z.input<
+  typeof UpdatePasswordStrategyPayloadSchema
+>;
+export type UpdatePasswordStrategyPayload = z.output<
+  typeof UpdatePasswordStrategyPayloadSchema
+>;
+
+export const ForgotPasswordSchema = z.object({
+  identifier: z.string().optional(),
   identifierType: IdentityIdentifierSchema.optional(),
 });
 
-export const VerifyPasswordSchema = type({
-  password: type('string'),
-  identifier: type('string').optional(),
+export const VerifyPasswordSchema = z.object({
+  password: z.string(),
+  identifier: z.string().optional(),
   identifierType: IdentityIdentifierSchema.optional(),
 });

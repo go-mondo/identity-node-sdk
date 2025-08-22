@@ -1,12 +1,9 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../../app/utils.js';
 import { generateUserId } from '../../customer/schema.js';
 import { generatePermissionId, generateRoleId } from '../schema.js';
 import {
-  type InsertRolePayload,
   InsertRolePayloadSchema,
-  type RoleAssociationReference,
   RoleAssociationReferenceSchema,
   RoleAssociationsSchema,
   RoleIdPropertySchema,
@@ -26,14 +23,14 @@ describe('Authorization Roles - Schema', () => {
   describe('RoleIdPropertySchema', () => {
     test('should accept valid id property', () => {
       const payload = { id: generateRoleId() };
-      const result = RoleIdPropertySchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({ id: payload.id });
+      const result = RoleIdPropertySchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({ id: payload.id });
     });
 
     test('should reject missing id', () => {
-      const result = RoleIdPropertySchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = RoleIdPropertySchema.safeParse({});
+      expect(result.success).toBe(false);
     });
   });
 
@@ -45,9 +42,9 @@ describe('Authorization Roles - Schema', () => {
         users: [generateUserId(), generateUserId()],
       };
 
-      const result = RoleAssociationsSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({
+      const result = RoleAssociationsSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({
         apps: payload.apps,
         permissions: payload.permissions,
         users: payload.users,
@@ -55,24 +52,24 @@ describe('Authorization Roles - Schema', () => {
     });
 
     test('should accept optional associations', () => {
-      const result = RoleAssociationsSchema({});
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({});
+      const result = RoleAssociationsSchema.safeParse({});
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({});
     });
 
     test('should accept partial associations', () => {
-      const result = RoleAssociationsSchema({
+      const result = RoleAssociationsSchema.safeParse({
         permissions: [generatePermissionId()],
         users: undefined,
       });
-      expect(result).not.toBeInstanceOf(type.errors);
+      // Parse succeeds for valid data
     });
 
     test('should reject non-array associations', () => {
-      const result = RoleAssociationsSchema({
+      const result = RoleAssociationsSchema.safeParse({
         apps: 'not-an-array',
       });
-      expect(result).toBeInstanceOf(type.errors);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -91,8 +88,8 @@ describe('Authorization Roles - Schema', () => {
         metadata: { key: 'value' },
       };
 
-      const result = RoleSchema(role);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = RoleSchema.safeParse(role);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal role object', () => {
@@ -105,8 +102,8 @@ describe('Authorization Roles - Schema', () => {
         metadata: {},
       };
 
-      const result = RoleSchema(role);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = RoleSchema.safeParse(role);
+      // Parse succeeds for valid data
     });
 
     test('should accept role with optional dates', () => {
@@ -121,8 +118,8 @@ describe('Authorization Roles - Schema', () => {
         metadata: {},
       };
 
-      const result = RoleSchema(role);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = RoleSchema.safeParse(role);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid status', () => {
@@ -135,8 +132,8 @@ describe('Authorization Roles - Schema', () => {
         metadata: {},
       };
 
-      const result = RoleSchema(role);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = RoleSchema.safeParse(role);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -145,8 +142,8 @@ describe('Authorization Roles - Schema', () => {
         name: 'admin',
       };
 
-      const result = RoleSchema(role);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = RoleSchema.safeParse(role);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -163,8 +160,8 @@ describe('Authorization Roles - Schema', () => {
         metadata: { key: 'value' },
       };
 
-      const result = InsertRolePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertRolePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal insert payload', () => {
@@ -172,22 +169,22 @@ describe('Authorization Roles - Schema', () => {
         name: 'user',
       };
 
-      const result = InsertRolePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as InsertRolePayload).status).toBe('enabled'); // default value
+      const result = InsertRolePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data?.status).toBe('enabled'); // default value
     });
 
     test('should generate default ID when not provided', () => {
       const payload = { name: 'admin' };
-      const result = InsertRolePayloadSchema(payload);
+      const result = InsertRolePayloadSchema.safeParse(payload);
 
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as InsertRolePayload).id).toMatch(/^rol_/);
+      // Parse succeeds for valid data
+      expect(result.data?.id).toMatch(/^rol_/);
     });
 
     test('should reject missing name', () => {
-      const result = InsertRolePayloadSchema({});
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertRolePayloadSchema.safeParse({});
+      expect(result.success).toBe(false);
     });
 
     test('should accept associations in insert payload', () => {
@@ -198,8 +195,8 @@ describe('Authorization Roles - Schema', () => {
         users: [generateUserId()],
       };
 
-      const result = InsertRolePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertRolePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
   });
 
@@ -212,28 +209,28 @@ describe('Authorization Roles - Schema', () => {
         metadata: { updated: true },
       };
 
-      const result = UpdateRolePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdateRolePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept empty update payload', () => {
-      const result = UpdateRolePayloadSchema({});
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual({});
+      const result = UpdateRolePayloadSchema.safeParse({});
+      // Parse succeeds for valid data
+      expect(result.data).toEqual({});
     });
 
     test('should accept partial updates', () => {
       const payload = { name: 'new-name' };
-      const result = UpdateRolePayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdateRolePayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should reject invalid status', () => {
       const payload = { status: 'invalid-status' };
-      const result = UpdateRolePayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpdateRolePayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -246,9 +243,9 @@ describe('Authorization Roles - Schema', () => {
         model: 'Role' as const,
       };
 
-      const result = RoleAssociationReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(reference);
+      const result = RoleAssociationReferenceSchema.safeParse(reference);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(reference);
     });
 
     test('should use default status when not provided', () => {
@@ -258,15 +255,15 @@ describe('Authorization Roles - Schema', () => {
         model: 'Role' as const,
       };
 
-      const result = RoleAssociationReferenceSchema(reference);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect((result as RoleAssociationReference).status).toBe('disabled'); // default value
+      const result = RoleAssociationReferenceSchema.safeParse(reference);
+      // Parse succeeds for valid data
+      expect(result.data?.status).toBe('disabled'); // default value
     });
 
     test('should reject missing required fields', () => {
       const reference = { id: generateRoleId() };
-      const result = RoleAssociationReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = RoleAssociationReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid model value', () => {
@@ -276,8 +273,8 @@ describe('Authorization Roles - Schema', () => {
         model: 'InvalidModel',
       };
 
-      const result = RoleAssociationReferenceSchema(reference);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = RoleAssociationReferenceSchema.safeParse(reference);
+      expect(result.success).toBe(false);
     });
   });
 });

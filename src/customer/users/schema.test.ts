@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../schema.js';
 import {
@@ -19,16 +18,13 @@ describe('Customer - User', () => {
         updatedAt: new Date(),
       };
 
-      const result = UserPayloadSchema(
-        item
-      ) as typeof UserPayloadSchema.inferOut;
+      const result = UserPayloadSchema.safeParse(item);
 
-      if (result instanceof type.errors) {
-        console.log(result.summary);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.metadata).toBeUndefined();
       }
-
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).to.undefined;
     });
   });
 
@@ -41,17 +37,14 @@ describe('Customer - User', () => {
         phoneNumber: '123',
       };
 
-      const result = InsertUserPayloadSchema(
-        item
-      ) as typeof InsertUserPayloadSchema.inferOut;
+      const result = InsertUserPayloadSchema.safeParse(item);
 
-      if (result instanceof type.errors) {
-        console.log(result.summary);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.metadata).toBeUndefined();
+        expect(result.data.familyName).toBe(item.familyName);
       }
-
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).to.undefined;
-      expect(result?.familyName).to.equal(item.familyName);
     });
 
     test('should serialize successfully', async () => {
@@ -60,21 +53,15 @@ describe('Customer - User', () => {
         id: generateUserId(),
         phoneNumber: '123',
         metadata: new Map(),
-        // status: UserStatus.ACTIVE,
-        // createdAt: new Date(),
-        // updatedAt: new Date(),
       };
 
-      const result = InsertUserPayloadSchema(
-        item
-      ) as typeof InsertUserPayloadSchema.inferOut;
+      const result = InsertUserPayloadSchema.safeParse(item);
 
-      if (result instanceof type.errors) {
-        console.log(result.summary);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.metadata).toBeNull();
       }
-
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result?.metadata).to.null;
     });
 
     test('should serialize nulls successfully', async () => {
@@ -94,13 +81,10 @@ describe('Customer - User', () => {
         updatedAt: '2025-04-02T03:50:40.812Z',
       };
 
-      const result = UserPayloadSchema(payload);
+      const result = UserPayloadSchema.safeParse(payload);
 
-      if (result instanceof type.errors) {
-        console.log(result.summary);
-      }
-
-      expect(result).not.toBeInstanceOf(type.errors);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should serialize nulls successfully', async () => {
@@ -120,19 +104,10 @@ describe('Customer - User', () => {
         updatedAt: '2025-04-02T03:50:40.812Z',
       };
 
-      const test = type({
-        foo: 'string.numeric.parse',
-        bar: 'number',
-        baz: 'string.date.iso.parse',
-      });
+      const result = UserPayloadSchema.safeParse(payload);
 
-      const result = UserPayloadSchema(payload);
-
-      if (result instanceof type.errors) {
-        console.log(result.summary);
-      }
-
-      expect(result).not.toBeInstanceOf(type.errors);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
   });
 });

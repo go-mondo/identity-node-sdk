@@ -5,7 +5,6 @@ import {
   insertItemWithAuthorization,
   updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import { parseEgressSchema } from '../../common/resources/utils.js';
 import { PATH } from '../resources.js';
 import {
   type InsertOIDCInput,
@@ -50,12 +49,10 @@ export async function getOIDC(
   instance: MondoIdentity,
   appId: string
 ): Promise<OIDC> {
-  return parseEgressSchema(
-    OIDCSchema(
-      await getItemWithAuthorization(
-        new URL(OIDCResources.buildPath(appId), instance.config.host),
-        instance.authorizer
-      )
+  return OIDCSchema.parse(
+    await getItemWithAuthorization(
+      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -65,15 +62,11 @@ export async function insertOIDC(
   appId: string,
   item?: InsertOIDCInput
 ): Promise<OIDC> {
-  return parseEgressSchema(
-    OIDCSchema(
-      await insertItemWithAuthorization(
-        new URL(OIDCResources.buildPath(appId), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          InsertOIDCPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return OIDCSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      instance.authorizer,
+      InsertOIDCPayloadSchema.parse(item)
     )
   );
 }
@@ -83,15 +76,11 @@ export async function updateOIDC(
   appId: string,
   item: UpdateOIDCInput
 ): Promise<OIDC> {
-  return parseEgressSchema(
-    OIDCSchema(
-      await updateItemWithAuthorization(
-        new URL(OIDCResources.buildPath(appId), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpdateOIDCPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return OIDCSchema.parse(
+    await updateItemWithAuthorization(
+      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      instance.authorizer,
+      UpdateOIDCPayloadSchema.parse(item)
     )
   );
 }
@@ -100,12 +89,10 @@ export async function deleteOIDC(
   instance: MondoIdentity,
   appId: string
 ): Promise<OIDC> {
-  return parseEgressSchema(
-    OIDCSchema(
-      await deleteItemWithAuthorization(
-        new URL(OIDCResources.buildPath(appId), instance.config.host),
-        instance.authorizer
-      )
+  return OIDCSchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      instance.authorizer
     )
   );
 }

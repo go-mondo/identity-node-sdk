@@ -1,21 +1,24 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { PasswordPolicySchema } from '../../../authentication/strategies/schema/schema.js';
 import { UserIdSchema } from '../../../customer/schema.js';
 import { IdentityIdentifierSchema } from '../../../identity/schema.js';
 import { BasePayloadSchema } from '../base.js';
 
-export const SetPasswordActionPayloadSchema = BasePayloadSchema.and({
-  operation: type("'set-password'"),
+export const SetPasswordActionPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  operation: z.literal('set-password'),
   user: UserIdSchema,
   identifier: IdentityIdentifierSchema,
   policy: PasswordPolicySchema,
-}).onUndeclaredKey('delete');
-export type SetPasswordActionPayload =
-  typeof SetPasswordActionPayloadSchema.inferOut;
+});
+export type SetPasswordActionPayload = z.output<
+  typeof SetPasswordActionPayloadSchema
+>;
 
-export const SetPasswordActionRequestSchema = type({
-  code: type('string'),
-  password: type('string'),
-}).onUndeclaredKey('delete');
-export type SetPasswordActionRequest =
-  typeof SetPasswordActionRequestSchema.inferOut;
+export const SetPasswordActionRequestSchema = z.object({
+  code: z.string(),
+  password: z.string(),
+});
+export type SetPasswordActionRequest = z.output<
+  typeof SetPasswordActionRequestSchema
+>;

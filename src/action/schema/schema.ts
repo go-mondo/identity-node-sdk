@@ -1,3 +1,5 @@
+import type { z } from 'zod';
+
 import { SetPasswordActionPayloadSchema } from './operations/set-password.js';
 import { SignUpVerificationActionPayloadSchema } from './operations/sign-up-verification.js';
 import { SignUpActionPayloadSchema } from './operations/sign-up.js';
@@ -11,7 +13,7 @@ export const ActionPayloadSchema = SetPasswordActionPayloadSchema.or(
 )
   .or(SignUpActionPayloadSchema)
   .or(UserAttributeVerificationActionPayloadSchema);
-export type ActionPayload = typeof ActionPayloadSchema.inferOut;
+export type ActionPayload = z.output<typeof ActionPayloadSchema>;
 
 export {
   ActionIdPropertySchema,

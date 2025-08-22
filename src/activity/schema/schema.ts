@@ -1,3 +1,4 @@
+import type { z } from 'zod';
 import {
   AuthenticationActivityPayloadSchema,
   AuthenticationActivitySchema,
@@ -34,8 +35,8 @@ export const ActivitySchema = NoteActivitySchema.or(
   .or(AuthorizationActivitySchema)
   .or(OperationActivitySchema)
   .or(UnknownActivitySchema);
-export type ActivityProperties = typeof ActivitySchema.inferIn;
-export type Activity = typeof ActivitySchema.inferOut;
+export type ActivityProperties = z.input<typeof ActivitySchema>;
+export type Activity = z.output<typeof ActivitySchema>;
 
 export const ActivityPayloadSchema = NoteActivityPayloadSchema.or(
   AuthenticationActivityPayloadSchema
@@ -43,13 +44,17 @@ export const ActivityPayloadSchema = NoteActivityPayloadSchema.or(
   .or(AuthorizationActivityPayloadSchema)
   .or(OperationActivityPayloadSchema)
   .or(UnknownActivityPayloadSchema);
-export type ActivityPayload = typeof ActivityPayloadSchema.inferOut;
+export type ActivityPayload = z.output<typeof ActivityPayloadSchema>;
 
 export const InsertActivityPayloadSchema = InsertNoteActivityPayloadSchema;
-export type InsertActivityPayload = typeof InsertActivityPayloadSchema.inferOut;
+export type InsertActivityPayload = z.output<
+  typeof InsertActivityPayloadSchema
+>;
 
 export const UpdateActivityPayloadSchema = UpdateNoteActivityPayloadSchema;
-export type UpdateActivityPayload = typeof UpdateActivityPayloadSchema.inferOut;
+export type UpdateActivityPayload = z.output<
+  typeof UpdateActivityPayloadSchema
+>;
 
 export {
   ActivityIdPropertySchema,

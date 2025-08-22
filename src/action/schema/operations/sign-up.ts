@@ -1,31 +1,37 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { AppIdSchema } from '../../../app/schema.js';
+import { UserIdSchema } from '../../../customer/schema.js';
 import {
-  InsertUserPayloadSchema,
   RequiredEmailSchema,
   RequiredPhoneNumberSchema,
   UserNamePropertiesSchema,
 } from '../../../customer/users/schema.js';
 import { BasePayloadSchema } from '../base.js';
 
-export const SignUpActionPayloadSchema = BasePayloadSchema.and({
-  operation: type("'sign-up'"),
+export const SignUpActionPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  operation: z.literal('sign-up'),
   app: AppIdSchema.optional(),
   user: UserNamePropertiesSchema,
-}).onUndeclaredKey('delete');
-export type SignUpActionPayload = typeof SignUpActionPayloadSchema.inferOut;
+});
+export type SignUpActionPayload = z.output<typeof SignUpActionPayloadSchema>;
 
-const EmailSignUpActionRequestSchema = UserNamePropertiesSchema.and({
+const EmailSignUpActionRequestSchema = z.object({
+  ...UserNamePropertiesSchema.shape,
   email: RequiredEmailSchema,
   phoneNumber: RequiredPhoneNumberSchema.optional(),
-}).and(InsertUserPayloadSchema.pick('id'));
+  id: UserIdSchema.optional(),
+});
 
-const PhoneNumberSignUpActionRequestSchema = UserNamePropertiesSchema.and({
+const PhoneNumberSignUpActionRequestSchema = z.object({
+  ...UserNamePropertiesSchema.shape,
   phoneNumber: RequiredPhoneNumberSchema,
   email: RequiredEmailSchema.optional(),
-}).and(InsertUserPayloadSchema.pick('id'));
+  id: UserIdSchema.optional(),
+});
 
-export const SignUpActionRequestSchema = EmailSignUpActionRequestSchema.or(
-  PhoneNumberSignUpActionRequestSchema
-);
-export type SignUpActionRequest = typeof SignUpActionRequestSchema.inferOut;
+export const SignUpActionRequestSchema = z.union([
+  EmailSignUpActionRequestSchema,
+  PhoneNumberSignUpActionRequestSchema,
+]);
+export type SignUpActionRequest = z.output<typeof SignUpActionRequestSchema>;

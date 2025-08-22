@@ -1,17 +1,17 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { AppIdSchema } from '../../../../app/schema.js';
 import { GrantType } from '../../../common/schema.js';
 
 /**
  * @see https://datatracker.ietf.org/doc/html/rfc6749#section-6
  */
-const GrantTypeSchema = type.enumerated(GrantType.REFRESH_TOKEN);
+const GrantTypeSchema = z.enum([GrantType.REFRESH_TOKEN] as const);
 
-export const RefreshTokenSchema = type({
+export const RefreshTokenSchema = z.object({
   grant_type: GrantTypeSchema,
-  refresh_token: type('string'),
-  scope: type('string').optional(),
+  refresh_token: z.string(),
+  scope: z.string().optional(),
   client_id: AppIdSchema,
-  client_secret: type('string'),
+  client_secret: z.string(),
 });
-export type RefreshTokenPayload = typeof RefreshTokenSchema.inferOut;
+export type RefreshTokenPayload = z.output<typeof RefreshTokenSchema>;

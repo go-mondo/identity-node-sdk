@@ -1,10 +1,12 @@
+import type { z } from 'zod';
+
 import type {
   EmailOrPhonePropertiesSchema,
   UpdateUserNamePropertiesSchema,
 } from './schema.js';
 
-type UserName = typeof UpdateUserNamePropertiesSchema.inferIn;
-type UserEmailOrPhone = typeof EmailOrPhonePropertiesSchema.inferIn;
+type UserName = z.input<typeof UpdateUserNamePropertiesSchema>;
+type UserEmailOrPhone = z.input<typeof EmailOrPhonePropertiesSchema>;
 
 type User = UserName & UserEmailOrPhone;
 

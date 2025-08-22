@@ -1,10 +1,13 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 
-const StringArraySchema = type('string[]');
-const StringArrayToSet = StringArraySchema.pipe((s) => new Set(s));
-const StringSet = type.instanceOf(Set<string>);
+const StringArraySchema = z.array(z.string());
+const StringArrayToSet = StringArraySchema.pipe(z.transform((s) => new Set(s)));
+const StringSet = z.instanceof(Set<string>);
 
-export const UniqueStringSetPayloadSchema = StringSet.or(StringArrayToSet);
+export const UniqueStringSetPayloadSchema = z.union([
+  StringSet,
+  StringArrayToSet,
+]);
 export const UniqueStringPayloadSchema = UniqueStringSetPayloadSchema.pipe(
-  (s) => Array.from(s.values())
+  z.transform((s) => Array.from(s.values()))
 );

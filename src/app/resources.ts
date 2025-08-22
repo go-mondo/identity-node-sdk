@@ -5,10 +5,7 @@ import {
   insertItemWithAuthorization,
   updateItemWithAuthorization,
 } from '../common/resources/operations.js';
-import {
-  addPaginationToURL,
-  parseEgressSchema,
-} from '../common/resources/utils.js';
+import { addPaginationToURL } from '../common/resources/utils.js';
 import {
   type PaginationCollection,
   PaginationCollectionSchema,
@@ -68,10 +65,8 @@ export async function listApps(
     pagination
   );
 
-  return parseEgressSchema(
-    PaginationCollectionSchema(AppSchema)(
-      await getItemWithAuthorization(url, instance.authorizer)
-    )
+  return PaginationCollectionSchema(AppSchema).parse(
+    await getItemWithAuthorization(url, instance.authorizer)
   );
 }
 
@@ -79,12 +74,10 @@ export async function getApp(
   instance: MondoIdentity,
   id: string
 ): Promise<App> {
-  return parseEgressSchema(
-    AppSchema(
-      await getItemWithAuthorization(
-        new URL(AppResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return AppSchema.parse(
+    await getItemWithAuthorization(
+      new URL(AppResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -93,15 +86,11 @@ export async function insertApp(
   instance: MondoIdentity,
   item: InsertAppInput
 ): Promise<App> {
-  return parseEgressSchema(
-    AppSchema(
-      await insertItemWithAuthorization(
-        new URL(AppResources.buildPath(), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          InsertAppPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return AppSchema.parse(
+    await insertItemWithAuthorization(
+      new URL(AppResources.buildPath(), instance.config.host),
+      instance.authorizer,
+      InsertAppPayloadSchema.parse
     )
   );
 }
@@ -111,15 +100,11 @@ export async function updateApp(
   id: string,
   item: UpdateAppInput
 ): Promise<App> {
-  return parseEgressSchema(
-    AppSchema(
-      await updateItemWithAuthorization(
-        new URL(AppResources.buildPath(id), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpdateAppPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return AppSchema.parse(
+    await updateItemWithAuthorization(
+      new URL(AppResources.buildPath(id), instance.config.host),
+      instance.authorizer,
+      UpdateAppPayloadSchema.parse(item)
     )
   );
 }
@@ -128,12 +113,10 @@ export async function deleteApp(
   instance: MondoIdentity,
   id: string
 ): Promise<App> {
-  return parseEgressSchema(
-    AppSchema(
-      await deleteItemWithAuthorization(
-        new URL(AppResources.buildPath(id), instance.config.host),
-        instance.authorizer
-      )
+  return AppSchema.parse(
+    await deleteItemWithAuthorization(
+      new URL(AppResources.buildPath(id), instance.config.host),
+      instance.authorizer
     )
   );
 }

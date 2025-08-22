@@ -1,58 +1,68 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 
 // Normalizing to a Date object
-export const RequiredDateSchema = type('Date').or('string.date.iso.parse');
-export const OptionalDateSchema = RequiredDateSchema.or('undefined');
+export const RequiredDateSchema = z.union([
+  z.date(),
+  z
+    .string()
+    .datetime()
+    .transform((str) => new Date(str)),
+]);
+export const OptionalDateSchema = RequiredDateSchema.optional();
 
-export type AnyRequiredDateType = typeof RequiredDateSchema.inferIn;
-export type RequiredDate = typeof RequiredDateSchema.inferOut;
+export type AnyRequiredDateType = z.input<typeof RequiredDateSchema>;
+export type RequiredDate = z.output<typeof RequiredDateSchema>;
 
-export type AnyOptionalDate = typeof OptionalDateSchema.inferIn;
-export type OptionalDate = typeof OptionalDateSchema.inferOut;
+export type AnyOptionalDate = z.input<typeof OptionalDateSchema>;
+export type OptionalDate = z.output<typeof OptionalDateSchema>;
 
 // What the class property is serialized to
-export const RequiredDatePayloadSchema = RequiredDateSchema.pipe.try((d) =>
+export const RequiredDatePayloadSchema = RequiredDateSchema.transform((d) =>
   d.toISOString()
 );
-export const OptionalDatePayloadSchema = OptionalDateSchema.pipe.try((d) =>
+export const OptionalDatePayloadSchema = OptionalDateSchema.transform((d) =>
   d?.toISOString()
 );
 
-export type RequiredDatePayload = typeof RequiredDatePayloadSchema.inferOut;
-export type OptionalDatePayload = typeof OptionalDatePayloadSchema.inferOut;
+export type RequiredDatePayload = z.output<typeof RequiredDatePayloadSchema>;
+export type OptionalDatePayload = z.output<typeof OptionalDatePayloadSchema>;
 
 /**
  * Created At
  */
-export const CreatedAtPropertyPayloadSchema = type({
+export const CreatedAtPropertyPayloadSchema = z.object({
   createdAt: RequiredDatePayloadSchema,
 });
-export type CreatedAtPropertyPayload =
-  typeof CreatedAtPropertyPayloadSchema.inferOut;
+export type CreatedAtPropertyPayload = z.output<
+  typeof CreatedAtPropertyPayloadSchema
+>;
 
 /**
  * Updated At
  */
-export const UpdatedAtPropertyPayloadSchema = type({
+export const UpdatedAtPropertyPayloadSchema = z.object({
   updatedAt: RequiredDatePayloadSchema,
 });
-export type UpdatedAtPropertyPayload =
-  typeof UpdatedAtPropertyPayloadSchema.inferOut;
+export type UpdatedAtPropertyPayload = z.output<
+  typeof UpdatedAtPropertyPayloadSchema
+>;
 
 /**
  * Deleted At
  */
-export const DeletedAtPropertyPayloadSchema = type({
-  'deletedAt?': OptionalDatePayloadSchema,
+export const DeletedAtPropertyPayloadSchema = z.object({
+  deletedAt: OptionalDatePayloadSchema,
 });
-export type DeletedAtPropertyPayload =
-  typeof DeletedAtPropertyPayloadSchema.inferOut;
+export type DeletedAtPropertyPayload = z.output<
+  typeof DeletedAtPropertyPayloadSchema
+>;
 
 /**
  * Deactivated At
  */
-export const DeactivatedAtPropertyPayloadSchema = type({
-  'deactivatedAt?': OptionalDatePayloadSchema,
+export const DeactivatedAtPropertyPayloadSchema = z.object({
+  deactivatedAt: OptionalDatePayloadSchema,
 });
-export type DeactivatedAtPropertyPayload =
-  typeof DeactivatedAtPropertyPayloadSchema.inferOut;
+export type DeactivatedAtPropertyPayload = z.output<
+  typeof DeactivatedAtPropertyPayloadSchema
+>;

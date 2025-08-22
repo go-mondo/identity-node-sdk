@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { AppIdSchema } from '../../../../app/schema.js';
 import {
   AuthorizationDisplaySchema,
@@ -13,54 +13,72 @@ import {
  * @see https://openid.net/specs/openid-connect-core-1_0.html#rfc.section.3.1.2.1
  */
 
-const ResponseTypeSchema = type.enumerated(ResponseType.CODE);
+const ResponseTypeSchema = z.enum([ResponseType.CODE] as const);
 
-const PKCESchema = type({
-  code_challenge_method: CodeChallengeMethodSchema.optional(),
-  code_challenge: type('string').optional(),
-})
-  .or({
-    code_challenge_method: CodeChallengeMethodSchema,
-    code_challenge: type('string').moreThanLength(0),
+const CodeChallengeSchema = z
+  .string()
+  .min(43, 'Code challenge must be at least 43 characters long.')
+  .max(128, 'Code challenge must be at most 128 characters long.')
+  .regex(/^[A-Za-z0-9\-_.~]+$/, 'Code challenge contains invalid characters.') // Base64url-encoded string
+  .describe('PKCE code challenge, derived from the code verifier.');
+
+// const PKCESchema = z.union([
+//   z.object({
+//     code_challenge_method: CodeChallengeMethodSchema.optional(),
+//     code_challenge: z.string().optional(),
+//   }),
+//   z.object({
+//     code_challenge_method: CodeChallengeMethodSchema,
+//     code_challenge: z.string().min(1),
+//   })
+// ]).refine((data) => {
+//   return (
+//     (data.code_challenge_method && data.code_challenge) ||
+//     (!data.code_challenge_method && !data.code_challenge)
+//   );
+// }, {
+//   message: 'code_challenge and code_challenge_method must both be present or both be absent',
+// });
+
+const OAuthSchema = z.object({
+  response_type: ResponseTypeSchema,
+  client_id: AppIdSchema,
+  redirect_uri: z.url().optional(),
+  scope: z.string().optional(),
+  state: z.string().optional(),
+});
+
+const OIDCSchema = z.object({
+  nonce: z.string().optional(),
+  display: AuthorizationDisplaySchema.optional(),
+  prompt: AuthorizationPromptSchema.optional(),
+  max_age: z.number().int().min(0).optional(),
+});
+
+export const AuthorizationCodeSchema = z
+  .object({
+    ...OAuthSchema.shape,
+    ...OIDCSchema.shape,
+    ...OptionalSchema.shape,
+    code_challenge_method: CodeChallengeMethodSchema.optional(),
+    code_challenge: CodeChallengeSchema.optional(),
   })
-  .narrow((data, ctx) => {
-    if (
-      (data.code_challenge_method && data.code_challenge) ||
-      (!data.code_challenge_method && !data.code_challenge)
-    ) {
-      return true;
-    }
-
-    if (data.code_challenge_method && !data.code_challenge) {
-      return ctx.reject({
-        expected: 'is required',
-        actual: '',
+  .superRefine((data, ctx) => {
+    // If one is present, the other must also be present
+    if (data.code_challenge && !data.code_challenge_method) {
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'code_challenge_method is required when code_challenge is present',
+        path: ['code_challenge_method'],
+      });
+    } else if (!data.code_challenge && data.code_challenge_method) {
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'code_challenge is required when code_challenge_method is present',
         path: ['code_challenge'],
       });
     }
-    return ctx.reject({
-      expected: 'is required',
-      actual: '',
-      path: ['code_challenge_method'],
-    });
   });
-
-const OAuthSchema = type({
-  response_type: ResponseTypeSchema,
-  client_id: AppIdSchema,
-  redirect_uri: type('string.url').optional(),
-  scope: type('string').optional(),
-  state: type('string').optional(),
-});
-
-const OIDCSchema = type({
-  nonce: type('string').optional(),
-  display: AuthorizationDisplaySchema.optional(),
-  prompt: AuthorizationPromptSchema.optional(),
-  max_age: type.keywords.number.integer.atLeast(0).optional(),
-});
-
-export const AuthorizationCodeSchema = OAuthSchema.and(OIDCSchema)
-  .and(PKCESchema)
-  .and(OptionalSchema);
-export type AuthorizationCodePayload = typeof AuthorizationCodeSchema.inferOut;
+export type AuthorizationCodePayload = z.output<typeof AuthorizationCodeSchema>;

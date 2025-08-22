@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import {
   SettingsSchema,
@@ -15,8 +14,9 @@ describe('Authentication Settings - Schema', () => {
         metadata: {},
       };
 
-      const result = SettingsSchema(settings);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SettingsSchema.safeParse(settings);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should reject missing required dates', () => {
@@ -25,8 +25,8 @@ describe('Authentication Settings - Schema', () => {
         // missing createdAt, updatedAt
       };
 
-      const result = SettingsSchema(settings);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SettingsSchema.safeParse(settings);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -36,9 +36,12 @@ describe('Authentication Settings - Schema', () => {
         metadata: {},
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept payload with optional dates', () => {
@@ -47,8 +50,9 @@ describe('Authentication Settings - Schema', () => {
         metadata: {},
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should accept empty payload', () => {
@@ -56,8 +60,9 @@ describe('Authentication Settings - Schema', () => {
         // Schema might have defaults for metadata
       };
 
-      const result = SettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
   });
 
@@ -65,9 +70,12 @@ describe('Authentication Settings - Schema', () => {
     test('should accept empty upsert payload', () => {
       const payload = {};
 
-      const result = UpsertSettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpsertSettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept upsert with only metadata', () => {
@@ -75,8 +83,9 @@ describe('Authentication Settings - Schema', () => {
         metadata: { configVersion: '2.0' },
       };
 
-      const result = UpsertSettingsPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpsertSettingsPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
     });
 
     test('should reject invalid factors structure', () => {
@@ -84,8 +93,8 @@ describe('Authentication Settings - Schema', () => {
         factors: 'invalid-factors',
       };
 
-      const result = UpsertSettingsPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpsertSettingsPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

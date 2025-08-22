@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 
 /**
  * Ref: https://datatracker.ietf.org/doc/html/rfc7518#section-3.1
@@ -18,11 +18,11 @@ export const Algorithm = {
   PS256: 'PS256',
   PS384: 'PS384',
   PS512: 'PS512',
-};
+} as const;
 
 export type AnyAlgorithm = (typeof Algorithm)[keyof typeof Algorithm];
 
-export const AlgorithmSchema = type.enumerated(
+export const AlgorithmSchema = z.enum([
   Algorithm.HS256,
   Algorithm.HS384,
   Algorithm.HS512,
@@ -33,5 +33,5 @@ export const AlgorithmSchema = type.enumerated(
   Algorithm.ES384,
   Algorithm.PS256,
   Algorithm.PS384,
-  Algorithm.PS512
-);
+  Algorithm.PS512,
+] as const);

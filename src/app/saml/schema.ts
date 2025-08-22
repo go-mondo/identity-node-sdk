@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -9,26 +9,30 @@ import {
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 
-export const SAMLSchema = type({
-  'updatedAt?': OptionalDateSchema,
-  'deletedAt?': OptionalDateSchema,
-  'deactivatedAt?': OptionalDateSchema,
-}).and(MetadataMapPropertySchema);
-export type SAMLProperties = typeof SAMLSchema.inferIn;
-export type SAML = typeof SAMLSchema.inferOut;
+export const SAMLSchema = z.object({
+  updatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+  ...MetadataMapPropertySchema.shape,
+});
+export type SAMLProperties = z.input<typeof SAMLSchema>;
+export type SAML = z.output<typeof SAMLSchema>;
 
-export const SAMLPayloadSchema = type({
-  'updatedAt?': OptionalDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type SAMLPayload = typeof SAMLPayloadSchema.inferOut;
+export const SAMLPayloadSchema = z.object({
+  updatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type SAMLPayload = z.output<typeof SAMLPayloadSchema>;
 
-export const InsertSAMLPayloadSchema =
-  UpsertMetadataPropertyPayloadSchema.or('undefined');
-export type InsertSAMLInput = typeof InsertSAMLPayloadSchema.inferIn;
-export type InsertSAMLPayload = typeof InsertSAMLPayloadSchema.inferOut;
+export const InsertSAMLPayloadSchema = z.union([
+  UpsertMetadataPropertyPayloadSchema,
+  z.undefined(),
+]);
+export type InsertSAMLInput = z.input<typeof InsertSAMLPayloadSchema>;
+export type InsertSAMLPayload = z.output<typeof InsertSAMLPayloadSchema>;
 
 export const UpdateSAMLPayloadSchema = UpsertMetadataPropertyPayloadSchema;
-export type UpdateSAMLInput = typeof InsertSAMLPayloadSchema.inferIn;
-export type UpdateSAMLPayload = typeof InsertSAMLPayloadSchema.inferOut;
+export type UpdateSAMLInput = z.input<typeof InsertSAMLPayloadSchema>;
+export type UpdateSAMLPayload = z.output<typeof InsertSAMLPayloadSchema>;

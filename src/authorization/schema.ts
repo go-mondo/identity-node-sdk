@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import KSUID from 'ksuid';
 import { KSUIDSchema } from '../common/schema/id.js';
 
@@ -20,15 +20,17 @@ export function generateRoleId() {
 }
 
 export const RoleIdSchema = KSUIDSchema(Model.Role.UIDPrefix);
-export type RoleId = typeof RoleIdSchema.inferOut;
+export type RoleId = z.output<typeof RoleIdSchema>;
 
-export const RoleIdAssociationsSchema = type('undefined').or(
-  RoleIdSchema.array()
-);
+export const RoleIdAssociationsSchema = z.union([
+  z.undefined(),
+  z.array(RoleIdSchema),
+]);
 
 export const PermissionIdSchema = KSUIDSchema(Model.Permission.UIDPrefix);
-export type PermissionId = typeof PermissionIdSchema.inferOut;
+export type PermissionId = z.output<typeof PermissionIdSchema>;
 
-export const PermissionIdAssociationsSchema = type('undefined').or(
-  PermissionIdSchema.array()
-);
+export const PermissionIdAssociationsSchema = z.union([
+  z.undefined(),
+  z.array(PermissionIdSchema),
+]);

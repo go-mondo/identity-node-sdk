@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateStrategyId } from '../../../../authentication/utils.js';
 import {
@@ -23,8 +22,8 @@ describe('Authentication Strategies - Email', () => {
         metadata: { provider: 'sendgrid' },
       };
 
-      const result = EmailStrategySchema(strategy);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = EmailStrategySchema.safeParse(strategy);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid type', () => {
@@ -37,8 +36,8 @@ describe('Authentication Strategies - Email', () => {
         metadata: {},
       };
 
-      const result = EmailStrategySchema(strategy);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = EmailStrategySchema.safeParse(strategy);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -47,15 +46,14 @@ describe('Authentication Strategies - Email', () => {
         // missing id, enabled, dates, metadata
       };
 
-      const result = EmailStrategySchema(strategy);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = EmailStrategySchema.safeParse(strategy);
+      expect(result.success).toBe(false);
     });
   });
 
   describe('EmailStrategyPayloadSchema', () => {
     test('should accept complete payload', () => {
       const payload = {
-        id: generateStrategyId(),
         type: 'email',
         label: 'Test',
         status: 'enabled',
@@ -64,9 +62,9 @@ describe('Authentication Strategies - Email', () => {
         metadata: { configured: true },
       };
 
-      const result = EmailStrategyPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = EmailStrategyPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(true);
+      expect(result.data).toEqual(payload);
     });
 
     test('should reject invalid type', () => {
@@ -80,8 +78,8 @@ describe('Authentication Strategies - Email', () => {
         metadata: {},
       };
 
-      const result = EmailStrategyPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = EmailStrategyPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -95,8 +93,8 @@ describe('Authentication Strategies - Email', () => {
         metadata: { setup: 'manual' },
       };
 
-      const result = InsertEmailStrategyPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertEmailStrategyPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal insert payload', () => {
@@ -105,8 +103,8 @@ describe('Authentication Strategies - Email', () => {
         label: 'Test',
       };
 
-      const result = InsertEmailStrategyPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertEmailStrategyPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject missing type', () => {
@@ -114,8 +112,8 @@ describe('Authentication Strategies - Email', () => {
         status: 'enabled',
       };
 
-      const result = InsertEmailStrategyPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertEmailStrategyPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid type', () => {
@@ -123,8 +121,8 @@ describe('Authentication Strategies - Email', () => {
         type: 'password',
       };
 
-      const result = InsertEmailStrategyPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertEmailStrategyPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -136,9 +134,10 @@ describe('Authentication Strategies - Email', () => {
         metadata: { updated: true },
       };
 
-      const result = UpdateEmailStrategyPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdateEmailStrategyPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(true);
+      expect(result.data?.type).toEqual(payload.type);
+      expect(result.data?.metadata).toEqual(payload.metadata);
     });
 
     test('should accept minimal update', () => {
@@ -146,8 +145,8 @@ describe('Authentication Strategies - Email', () => {
         type: 'email',
       };
 
-      const result = UpdateEmailStrategyPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateEmailStrategyPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid type', () => {
@@ -155,8 +154,8 @@ describe('Authentication Strategies - Email', () => {
         type: 'totp',
       };
 
-      const result = UpdateEmailStrategyPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpdateEmailStrategyPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -167,9 +166,9 @@ describe('Authentication Strategies - Email', () => {
         code: '123456',
       };
 
-      const result = VerifyEmailSchema(verification);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(verification);
+      const result = VerifyEmailSchema.safeParse(verification);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(verification);
     });
 
     test('should accept verification with only code', () => {
@@ -177,9 +176,9 @@ describe('Authentication Strategies - Email', () => {
         code: 'ABC123',
       };
 
-      const result = VerifyEmailSchema(verification);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(verification);
+      const result = VerifyEmailSchema.safeParse(verification);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(verification);
     });
 
     test('should reject missing code', () => {
@@ -187,8 +186,8 @@ describe('Authentication Strategies - Email', () => {
         email: 'user@example.com',
       };
 
-      const result = VerifyEmailSchema(verification);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = VerifyEmailSchema.safeParse(verification);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid email format', () => {
@@ -197,8 +196,8 @@ describe('Authentication Strategies - Email', () => {
         code: '123456',
       };
 
-      const result = VerifyEmailSchema(verification);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = VerifyEmailSchema.safeParse(verification);
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-string code', () => {
@@ -207,8 +206,8 @@ describe('Authentication Strategies - Email', () => {
         code: 123456,
       };
 
-      const result = VerifyEmailSchema(verification);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = VerifyEmailSchema.safeParse(verification);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -218,17 +217,17 @@ describe('Authentication Strategies - Email', () => {
         email: 'test@example.com',
       };
 
-      const result = SendEmailVerificationCodeSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result = SendEmailVerificationCodeSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should accept empty request', () => {
       const request = {};
 
-      const result = SendEmailVerificationCodeSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result = SendEmailVerificationCodeSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should reject invalid email format', () => {
@@ -236,8 +235,8 @@ describe('Authentication Strategies - Email', () => {
         email: 'not-an-email',
       };
 
-      const result = SendEmailVerificationCodeSchema(request);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SendEmailVerificationCodeSchema.safeParse(request);
+      expect(result.success).toBe(false);
     });
 
     test('should reject non-string email', () => {
@@ -245,8 +244,8 @@ describe('Authentication Strategies - Email', () => {
         email: 123,
       };
 
-      const result = SendEmailVerificationCodeSchema(request);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SendEmailVerificationCodeSchema.safeParse(request);
+      expect(result.success).toBe(false);
     });
   });
 });

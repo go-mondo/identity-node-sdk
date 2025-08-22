@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateActivityId } from '../utils.js';
 import {
@@ -24,8 +23,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: { webhook_source: 'third-party', event_type: 'custom' },
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept unknown activity with system performer', () => {
@@ -44,8 +43,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: { severity: 'low', category: 'anomaly' },
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept unknown activity with integration performer', () => {
@@ -68,8 +67,8 @@ describe('Activity Schema - Unknown', () => {
         },
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept unknown activity with optional fields', () => {
@@ -93,8 +92,8 @@ describe('Activity Schema - Unknown', () => {
         },
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should reject unknown activity with wrong type', () => {
@@ -113,8 +112,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: {},
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject unknown activity missing message', () => {
@@ -133,8 +132,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: {},
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject unknown activity with non-string message', () => {
@@ -153,8 +152,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: {},
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject unknown activity missing required base fields', () => {
@@ -165,8 +164,8 @@ describe('Activity Schema - Unknown', () => {
         // missing performedBy, source, isMutateable, dates, metadata
       };
 
-      const result = UnknownActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UnknownActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -191,9 +190,9 @@ describe('Activity Schema - Unknown', () => {
         },
       };
 
-      const result = UnknownActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UnknownActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept minimal unknown activity payload', () => {
@@ -212,8 +211,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: {},
       };
 
-      const result = UnknownActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UnknownActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept payload with optional date fields', () => {
@@ -237,8 +236,8 @@ describe('Activity Schema - Unknown', () => {
         },
       };
 
-      const result = UnknownActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UnknownActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject payload with invalid date format', () => {
@@ -257,8 +256,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: {},
       };
 
-      const result = UnknownActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UnknownActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with wrong type', () => {
@@ -277,8 +276,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: {},
       };
 
-      const result = UnknownActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UnknownActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload missing message', () => {
@@ -297,8 +296,8 @@ describe('Activity Schema - Unknown', () => {
         metadata: {},
       };
 
-      const result = UnknownActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UnknownActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

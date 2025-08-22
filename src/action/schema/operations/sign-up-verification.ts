@@ -1,18 +1,21 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { UserIdSchema } from '../../../customer/schema.js';
 import { IdentityIdentifierSchema } from '../../../identity/schema.js';
 import { BasePayloadSchema } from '../base.js';
 
-export const SignUpVerificationActionPayloadSchema = BasePayloadSchema.and({
-  operation: type("'sign-up-verification'"),
+export const SignUpVerificationActionPayloadSchema = z.object({
+  ...BasePayloadSchema.shape,
+  operation: z.literal('sign-up-verification'),
   user: UserIdSchema,
   identifier: IdentityIdentifierSchema,
-}).onUndeclaredKey('delete');
-export type SignUpVerificationActionPayload =
-  typeof SignUpVerificationActionPayloadSchema.inferOut;
+});
+export type SignUpVerificationActionPayload = z.output<
+  typeof SignUpVerificationActionPayloadSchema
+>;
 
-export const SignUpVerificationActionRequestSchema = type({
-  code: type('string'),
-}).onUndeclaredKey('delete');
-export type SignUpVerificationActionRequest =
-  typeof SignUpVerificationActionRequestSchema.inferOut;
+export const SignUpVerificationActionRequestSchema = z.object({
+  code: z.string(),
+});
+export type SignUpVerificationActionRequest = z.output<
+  typeof SignUpVerificationActionRequestSchema
+>;

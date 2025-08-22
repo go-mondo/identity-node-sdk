@@ -3,7 +3,6 @@ import {
   getItemWithAuthorization,
   updateItemWithAuthorization,
 } from '../../common/resources/operations.js';
-import { parseEgressSchema } from '../../common/resources/utils.js';
 import { PATH } from '../resources.js';
 import {
   type Authorization,
@@ -37,12 +36,10 @@ export async function getAuthorization(
   instance: MondoIdentity,
   appId: string
 ): Promise<Authorization> {
-  return parseEgressSchema(
-    AuthorizationSchema(
-      await getItemWithAuthorization(
-        new URL(AuthorizationResources.buildPath(appId), instance.config.host),
-        instance.authorizer
-      )
+  return AuthorizationSchema.parse(
+    await getItemWithAuthorization(
+      new URL(AuthorizationResources.buildPath(appId), instance.config.host),
+      instance.authorizer
     )
   );
 }
@@ -52,15 +49,11 @@ export async function upsertAuthorization(
   appId: string,
   item: UpsertAuthorizationInput
 ): Promise<Authorization> {
-  return parseEgressSchema(
-    AuthorizationSchema(
-      await updateItemWithAuthorization(
-        new URL(AuthorizationResources.buildPath(appId), instance.config.host),
-        instance.authorizer,
-        parseEgressSchema(
-          UpsertAuthorizationPayloadSchema.onUndeclaredKey('delete')(item)
-        )
-      )
+  return AuthorizationSchema.parse(
+    await updateItemWithAuthorization(
+      new URL(AuthorizationResources.buildPath(appId), instance.config.host),
+      instance.authorizer,
+      UpsertAuthorizationPayloadSchema.parse(item)
     )
   );
 }

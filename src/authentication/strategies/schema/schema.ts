@@ -1,3 +1,5 @@
+import type { z } from 'zod';
+
 import {
   EmailStrategyPayloadSchema,
   EmailStrategySchema,
@@ -24,25 +26,29 @@ export const InsertStrategyPayloadSchema =
   InsertPasswordStrategyPayloadSchema.or(InsertEmailStrategyPayloadSchema).or(
     InsertTOTPStrategyPayloadSchema
   );
-export type InsertStrategyInput = typeof InsertStrategyPayloadSchema.inferIn;
-export type InsertStrategyPayload = typeof InsertStrategyPayloadSchema.inferOut;
+export type InsertStrategyInput = z.input<typeof InsertStrategyPayloadSchema>;
+export type InsertStrategyPayload = z.output<
+  typeof InsertStrategyPayloadSchema
+>;
 
 export const UpdateStrategyPayloadSchema =
   UpdatePasswordStrategyPayloadSchema.or(UpdateEmailStrategyPayloadSchema).or(
     UpdateTOTPStrategyPayloadSchema
   );
-export type UpdateStrategyInput = typeof UpdateStrategyPayloadSchema.inferIn;
-export type UpdateStrategyPayload = typeof UpdateStrategyPayloadSchema.inferOut;
+export type UpdateStrategyInput = z.input<typeof UpdateStrategyPayloadSchema>;
+export type UpdateStrategyPayload = z.output<
+  typeof UpdateStrategyPayloadSchema
+>;
 
 export const StrategyPayloadSchema = PasswordStrategyPayloadSchema.or(
   EmailStrategyPayloadSchema.or(TOTPStrategyPayloadSchema)
 );
-export type StrategyPayload = typeof StrategyPayloadSchema.inferOut;
+export type StrategyPayload = z.input<typeof StrategyPayloadSchema>;
 
 export const StrategySchema =
   PasswordStrategySchema.or(EmailStrategySchema).or(TOTPStrategySchema);
-export type StrategyProperties = typeof StrategySchema.inferIn;
-export type Strategy = typeof StrategySchema.inferOut;
+export type StrategyProperties = z.input<typeof StrategySchema>;
+export type Strategy = z.output<typeof StrategySchema>;
 
 export {
   BaseInsertStrategyPayloadSchema,

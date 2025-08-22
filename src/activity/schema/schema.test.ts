@@ -1,10 +1,8 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../../customer/schema.js';
 import {
   ActivityPayloadSchema,
   ActivitySchema,
-  type InsertActivityPayload,
   InsertActivityPayloadSchema,
   UpdateActivityPayloadSchema,
 } from './schema.js';
@@ -28,8 +26,8 @@ describe('Activity Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept authentication activity', () => {
@@ -50,8 +48,8 @@ describe('Activity Schema - Main', () => {
         metadata: { method: 'email' },
       };
 
-      const result = ActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept authorization activity', () => {
@@ -71,8 +69,8 @@ describe('Activity Schema - Main', () => {
         metadata: { resource: 'users' },
       };
 
-      const result = ActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation activity', () => {
@@ -93,8 +91,8 @@ describe('Activity Schema - Main', () => {
         metadata: { operation: 'sync' },
       };
 
-      const result = ActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept unknown activity', () => {
@@ -113,8 +111,8 @@ describe('Activity Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid activity type', () => {
@@ -132,8 +130,8 @@ describe('Activity Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -154,9 +152,9 @@ describe('Activity Schema - Main', () => {
         metadata: { urgent: true },
       };
 
-      const result = ActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = ActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept authentication activity payload', () => {
@@ -177,8 +175,8 @@ describe('Activity Schema - Main', () => {
         metadata: { device: 'iPhone' },
       };
 
-      const result = ActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept authorization activity payload', () => {
@@ -198,8 +196,8 @@ describe('Activity Schema - Main', () => {
         metadata: { action: 'read' },
       };
 
-      const result = ActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept operation activity payload', () => {
@@ -220,8 +218,8 @@ describe('Activity Schema - Main', () => {
         metadata: { backup_type: 'full' },
       };
 
-      const result = ActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept unknown activity payload', () => {
@@ -240,8 +238,8 @@ describe('Activity Schema - Main', () => {
         metadata: { webhook_id: 'wh_123' },
       };
 
-      const result = ActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = ActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid activity type in payload', () => {
@@ -259,8 +257,8 @@ describe('Activity Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with invalid date format', () => {
@@ -279,8 +277,8 @@ describe('Activity Schema - Main', () => {
         metadata: {},
       };
 
-      const result = ActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = ActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -296,8 +294,8 @@ describe('Activity Schema - Main', () => {
         metadata: { priority: 'high' },
       };
 
-      const result = InsertActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal insert payload', () => {
@@ -306,10 +304,10 @@ describe('Activity Schema - Main', () => {
         message: 'Simple note',
       };
 
-      const result = InsertActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
       // Should generate ID automatically
-      expect((result as InsertActivityPayload).id).toMatch(/^act_/);
+      expect(result.data?.id).toMatch(/^act_/);
     });
 
     test('should reject insert payload missing required fields', () => {
@@ -318,8 +316,8 @@ describe('Activity Schema - Main', () => {
         // missing message
       };
 
-      const result = InsertActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject insert payload with invalid type', () => {
@@ -328,8 +326,8 @@ describe('Activity Schema - Main', () => {
         message: 'Test message',
       };
 
-      const result = InsertActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -341,9 +339,9 @@ describe('Activity Schema - Main', () => {
         metadata: { updated: true },
       };
 
-      const result = UpdateActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdateActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept update payload without message', () => {
@@ -356,8 +354,8 @@ describe('Activity Schema - Main', () => {
         metadata: { auto_updated: true },
       };
 
-      const result = UpdateActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal update payload', () => {
@@ -365,8 +363,8 @@ describe('Activity Schema - Main', () => {
         type: 'note' as const,
       };
 
-      const result = UpdateActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject update payload with invalid type', () => {
@@ -375,8 +373,8 @@ describe('Activity Schema - Main', () => {
         message: 'Updated message',
       };
 
-      const result = UpdateActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpdateActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should accept update with only metadata', () => {
@@ -385,8 +383,8 @@ describe('Activity Schema - Main', () => {
         metadata: { version: '2.0' },
       };
 
-      const result = UpdateActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
   });
 });

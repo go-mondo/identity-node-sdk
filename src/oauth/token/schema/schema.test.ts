@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../../../app/utils.js';
 import { Schema } from './schema.js';
@@ -13,9 +12,12 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = Schema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = Schema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept authorization code with PKCE', () => {
@@ -27,9 +29,12 @@ describe('OAuth Token - Schema', () => {
         code_verifier: 'pkce_verifier_123',
       };
 
-      const result = Schema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = Schema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept authorization code with client secret', () => {
@@ -41,9 +46,12 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = Schema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = Schema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept client credentials grant', () => {
@@ -54,9 +62,12 @@ describe('OAuth Token - Schema', () => {
         scope: 'read write',
       };
 
-      const result = Schema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = Schema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should accept refresh token grant', () => {
@@ -68,9 +79,12 @@ describe('OAuth Token - Schema', () => {
         scope: 'read',
       };
 
-      const result = Schema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = Schema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(payload);
+      }
     });
 
     test('should reject invalid grant type', () => {
@@ -81,8 +95,8 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = Schema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = Schema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject authorization code without required fields', () => {
@@ -92,8 +106,8 @@ describe('OAuth Token - Schema', () => {
         // missing code and redirect_uri
       };
 
-      const result = Schema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = Schema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid redirect URI', () => {
@@ -104,8 +118,8 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'not-a-valid-url',
       };
 
-      const result = Schema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = Schema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject client credentials without required fields', () => {
@@ -115,8 +129,8 @@ describe('OAuth Token - Schema', () => {
         // missing client_secret
       };
 
-      const result = Schema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = Schema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject refresh token without required fields', () => {
@@ -126,8 +140,8 @@ describe('OAuth Token - Schema', () => {
         // missing refresh_token and client_secret
       };
 
-      const result = Schema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = Schema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject completely invalid payload', () => {
@@ -135,8 +149,8 @@ describe('OAuth Token - Schema', () => {
         invalid: 'data',
       };
 
-      const result = Schema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = Schema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

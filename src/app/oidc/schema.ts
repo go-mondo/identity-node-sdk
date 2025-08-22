@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
@@ -9,26 +9,30 @@ import {
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 
-export const OIDCSchema = type({
-  'updatedAt?': OptionalDateSchema,
-  'deletedAt?': OptionalDateSchema,
-  'deactivatedAt?': OptionalDateSchema,
-}).and(MetadataMapPropertySchema);
-export type OIDCProperties = typeof OIDCSchema.inferIn;
-export type OIDC = typeof OIDCSchema.inferOut;
+export const OIDCSchema = z.object({
+  updatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+  ...MetadataMapPropertySchema.shape,
+});
+export type OIDCProperties = z.input<typeof OIDCSchema>;
+export type OIDC = z.output<typeof OIDCSchema>;
 
-export const OIDCPayloadSchema = type({
-  'updatedAt?': OptionalDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type OIDCPayload = typeof OIDCPayloadSchema.inferOut;
+export const OIDCPayloadSchema = z.object({
+  updatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type OIDCPayload = z.output<typeof OIDCPayloadSchema>;
 
-export const InsertOIDCPayloadSchema =
-  UpsertMetadataPropertyPayloadSchema.or('undefined');
-export type InsertOIDCInput = typeof InsertOIDCPayloadSchema.inferIn;
-export type InsertOIDCPayload = typeof InsertOIDCPayloadSchema.inferOut;
+export const InsertOIDCPayloadSchema = z.union([
+  UpsertMetadataPropertyPayloadSchema,
+  z.undefined(),
+]);
+export type InsertOIDCInput = z.input<typeof InsertOIDCPayloadSchema>;
+export type InsertOIDCPayload = z.output<typeof InsertOIDCPayloadSchema>;
 
 export const UpdateOIDCPayloadSchema = MetadataPayloadPropertySchema;
-export type UpdateOIDCInput = typeof UpdateOIDCPayloadSchema.inferIn;
-export type UpdateOIDCPayload = typeof UpdateOIDCPayloadSchema.inferOut;
+export type UpdateOIDCInput = z.input<typeof UpdateOIDCPayloadSchema>;
+export type UpdateOIDCPayload = z.output<typeof UpdateOIDCPayloadSchema>;

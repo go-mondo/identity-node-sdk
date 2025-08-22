@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../../../app/utils.js';
 import { generateUserId } from '../../../customer/schema.js';
@@ -25,9 +24,9 @@ describe('Action Schema Operations - Sign Up', () => {
         metadata: { key: 'value' },
       };
 
-      const result = SignUpActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = SignUpActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept payload without app', () => {
@@ -44,8 +43,8 @@ describe('Action Schema Operations - Sign Up', () => {
         metadata: {},
       };
 
-      const result = SignUpActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SignUpActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal user name properties', () => {
@@ -59,8 +58,8 @@ describe('Action Schema Operations - Sign Up', () => {
         metadata: {},
       };
 
-      const result = SignUpActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SignUpActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject invalid operation', () => {
@@ -74,8 +73,8 @@ describe('Action Schema Operations - Sign Up', () => {
         metadata: {},
       };
 
-      const result = SignUpActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject missing required fields', () => {
@@ -85,8 +84,8 @@ describe('Action Schema Operations - Sign Up', () => {
         // missing user, attempt, etc.
       };
 
-      const result = SignUpActionPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpActionPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should delete undeclared keys', () => {
@@ -101,9 +100,9 @@ describe('Action Schema Operations - Sign Up', () => {
         extraField: 'should be removed',
       };
 
-      const result = SignUpActionPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).not.toHaveProperty('extraField');
+      const result = SignUpActionPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).not.toHaveProperty('extraField');
     });
   });
 
@@ -116,9 +115,9 @@ describe('Action Schema Operations - Sign Up', () => {
         familyName: 'Doe',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should accept phone number sign up request', () => {
@@ -129,9 +128,9 @@ describe('Action Schema Operations - Sign Up', () => {
         familyName: 'Smith',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should accept request with both email and phone', () => {
@@ -143,9 +142,9 @@ describe('Action Schema Operations - Sign Up', () => {
         familyName: 'Doe',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(request);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(request);
     });
 
     test('should accept minimal request with just email', () => {
@@ -153,8 +152,8 @@ describe('Action Schema Operations - Sign Up', () => {
         email: 'minimal@example.com',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal request with just phone', () => {
@@ -162,8 +161,8 @@ describe('Action Schema Operations - Sign Up', () => {
         phoneNumber: '+1234567890',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
     });
 
     test('should reject request without email or phone', () => {
@@ -172,8 +171,8 @@ describe('Action Schema Operations - Sign Up', () => {
         familyName: 'Doe',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      expect(result.success).toBe(false);
     });
 
     test('should reject invalid email format', () => {
@@ -182,8 +181,8 @@ describe('Action Schema Operations - Sign Up', () => {
         givenName: 'John',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      expect(result.success).toBe(false);
     });
 
     test('should accept optional name properties', () => {
@@ -196,8 +195,8 @@ describe('Action Schema Operations - Sign Up', () => {
         honorificSuffix: 'Jr.',
       };
 
-      const result = SignUpActionRequestSchema(request);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = SignUpActionRequestSchema.safeParse(request);
+      // Parse succeeds for valid data
     });
   });
 });

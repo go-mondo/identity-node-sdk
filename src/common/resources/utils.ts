@@ -1,35 +1,6 @@
-import { type } from 'arktype';
 import { HttpError } from '../errors/http.js';
 import { ValidationError } from '../errors/validation.js';
 import type { Pagination } from '../schema/pagination.js';
-
-/**
- * Parse schema data that is calling the API
- */
-export function parseEgressSchema<S>(output: S | type.errors): S {
-  if (output instanceof type.errors) {
-    console.warn(`Failed to parse egress payload: ${output.summary}`, {
-      error: output,
-    });
-
-    throw output;
-  }
-
-  return output;
-}
-
-/**
- * Parse schema data that is returning from the API
- */
-export function parseIngressSchema<S>(output: S | type.errors): S {
-  if (output instanceof type.errors) {
-    console.warn(`Failed to parse ingress payload: ${output.summary}`, {
-      error: output,
-    });
-  }
-
-  return output as S;
-}
 
 export function defaultRequestHeaders(): Headers {
   return new Headers([['accept', 'application/json']]);

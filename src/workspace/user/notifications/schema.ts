@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
@@ -18,50 +18,56 @@ export type AnyNotificationType =
 export const UserNotificationIdSchema = KSUIDSchema(
   Model.Notification.UIDPrefix
 );
-export type UserNotificationId = typeof UserNotificationIdSchema.inferOut;
+export type UserNotificationId = z.output<typeof UserNotificationIdSchema>;
 
-export const UserNotificationIdPropertySchema = type({
+export const UserNotificationIdPropertySchema = z.object({
   id: UserNotificationIdSchema,
 });
-export type UserNotificationIdProperty =
-  typeof UserNotificationIdPropertySchema.inferOut;
+export type UserNotificationIdProperty = z.output<
+  typeof UserNotificationIdPropertySchema
+>;
 
-const ActionSchema = type({
-  link: type('string.url'),
-  label: type('string'),
+const ActionSchema = z.object({
+  link: z.url(),
+  label: z.string(),
 });
 
-const BaseAttributes = type({
-  title: type('string | undefined').optional(),
-  message: type('string | undefined').optional(),
+const BaseAttributes = z.object({
+  title: z.union([z.string(), z.undefined()]).optional(),
+  message: z.union([z.string(), z.undefined()]).optional(),
 });
 
-export const UserNotificationPayloadSchema =
-  UserNotificationIdPropertySchema.and(BaseAttributes)
-    .and({
-      type: type.enumerated(NotificationType.IMPORT, NotificationType.INFO),
-      action: ActionSchema.or('undefined').optional(),
-      createdAt: RequiredDatePayloadSchema,
-      updatedAt: RequiredDatePayloadSchema,
-      'deletedAt?': OptionalDatePayloadSchema,
-      'deactivatedAt?': OptionalDatePayloadSchema,
-    })
-    .and(MetadataPayloadPropertySchema);
-export type UserNotificationPayload =
-  typeof UserNotificationPayloadSchema.inferOut;
+export const UserNotificationPayloadSchema = z.object({
+  ...UserNotificationIdPropertySchema.shape,
+  ...BaseAttributes.shape,
+  type: z.enum([NotificationType.IMPORT, NotificationType.INFO] as const),
+  action: z.union([ActionSchema, z.undefined()]).optional(),
+  createdAt: RequiredDatePayloadSchema,
+  updatedAt: RequiredDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UserNotificationPayload = z.output<
+  typeof UserNotificationPayloadSchema
+>;
 
-export const InsertUserNotificationPayloadSchema = type({
+export const InsertUserNotificationPayloadSchema = z.object({
   id: UserNotificationIdSchema.default(() => generateNotificationId()),
-  type: type.enumerated(NotificationType.INFO),
+  type: z.enum([NotificationType.INFO] as const),
   action: ActionSchema.optional(),
-})
-  .and(BaseAttributes)
-  .and(MetadataPayloadPropertySchema);
-export type InsertUserNotificationPayload =
-  typeof InsertUserNotificationPayloadSchema.inferOut;
+  ...BaseAttributes.shape,
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type InsertUserNotificationPayload = z.output<
+  typeof InsertUserNotificationPayloadSchema
+>;
 
-export const UpdateUserNotificationPayloadSchema = BaseAttributes.and({
+export const UpdateUserNotificationPayloadSchema = z.object({
+  ...BaseAttributes.shape,
   action: ActionSchema.optional(),
-}).and(MetadataPayloadPropertySchema);
-export type UpdateUserNotificationPayload =
-  typeof UpdateUserNotificationPayloadSchema.inferOut;
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UpdateUserNotificationPayload = z.output<
+  typeof UpdateUserNotificationPayloadSchema
+>;

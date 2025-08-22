@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
@@ -13,22 +13,24 @@ export const ProviderType = {
 
 export type AnyProviderType = (typeof ProviderType)[keyof typeof ProviderType];
 
-export const ProviderIdSchema = type.string;
-export type ProviderId = typeof ProviderIdSchema.inferOut;
+export const ProviderIdSchema = z.string();
+export type ProviderId = z.output<typeof ProviderIdSchema>;
 
-export const ProviderIdPropertySchema = type({
+export const ProviderIdPropertySchema = z.object({
   id: ProviderIdSchema,
 });
-export type ProviderIdProperty = typeof ProviderIdPropertySchema.inferOut;
+export type ProviderIdProperty = z.output<typeof ProviderIdPropertySchema>;
 
-export const ProviderTypeSchema = type.enumerated(ProviderType.MONDO);
+export const ProviderTypeSchema = z.enum([ProviderType.MONDO] as const);
 
-export const ProviderPayloadSchema = ProviderIdPropertySchema.and({
+export const ProviderPayloadSchema = z.object({
+  ...ProviderIdPropertySchema.shape,
   type: ProviderTypeSchema,
   user: UserIdSchema,
   strategy: StrategyIdSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type ProviderPayload = typeof ProviderPayloadSchema.inferOut;
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type ProviderPayload = z.output<typeof ProviderPayloadSchema>;

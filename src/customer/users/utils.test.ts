@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import {
-  getInitials,
   buildName,
   buildProperName,
   buildReference,
+  getInitials,
 } from './utils.js';
 
 describe('Customer Users - Utils', () => {

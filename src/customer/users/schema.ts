@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import { RoleIdAssociationsSchema } from '../../authorization/schema.js';
 import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
@@ -34,113 +34,115 @@ export const UserStatus = {
 } as const;
 export type AnyUserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 
-const UserStatusSchema = type.enumerated(
+const UserStatusSchema = z.enum([
   UserStatus.ACTIVE,
   UserStatus.SUSPENDED,
-  UserStatus.UNVERIFIED
-);
+  UserStatus.UNVERIFIED,
+] as const);
 
-export const UserNamePropertiesSchema = type({
-  givenName: optionallyNullishToUndefined(type('string')),
-  middleName: optionallyNullishToUndefined(type('string')),
-  familyName: optionallyNullishToUndefined(type('string')),
-  honorificPrefix: optionallyNullishToUndefined(type('string')),
-  honorificSuffix: optionallyNullishToUndefined(type('string')),
+export const UserNamePropertiesSchema = z.object({
+  givenName: optionallyNullishToUndefined(z.string()),
+  middleName: optionallyNullishToUndefined(z.string()),
+  familyName: optionallyNullishToUndefined(z.string()),
+  honorificPrefix: optionallyNullishToUndefined(z.string()),
+  honorificSuffix: optionallyNullishToUndefined(z.string()),
 });
 // export type UserNameProperties = typeof UserNamePropertiesSchema.inferOut;
 
-export const UpdateUserNamePropertiesSchema = type({
-  givenName: optionallyNullish(type('string')),
-  middleName: optionallyNullish(type('string')),
-  familyName: optionallyNullish(type('string')),
-  honorificPrefix: optionallyNullish(type('string')),
-  honorificSuffix: optionallyNullish(type('string')),
+export const UpdateUserNamePropertiesSchema = z.object({
+  givenName: optionallyNullish(z.string()),
+  middleName: optionallyNullish(z.string()),
+  familyName: optionallyNullish(z.string()),
+  honorificPrefix: optionallyNullish(z.string()),
+  honorificSuffix: optionallyNullish(z.string()),
 });
 // type UpsertUserNameProperties = typeof UpdateUserNamePropertiesSchema.inferOut;
 
-export const UserIdPropertySchema = type({
+export const UserIdPropertySchema = z.object({
   id: UserIdSchema,
 });
-export type UserIdProperty = typeof UserIdPropertySchema.inferOut;
+export type UserIdProperty = z.output<typeof UserIdPropertySchema>;
 
-export const RequiredEmailSchema = type('string.email');
-export const RequiredPhoneNumberSchema = type('string');
+export const RequiredEmailSchema = z.email();
+export const RequiredPhoneNumberSchema = z.string();
 
-export const VerifiedEmailOrPhonePropertiesSchema = type({
+export const VerifiedEmailOrPhonePropertiesSchema = z.object({
   email: optionallyNullishToUndefined(RequiredEmailSchema),
-  verifiedEmail: optionallyNullishToUndefined(type('boolean')),
+  verifiedEmail: optionallyNullishToUndefined(z.boolean()),
   phoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
-  verifiedPhoneNumber: optionallyNullishToUndefined(type('boolean')),
+  verifiedPhoneNumber: optionallyNullishToUndefined(z.boolean()),
 });
 
-export const EmailOrPhonePropertiesSchema = type({
+export const EmailOrPhonePropertiesSchema = z.object({
   email: optionallyNullishToUndefined(RequiredEmailSchema),
   phoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
 });
 
-export const UserAssociationsSchema = type({
+export const UserAssociationsSchema = z.object({
   roles: RoleIdAssociationsSchema.optional(),
 });
-export type UserAssociations = typeof UserAssociationsSchema.inferOut;
+export type UserAssociations = z.output<typeof UserAssociationsSchema>;
 
-const BaseSchema = UserIdPropertySchema.and(UserNamePropertiesSchema)
-  .and(VerifiedEmailOrPhonePropertiesSchema)
-  .and({
-    status: UserStatusSchema,
-    roles: optionallyUndefined(AggregateSchema),
-  });
+const BaseSchema = z.object({
+  ...UserIdPropertySchema.shape,
+  ...UserNamePropertiesSchema.shape,
+  ...VerifiedEmailOrPhonePropertiesSchema.shape,
+  status: UserStatusSchema,
+  roles: optionallyUndefined(AggregateSchema),
+});
 
-export const UserSchema = BaseSchema.and({
+export const UserSchema = z.object({
+  ...BaseSchema.shape,
   lastLogin: OptionalDateSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
   deletedAt: OptionalDateSchema.optional(),
   deactivatedAt: OptionalDateSchema.optional(),
-}).and(MetadataMapPropertySchema);
-export type UserProperties = typeof UserSchema.inferIn;
-export type User = typeof UserSchema.inferOut;
+  ...MetadataMapPropertySchema.shape,
+});
+export type UserProperties = z.input<typeof UserSchema>;
+export type User = z.output<typeof UserSchema>;
 
-export const UserPayloadSchema = BaseSchema.and({
+export const UserPayloadSchema = z.object({
+  ...BaseSchema.shape,
   lastLogin: OptionalDatePayloadSchema.optional(),
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-}).and(MetadataPayloadPropertySchema);
-export type UserPayload = typeof UserPayloadSchema.inferOut;
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type UserPayload = z.output<typeof UserPayloadSchema>;
 
-export const InsertUserPayloadSchema = type({
+export const InsertUserPayloadSchema = z.object({
   id: UserIdSchema.optional(),
-})
-  .and(UserNamePropertiesSchema)
-  .and(VerifiedEmailOrPhonePropertiesSchema)
-  .and(UserAssociationsSchema)
-  .and(UpsertMetadataPropertyPayloadSchema);
-export type InsertUserInput = typeof InsertUserPayloadSchema.inferIn;
-export type InsertUserPayload = typeof InsertUserPayloadSchema.inferOut;
+  ...UserNamePropertiesSchema.shape,
+  ...VerifiedEmailOrPhonePropertiesSchema.shape,
+  ...UserAssociationsSchema.shape,
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type InsertUserInput = z.input<typeof InsertUserPayloadSchema>;
+export type InsertUserPayload = z.output<typeof InsertUserPayloadSchema>;
 
-export const UpdateUserPayloadSchema = type({
-  suspended: type.boolean.optional(),
-})
-  .and(UpdateUserNamePropertiesSchema)
-  .and(VerifiedEmailOrPhonePropertiesSchema)
-  .and(UpsertMetadataPropertyPayloadSchema);
-export type UpdateUserInput = typeof UpdateUserPayloadSchema.inferIn;
-export type UpdateUserPayload = typeof UpdateUserPayloadSchema.inferOut;
+export const UpdateUserPayloadSchema = z.object({
+  suspended: z.boolean().optional(),
+  ...UpdateUserNamePropertiesSchema.shape,
+  ...VerifiedEmailOrPhonePropertiesSchema.shape,
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type UpdateUserInput = z.input<typeof UpdateUserPayloadSchema>;
+export type UpdateUserPayload = z.output<typeof UpdateUserPayloadSchema>;
 
 /**
  * Association
  */
-
-export const UserAssociationReferenceSchema = UserIdPropertySchema.and(
-  UserNamePropertiesSchema
-).and(
-  EmailOrPhonePropertiesSchema.and(
-    type({
-      status: UserStatusSchema.default('unverified'),
-      model: "'User'",
-    })
-  )
-);
-export type UserAssociationReference =
-  typeof UserAssociationReferenceSchema.inferOut;
+export const UserAssociationReferenceSchema = z.object({
+  ...UserIdPropertySchema.shape,
+  ...UserNamePropertiesSchema.shape,
+  ...EmailOrPhonePropertiesSchema.shape,
+  status: UserStatusSchema.default('unverified'),
+  model: z.literal('User'),
+});
+export type UserAssociationReference = z.output<
+  typeof UserAssociationReferenceSchema
+>;

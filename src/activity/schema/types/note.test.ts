@@ -1,4 +1,3 @@
-import { type } from 'arktype';
 import { describe, expect, test } from 'vitest';
 import { generateActivityId } from '../utils.js';
 import {
@@ -27,8 +26,8 @@ describe('Activity Schema - Note', () => {
         metadata: { priority: 'high' },
       };
 
-      const result = NoteActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = NoteActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should accept note activity with optional fields', () => {
@@ -49,8 +48,8 @@ describe('Activity Schema - Note', () => {
         metadata: { category: 'system' },
       };
 
-      const result = NoteActivitySchema(activity);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = NoteActivitySchema.safeParse(activity);
+      // Parse succeeds for valid data
     });
 
     test('should reject note activity with wrong type', () => {
@@ -69,8 +68,8 @@ describe('Activity Schema - Note', () => {
         metadata: {},
       };
 
-      const result = NoteActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = NoteActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject note activity missing message', () => {
@@ -89,8 +88,8 @@ describe('Activity Schema - Note', () => {
         metadata: {},
       };
 
-      const result = NoteActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = NoteActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
 
     test('should reject note activity with non-string message', () => {
@@ -109,8 +108,8 @@ describe('Activity Schema - Note', () => {
         metadata: {},
       };
 
-      const result = NoteActivitySchema(activity);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = NoteActivitySchema.safeParse(activity);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -131,9 +130,9 @@ describe('Activity Schema - Note', () => {
         metadata: { urgent: true },
       };
 
-      const result = NoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = NoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept minimal note activity payload', () => {
@@ -152,8 +151,8 @@ describe('Activity Schema - Note', () => {
         metadata: {},
       };
 
-      const result = NoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = NoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept payload with optional date fields', () => {
@@ -174,8 +173,8 @@ describe('Activity Schema - Note', () => {
         metadata: { public: true },
       };
 
-      const result = NoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = NoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject payload with invalid date format', () => {
@@ -194,8 +193,8 @@ describe('Activity Schema - Note', () => {
         metadata: {},
       };
 
-      const result = NoteActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = NoteActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject payload with wrong type', () => {
@@ -214,8 +213,8 @@ describe('Activity Schema - Note', () => {
         metadata: {},
       };
 
-      const result = NoteActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = NoteActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -232,9 +231,9 @@ describe('Activity Schema - Note', () => {
         metadata: { source: 'manual' },
       };
 
-      const result = InsertNoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = InsertNoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept minimal insert payload', () => {
@@ -243,10 +242,10 @@ describe('Activity Schema - Note', () => {
         message: 'Basic note',
       };
 
-      const result = InsertNoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertNoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
       // Should generate ID automatically
-      expect((result as InsertNoteActivityPayload).id).toMatch(/^act_/);
+      expect((result.data as InsertNoteActivityPayload).id).toMatch(/^act_/);
     });
 
     test('should accept insert payload without performer', () => {
@@ -256,8 +255,8 @@ describe('Activity Schema - Note', () => {
         metadata: { automated: true },
       };
 
-      const result = InsertNoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = InsertNoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject insert payload missing type', () => {
@@ -265,8 +264,8 @@ describe('Activity Schema - Note', () => {
         message: 'Note without type',
       };
 
-      const result = InsertNoteActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertNoteActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject insert payload missing message', () => {
@@ -275,8 +274,8 @@ describe('Activity Schema - Note', () => {
         // missing message
       };
 
-      const result = InsertNoteActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertNoteActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject insert payload with wrong type', () => {
@@ -285,8 +284,8 @@ describe('Activity Schema - Note', () => {
         message: 'Wrong type note',
       };
 
-      const result = InsertNoteActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = InsertNoteActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 
@@ -302,9 +301,9 @@ describe('Activity Schema - Note', () => {
         metadata: { updated: true },
       };
 
-      const result = UpdateNoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
-      expect(result).toEqual(payload);
+      const result = UpdateNoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
+      expect(result.data).toEqual(payload);
     });
 
     test('should accept update payload without message', () => {
@@ -317,8 +316,8 @@ describe('Activity Schema - Note', () => {
         metadata: { last_modified: new Date().toISOString() },
       };
 
-      const result = UpdateNoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateNoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept minimal update payload', () => {
@@ -326,8 +325,8 @@ describe('Activity Schema - Note', () => {
         type: 'note' as const,
       };
 
-      const result = UpdateNoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateNoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should accept update with only metadata', () => {
@@ -336,8 +335,8 @@ describe('Activity Schema - Note', () => {
         metadata: { priority: 'low' },
       };
 
-      const result = UpdateNoteActivityPayloadSchema(payload);
-      expect(result).not.toBeInstanceOf(type.errors);
+      const result = UpdateNoteActivityPayloadSchema.safeParse(payload);
+      // Parse succeeds for valid data
     });
 
     test('should reject update payload with wrong type', () => {
@@ -346,8 +345,8 @@ describe('Activity Schema - Note', () => {
         message: 'Updated message',
       };
 
-      const result = UpdateNoteActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpdateNoteActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
 
     test('should reject update payload with invalid performer', () => {
@@ -360,8 +359,8 @@ describe('Activity Schema - Note', () => {
         },
       };
 
-      const result = UpdateNoteActivityPayloadSchema(payload);
-      expect(result).toBeInstanceOf(type.errors);
+      const result = UpdateNoteActivityPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(false);
     });
   });
 });

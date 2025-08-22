@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
   RequiredDatePayloadSchema,
@@ -16,56 +16,60 @@ export const OrganizationStatus = {
 export type AnyOrganizationStatus =
   (typeof OrganizationStatus)[keyof typeof OrganizationStatus];
 
-export const OrganizationIdPropertySchema = type({
+export const OrganizationIdPropertySchema = z.object({
   id: OrganizationIdSchema,
 });
-export type OrganizationIdProperty =
-  typeof OrganizationIdPropertySchema.inferOut;
+export type OrganizationIdProperty = z.output<
+  typeof OrganizationIdPropertySchema
+>;
 
-const OrganizationNameSchema = type.string;
+const OrganizationNameSchema = z.string();
 
-const StatusSchema = type.enumerated(
+const StatusSchema = z.enum([
   OrganizationStatus.ACTIVE,
-  OrganizationStatus.SUSPENDED
-);
+  OrganizationStatus.SUSPENDED,
+] as const);
 
-export const OrganizationPayloadSchema = type({
+export const OrganizationPayloadSchema = z.object({
+  ...OrganizationIdPropertySchema.shape,
   status: StatusSchema.default(OrganizationStatus.ACTIVE),
   name: OrganizationNameSchema,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  'deletedAt?': OptionalDatePayloadSchema,
-  'deactivatedAt?': OptionalDatePayloadSchema,
-})
-  .and(OrganizationIdPropertySchema)
-  .and(MetadataPayloadPropertySchema);
-export type OrganizationPayload = typeof OrganizationPayloadSchema.inferOut;
+  deletedAt: OptionalDatePayloadSchema.optional(),
+  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...MetadataPayloadPropertySchema.shape,
+});
+export type OrganizationPayload = z.output<typeof OrganizationPayloadSchema>;
 
-export const InsertOrganizationPayloadSchema = type({
+export const InsertOrganizationPayloadSchema = z.object({
   id: OrganizationIdSchema.default(() => generateOrganizationId()),
   status: StatusSchema.optional(),
   name: OrganizationNameSchema,
-}).and(UpsertMetadataPropertyPayloadSchema);
-export type InsertOrganizationPayload =
-  typeof InsertOrganizationPayloadSchema.inferOut;
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type InsertOrganizationPayload = z.output<
+  typeof InsertOrganizationPayloadSchema
+>;
 
-export const UpdateOrganizationPayloadSchema = type({
-  status: StatusSchema.or(type.null).optional(),
-  name: OrganizationNameSchema.or(type.null).optional(),
-}).and(UpsertMetadataPropertyPayloadSchema);
-export type UpdateOrganizationPayload =
-  typeof UpdateOrganizationPayloadSchema.inferOut;
+export const UpdateOrganizationPayloadSchema = z.object({
+  status: StatusSchema.or(z.null()).optional(),
+  name: OrganizationNameSchema.or(z.null()).optional(),
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
+export type UpdateOrganizationPayload = z.output<
+  typeof UpdateOrganizationPayloadSchema
+>;
 
 /**
  * Association
  */
 
-export const OrganizationAssociationReferenceSchema =
-  OrganizationIdPropertySchema.and(
-    type({
-      name: type.string,
-      model: "'Organization'",
-    })
-  );
-export type OrganizationAssociationReference =
-  typeof OrganizationAssociationReferenceSchema.inferOut;
+export const OrganizationAssociationReferenceSchema = z.object({
+  ...OrganizationIdPropertySchema.shape,
+  name: z.string(),
+  model: z.literal('Organization'),
+});
+export type OrganizationAssociationReference = z.output<
+  typeof OrganizationAssociationReferenceSchema
+>;

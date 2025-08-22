@@ -1,4 +1,4 @@
-import { type } from 'arktype';
+import { z } from 'zod';
 
 export const GrantType = {
   CLIENT_CREDENTIALS: 'client_credentials',
@@ -31,10 +31,10 @@ export const CodeChallengeMethod = {
 } as const;
 export type AnyCodeChallengeMethod =
   (typeof CodeChallengeMethod)[keyof typeof CodeChallengeMethod];
-export const CodeChallengeMethodSchema = type.enumerated(
+export const CodeChallengeMethodSchema = z.enum([
   CodeChallengeMethod.PLAIN,
-  CodeChallengeMethod.S256
-);
+  CodeChallengeMethod.S256,
+] as const);
 
 export const AuthorizationDisplay = {
   PAGE: 'page',
@@ -44,12 +44,12 @@ export const AuthorizationDisplay = {
 } as const;
 export type AnyAuthorizationDisplay =
   (typeof AuthorizationDisplay)[keyof typeof AuthorizationDisplay];
-export const AuthorizationDisplaySchema = type.enumerated(
+export const AuthorizationDisplaySchema = z.enum([
   AuthorizationDisplay.PAGE,
   AuthorizationDisplay.POPUP,
   AuthorizationDisplay.TOUCH,
-  AuthorizationDisplay.WAP
-);
+  AuthorizationDisplay.WAP,
+] as const);
 
 export const AuthorizationPrompt = {
   NONE: 'none',
@@ -59,15 +59,15 @@ export const AuthorizationPrompt = {
 } as const;
 export type AnyAuthorizationPrompt =
   (typeof AuthorizationPrompt)[keyof typeof AuthorizationPrompt];
-export const AuthorizationPromptSchema = type.enumerated(
+export const AuthorizationPromptSchema = z.enum([
   AuthorizationPrompt.NONE,
   AuthorizationPrompt.LOGIN,
   AuthorizationPrompt.CONSENT,
-  AuthorizationPrompt.SELECT_ACCOUNT
-);
+  AuthorizationPrompt.SELECT_ACCOUNT,
+] as const);
 
-export const OptionalSchema = type({
-  audience: type('string').optional(),
+export const OptionalSchema = z.object({
+  audience: z.string().optional(),
 });
 
 export const OIDCScope = {
@@ -89,4 +89,4 @@ export const Scope = {
   ...OAuthScope,
 };
 export type AnyScope = AnyOAuthScope | AnyOIDCScope | string;
-export const ScopeSchema = type('string');
+export const ScopeSchema = z.string();
