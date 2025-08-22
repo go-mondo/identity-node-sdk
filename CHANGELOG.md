@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.13](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.12...identity-sdk-v0.0.2-beta.13) (2025-08-22)
+
+
+### Features
+
+* moving to zod 4 ([684f655](https://github.com/go-mondo/identity-node-sdk/commit/684f655684a918d21d46df19cc6b0c1c4d19b0f2))
+
 ## [0.0.2-beta.12](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.11...identity-sdk-v0.0.2-beta.12) (2025-06-30)
 
 
