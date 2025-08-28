@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.15](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.14...identity-sdk-v0.0.2-beta.15) (2025-08-28)
+
+
+### Bug Fixes
+
+* adding date properties ([65868bb](https://github.com/go-mondo/identity-node-sdk/commit/65868bb4ec7fae50b4c64a67f9c2cb8d1ca6bd71))
+
 ## [0.0.2-beta.14](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.13...identity-sdk-v0.0.2-beta.14) (2025-08-28)
 
 
