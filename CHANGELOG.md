@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.16](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.15...identity-sdk-v0.0.2-beta.16) (2025-08-28)
+
+
+### Bug Fixes
+
+* orgs ([e218bd9](https://github.com/go-mondo/identity-node-sdk/commit/e218bd9d5836787f790997a8dbf2045521cd47b3))
+
 ## [0.0.2-beta.15](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.14...identity-sdk-v0.0.2-beta.15) (2025-08-28)
 
 
