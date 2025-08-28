@@ -3,6 +3,7 @@ import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   InsertOrganizationPayloadSchema,
   OrganizationPayloadSchema,
+  OrganizationSchema,
   UpdateOrganizationPayloadSchema,
 } from '../../customer/organization/schema.js';
 import { MembershipPayloadSchema } from '../membership/schema.js';
@@ -15,12 +16,23 @@ export const TenantIdPropertySchema = z.object({
   id: TenantIdSchema,
 });
 
-export const TenantPayloadSchema = z.object({
-  ...OrganizationPayloadSchema.shape,
+const BaseSchema = z.object({
   handle: z.string(),
   supportEmail: z.email().optional(),
   authHost: z.url().optional(), // Not live yet (used for dev now)
   membership: MembershipPayloadSchema.optional(),
+});
+
+export const TenantSchema = z.object({
+  ...OrganizationSchema.shape,
+  ...BaseSchema.shape,
+});
+export type TenantProperties = z.input<typeof TenantSchema>;
+export type Tenant = z.output<typeof TenantSchema>;
+
+export const TenantPayloadSchema = z.object({
+  ...OrganizationPayloadSchema.shape,
+  ...BaseSchema.shape,
 });
 export type TenantPayload = z.output<typeof TenantPayloadSchema>;
 
