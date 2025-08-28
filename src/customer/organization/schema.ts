@@ -1,9 +1,12 @@
 import { z } from 'zod';
 import {
   OptionalDatePayloadSchema,
+  OptionalDateSchema,
   RequiredDatePayloadSchema,
+  RequiredDateSchema,
 } from '../../common/index.js';
 import {
+  MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
@@ -25,15 +28,31 @@ export type OrganizationIdProperty = z.output<
 
 const OrganizationNameSchema = z.string();
 
-const StatusSchema = z.enum([
+const OrganizationStatusSchema = z.enum([
   OrganizationStatus.ACTIVE,
   OrganizationStatus.SUSPENDED,
 ] as const);
 
-export const OrganizationPayloadSchema = z.object({
+const BaseSchema = z.object({
   ...OrganizationIdPropertySchema.shape,
-  status: StatusSchema.default(OrganizationStatus.ACTIVE),
   name: OrganizationNameSchema,
+  status: OrganizationStatusSchema,
+});
+
+export const OrganizationSchema = z.object({
+  ...BaseSchema.shape,
+  lastLogin: OptionalDateSchema.optional(),
+  createdAt: RequiredDateSchema,
+  updatedAt: RequiredDateSchema,
+  deletedAt: OptionalDateSchema.optional(),
+  deactivatedAt: OptionalDateSchema.optional(),
+  ...MetadataMapPropertySchema.shape,
+});
+export type OrganizationProperties = z.input<typeof OrganizationSchema>;
+export type Organization = z.output<typeof OrganizationSchema>;
+
+export const OrganizationPayloadSchema = z.object({
+  ...BaseSchema.shape,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
   deletedAt: OptionalDatePayloadSchema.optional(),
@@ -44,7 +63,7 @@ export type OrganizationPayload = z.output<typeof OrganizationPayloadSchema>;
 
 export const InsertOrganizationPayloadSchema = z.object({
   id: OrganizationIdSchema.default(() => generateOrganizationId()),
-  status: StatusSchema.optional(),
+  status: OrganizationStatusSchema.optional(),
   name: OrganizationNameSchema,
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
@@ -53,8 +72,8 @@ export type InsertOrganizationPayload = z.output<
 >;
 
 export const UpdateOrganizationPayloadSchema = z.object({
-  status: StatusSchema.or(z.null()).optional(),
-  name: OrganizationNameSchema.or(z.null()).optional(),
+  status: OrganizationStatusSchema.optional(),
+  name: OrganizationNameSchema.optional(),
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
 export type UpdateOrganizationPayload = z.output<
@@ -64,7 +83,6 @@ export type UpdateOrganizationPayload = z.output<
 /**
  * Association
  */
-
 export const OrganizationAssociationReferenceSchema = z.object({
   ...OrganizationIdPropertySchema.shape,
   name: z.string(),
