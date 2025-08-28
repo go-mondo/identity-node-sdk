@@ -26,9 +26,9 @@ const BaseOAuth = z.object({
 
 export const OAuthSchema = z.object({
   ...BaseOAuth.shape,
-  updatedAt: OptionalDateSchema.optional(),
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type OAuthProperties = z.input<typeof OAuthSchema>;
@@ -36,9 +36,9 @@ export type OAuth = z.output<typeof OAuthSchema>;
 
 export const OAuthPayloadSchema = z.object({
   ...BaseOAuth.shape,
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type OAuthPayload = z.output<typeof OAuthPayloadSchema>;

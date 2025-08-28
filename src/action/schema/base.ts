@@ -39,7 +39,7 @@ export const BasePayloadSchema = z.object({
   attempt: z.number(),
   expiresAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });

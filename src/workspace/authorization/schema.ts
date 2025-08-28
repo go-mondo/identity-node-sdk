@@ -1,7 +1,14 @@
 import { z } from 'zod';
-import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
+import {
+  OptionalDatePayloadSchema,
+  OptionalDateSchema,
+  RequiredDateSchema,
+} from '../../common/schema/dates.js';
 import { Algorithm, AlgorithmSchema } from '../../common/schema/jwt.js';
-import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import {
+  MetadataMapPropertySchema,
+  MetadataPayloadPropertySchema,
+} from '../../common/schema/metadata.js';
 
 export const DEFAULT_SESSION_DURATION = 60 * 60 * 4; // 4 hour
 export const DEFAULT_REFRESH_TOKEN_DURATION = 60 * 60 * 24 * 14; // 14 days
@@ -14,11 +21,22 @@ const BaseAttributes = z.object({
   accessTokenSignatureAlgorithm: AlgorithmSchema.default(Algorithm.DEFAULT),
 });
 
+export const AuthorizationSchema = z.object({
+  ...BaseAttributes.shape,
+
+  updatedAt: RequiredDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
+  ...MetadataMapPropertySchema.shape,
+});
+export type AuthorizationProperties = z.input<typeof AuthorizationSchema>;
+export type Authorization = z.output<typeof AuthorizationSchema>;
+
 export const AuthorizationPayloadSchema = z.object({
   ...BaseAttributes.shape,
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;

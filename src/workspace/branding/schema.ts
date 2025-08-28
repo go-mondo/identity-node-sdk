@@ -1,6 +1,12 @@
 import { z } from 'zod';
-import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
-import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import {
+  OptionalDatePayloadSchema,
+  OptionalDateSchema,
+} from '../../common/schema/dates.js';
+import {
+  MetadataMapPropertySchema,
+  MetadataPayloadPropertySchema,
+} from '../../common/schema/metadata.js';
 
 const LogoSchema = z.object({
   dark: z.url().optional(),
@@ -13,22 +19,32 @@ const ColorSchema = z.object({
   linkHover: z.string().optional(),
 });
 
-const BaseAttributes = z.object({
+const BaseSchema = z.object({
   logo: LogoSchema.optional(),
   color: ColorSchema.optional(),
 });
 
+export const BrandingSchema = z.object({
+  ...BaseSchema.shape,
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
+  ...MetadataMapPropertySchema.shape,
+});
+export type BrandingProperties = z.input<typeof BrandingSchema>;
+export type Branding = z.output<typeof BrandingSchema>;
+
 export const BrandingPayloadSchema = z.object({
-  ...BaseAttributes.shape,
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...BaseSchema.shape,
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type BrandingPayload = z.output<typeof BrandingPayloadSchema>;
 
 export const UpsertBrandingPayloadSchema = z.object({
-  ...BaseAttributes.shape,
+  ...BaseSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type UpsertBrandingPayload = z.output<

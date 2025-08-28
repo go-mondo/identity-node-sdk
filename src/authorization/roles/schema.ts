@@ -54,8 +54,8 @@ export const RoleSchema = z.object({
   ...BaseSchema.shape,
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type RoleProperties = z.input<typeof RoleSchema>;
@@ -65,8 +65,8 @@ export const RolePayloadSchema = z.object({
   ...BaseSchema.shape,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type RolePayload = z.output<typeof RolePayloadSchema>;

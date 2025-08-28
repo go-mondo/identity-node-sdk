@@ -21,7 +21,7 @@ export type FeaturesPayload = z.output<typeof FeaturesPayloadSchema>;
 
 export const MembershipPayloadSchema = z.object({
   features: FeaturesPayloadSchema.optional(),
-  startAt: OptionalDatePayloadSchema.optional(),
-  endAt: OptionalDatePayloadSchema.optional(),
+  startAt: OptionalDatePayloadSchema,
+  endAt: OptionalDatePayloadSchema,
 });
 export type MembershipPayload = z.output<typeof MembershipPayloadSchema>;

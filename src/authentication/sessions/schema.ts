@@ -90,8 +90,8 @@ export const SessionSchema = z.object({
     .union([z.string(), z.instanceof(URL)])
     .pipe(z.transform((v) => (!v || v instanceof URL ? v : new URL(v))))
     .optional(),
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type SessionProperties = z.input<typeof SessionSchema>;
@@ -106,8 +106,8 @@ export const SessionPayloadSchema = z.object({
     .union([z.string(), z.instanceof(URL)])
     .transform((v) => (v instanceof URL ? v.toString() : v))
     .optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type SessionPayload = z.output<typeof SessionPayloadSchema>;

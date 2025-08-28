@@ -1,6 +1,12 @@
 import { z } from 'zod';
-import { OptionalDatePayloadSchema } from '../../common/schema/dates.js';
-import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import {
+  OptionalDatePayloadSchema,
+  OptionalDateSchema,
+} from '../../common/schema/dates.js';
+import {
+  MetadataMapPropertySchema,
+  MetadataPayloadPropertySchema,
+} from '../../common/schema/metadata.js';
 import { IdentityIdentifierSchema } from '../../identity/schema.js';
 
 const IdentityIdentifierPropertySchema = z.array(
@@ -11,13 +17,26 @@ const IdentityIdentifierPropertySchema = z.array(
 
 const AllowSelfRegistrationSchema = z.boolean();
 
-export const RegistrationPayloadSchema = z.object({
+const BaseSchema = z.object({
   allowSelfRegistration: AllowSelfRegistrationSchema,
   identifiers: IdentityIdentifierPropertySchema,
+});
 
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+export const RegistrationSchema = z.object({
+  ...BaseSchema.shape,
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
+  ...MetadataMapPropertySchema.shape,
+});
+export type RegistrationProperties = z.input<typeof RegistrationSchema>;
+export type Registration = z.output<typeof RegistrationSchema>;
+
+export const RegistrationPayloadSchema = z.object({
+  ...BaseSchema.shape,
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type RegistrationPayload = z.output<typeof RegistrationPayloadSchema>;

@@ -29,8 +29,8 @@ export const ProviderPayloadSchema = z.object({
   user: UserIdSchema,
   strategy: StrategyIdSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type ProviderPayload = z.output<typeof ProviderPayloadSchema>;

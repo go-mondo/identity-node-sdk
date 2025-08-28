@@ -1,6 +1,12 @@
 import { z } from 'zod';
-import { OptionalDatePayloadSchema } from '../../../common/schema/dates.js';
-import { UpsertMetadataPropertyPayloadSchema } from '../../../common/schema/metadata.js';
+import {
+  OptionalDatePayloadSchema,
+  OptionalDateSchema,
+} from '../../../common/schema/dates.js';
+import {
+  MetadataMapPropertySchema,
+  UpsertMetadataPropertyPayloadSchema,
+} from '../../../common/schema/metadata.js';
 
 const TableSchema = z.object({
   columns: z.array(z.string()).optional(),
@@ -8,15 +14,25 @@ const TableSchema = z.object({
 
 const TablesSchema = z.record(z.string(), TableSchema);
 
-const BaseAttributes = z.object({
+const BaseSchema = z.object({
   views: TablesSchema.optional(),
 });
 
+export const UserPreferencesSchema = z.object({
+  ...BaseSchema.shape,
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
+  ...MetadataMapPropertySchema.shape,
+});
+export type UserPreferencesProperties = z.input<typeof UserPreferencesSchema>;
+export type UserPreferences = z.output<typeof UserPreferencesSchema>;
+
 export const UserPreferencesPayloadSchema = z.object({
-  ...BaseAttributes.shape,
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  ...BaseSchema.shape,
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
 export type UserPreferencesPayload = z.output<
@@ -24,7 +40,7 @@ export type UserPreferencesPayload = z.output<
 >;
 
 export const UpsertUserPreferencesPayloadSchema = z.object({
-  ...BaseAttributes.shape,
+  ...BaseSchema.shape,
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
 export type UpsertUserPreferencesPayload = z.output<

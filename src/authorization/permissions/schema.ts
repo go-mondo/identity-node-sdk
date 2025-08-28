@@ -57,8 +57,8 @@ export const PermissionSchema = z.object({
   roles: AggregateSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type PermissionProperties = z.input<typeof PermissionSchema>;
@@ -70,8 +70,8 @@ export const PermissionPayloadSchema = z.object({
   roles: AggregateSchema.optional(),
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type PermissionPayload = z.output<typeof PermissionPayloadSchema>;

@@ -53,8 +53,8 @@ export const BaseStrategySchema = z.object({
   label: StrategyLabelSchema,
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 
@@ -63,8 +63,8 @@ export const BaseStrategyPayloadSchema = z.object({
   label: StrategyLabelSchema,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 

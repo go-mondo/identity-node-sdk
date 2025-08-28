@@ -10,18 +10,18 @@ import {
 } from '../../common/schema/metadata.js';
 
 export const SAMLSchema = z.object({
-  updatedAt: OptionalDateSchema.optional(),
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type SAMLProperties = z.input<typeof SAMLSchema>;
 export type SAML = z.output<typeof SAMLSchema>;
 
 export const SAMLPayloadSchema = z.object({
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type SAMLPayload = z.output<typeof SAMLPayloadSchema>;

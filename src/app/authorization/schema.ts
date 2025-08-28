@@ -73,9 +73,9 @@ export const AuthorizationSchema = z.object({
   availableAudiences: AvailableAudienceSetSchema.optional(),
   availableGrants: AvailableGrantSetSchema.optional(),
   defaultAudience: z.union([z.string(), z.undefined()]).optional(),
-  updatedAt: OptionalDateSchema.optional(),
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type AuthorizationProperties = z.input<typeof AuthorizationSchema>;
@@ -88,9 +88,9 @@ export const AuthorizationPayloadSchema = z.object({
   availableAudiences: AvailableAudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
   defaultAudience: z.union([z.string(), z.undefined()]).optional(),
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;

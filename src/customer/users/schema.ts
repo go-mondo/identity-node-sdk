@@ -93,11 +93,11 @@ const BaseSchema = z.object({
 
 export const UserSchema = z.object({
   ...BaseSchema.shape,
-  lastLogin: OptionalDateSchema.optional(),
+  lastLogin: OptionalDateSchema,
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type UserProperties = z.input<typeof UserSchema>;
@@ -105,11 +105,11 @@ export type User = z.output<typeof UserSchema>;
 
 export const UserPayloadSchema = z.object({
   ...BaseSchema.shape,
-  lastLogin: OptionalDatePayloadSchema.optional(),
+  lastLogin: OptionalDatePayloadSchema,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type UserPayload = z.output<typeof UserPayloadSchema>;

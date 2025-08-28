@@ -15,8 +15,8 @@ export const SettingsSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type SettingsProperties = z.input<typeof SettingsSchema>;
@@ -24,9 +24,9 @@ export type Settings = z.output<typeof SettingsSchema>;
 
 export const SettingsPayloadSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type SettingsPayload = z.output<typeof SettingsPayloadSchema>;

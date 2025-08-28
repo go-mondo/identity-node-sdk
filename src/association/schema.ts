@@ -67,8 +67,8 @@ export const AssociationSchema = z.object({
   ...ObjectPropertySchema.shape,
   expiresAt: RequiredDateSchema.optional(),
   updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 const RootAssociationProperties = AssociationSchema.omit({ object: true });
@@ -87,10 +87,10 @@ export type Association<O extends AssociationObject = AssociationObject> =
 
 export const AssociationPayloadSchema = z.object({
   ...ObjectPropertySchema.shape,
-  expiresAt: OptionalDatePayloadSchema.optional(),
+  expiresAt: OptionalDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 type RootAssociationPayload = z.output<typeof AssociationPayloadSchema>;
@@ -102,7 +102,7 @@ export type AssociationPayload<
 };
 
 export const UpsertAssociationPayloadSchema = z.object({
-  expiresAt: OptionalDatePayloadSchema.optional(),
+  expiresAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type UpsertAssociationInput = z.input<

@@ -16,9 +16,9 @@ const BaseSchema = z.object({
 
 export const RegistrationSchema = z.object({
   ...BaseSchema.shape,
-  updatedAt: OptionalDateSchema.optional(),
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type RegistrationProperties = z.input<typeof RegistrationSchema>;
@@ -26,9 +26,9 @@ export type Registration = z.output<typeof RegistrationSchema>;
 
 export const RegistrationPayloadSchema = z.object({
   ...BaseSchema.shape,
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type RegistrationPayload = z.output<typeof RegistrationPayloadSchema>;

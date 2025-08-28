@@ -10,18 +10,18 @@ import {
 } from '../../common/schema/metadata.js';
 
 export const OIDCSchema = z.object({
-  updatedAt: OptionalDateSchema.optional(),
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  updatedAt: OptionalDateSchema,
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type OIDCProperties = z.input<typeof OIDCSchema>;
 export type OIDC = z.output<typeof OIDCSchema>;
 
 export const OIDCPayloadSchema = z.object({
-  updatedAt: OptionalDatePayloadSchema.optional(),
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  updatedAt: OptionalDatePayloadSchema,
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type OIDCPayload = z.output<typeof OIDCPayloadSchema>;

@@ -41,11 +41,10 @@ const BaseSchema = z.object({
 
 export const OrganizationSchema = z.object({
   ...BaseSchema.shape,
-  lastLogin: OptionalDateSchema.optional(),
   createdAt: RequiredDateSchema,
   updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema.optional(),
-  deactivatedAt: OptionalDateSchema.optional(),
+  deletedAt: OptionalDateSchema,
+  deactivatedAt: OptionalDateSchema,
   ...MetadataMapPropertySchema.shape,
 });
 export type OrganizationProperties = z.input<typeof OrganizationSchema>;
@@ -55,8 +54,8 @@ export const OrganizationPayloadSchema = z.object({
   ...BaseSchema.shape,
   createdAt: RequiredDatePayloadSchema,
   updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema.optional(),
-  deactivatedAt: OptionalDatePayloadSchema.optional(),
+  deletedAt: OptionalDatePayloadSchema,
+  deactivatedAt: OptionalDatePayloadSchema,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type OrganizationPayload = z.output<typeof OrganizationPayloadSchema>;
