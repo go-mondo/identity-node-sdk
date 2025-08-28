@@ -10,7 +10,7 @@ import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../common/schema/metadata.js';
-import { Model, generateAppId } from './utils.js';
+import { Model } from './utils.js';
 
 export const AppStatus = {
   ENABLED: 'enabled',
@@ -59,7 +59,7 @@ export const AppPayloadSchema = z.object({
 export type AppPayload = z.output<typeof AppPayloadSchema>;
 
 export const InsertAppPayloadSchema = z.object({
-  id: AppIdSchema.default(() => generateAppId()),
+  id: AppIdSchema.optional(),
   status: StatusSchema.default(AppStatus.ENABLED),
   label: z.string(),
   description: z.string().optional(),

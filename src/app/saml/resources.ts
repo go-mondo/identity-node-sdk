@@ -66,7 +66,7 @@ export async function insertSAML(
     await insertItemWithAuthorization(
       new URL(SAMLResources.buildPath(appId), instance.config.host),
       instance.authorizer,
-      InsertSAMLPayloadSchema.parse(item)
+      item ? InsertSAMLPayloadSchema.parse(item) : undefined
     )
   );
 }

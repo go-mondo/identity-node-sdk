@@ -26,10 +26,9 @@ export const SAMLPayloadSchema = z.object({
 });
 export type SAMLPayload = z.output<typeof SAMLPayloadSchema>;
 
-export const InsertSAMLPayloadSchema = z.union([
-  UpsertMetadataPropertyPayloadSchema,
-  z.undefined(),
-]);
+export const InsertSAMLPayloadSchema = z.object({
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
 export type InsertSAMLInput = z.input<typeof InsertSAMLPayloadSchema>;
 export type InsertSAMLPayload = z.output<typeof InsertSAMLPayloadSchema>;
 

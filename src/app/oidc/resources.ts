@@ -66,7 +66,7 @@ export async function insertOIDC(
     await insertItemWithAuthorization(
       new URL(OIDCResources.buildPath(appId), instance.config.host),
       instance.authorizer,
-      InsertOIDCPayloadSchema.parse(item)
+      item ? InsertOIDCPayloadSchema.parse(item) : undefined
     )
   );
 }

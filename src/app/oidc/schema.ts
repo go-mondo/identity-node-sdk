@@ -26,10 +26,9 @@ export const OIDCPayloadSchema = z.object({
 });
 export type OIDCPayload = z.output<typeof OIDCPayloadSchema>;
 
-export const InsertOIDCPayloadSchema = z.union([
-  UpsertMetadataPropertyPayloadSchema,
-  z.undefined(),
-]);
+export const InsertOIDCPayloadSchema = z.object({
+  ...UpsertMetadataPropertyPayloadSchema.shape,
+});
 export type InsertOIDCInput = z.input<typeof InsertOIDCPayloadSchema>;
 export type InsertOIDCPayload = z.output<typeof InsertOIDCPayloadSchema>;
 
