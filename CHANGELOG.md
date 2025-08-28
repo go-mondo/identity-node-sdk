@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.18](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.17...identity-sdk-v0.0.2-beta.18) (2025-08-28)
+
+
+### Bug Fixes
+
+* tenant schema ([ca25b55](https://github.com/go-mondo/identity-node-sdk/commit/ca25b5581c0f3190cffc125de890c44d167bec68))
+
 ## [0.0.2-beta.17](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.16...identity-sdk-v0.0.2-beta.17) (2025-08-28)
 
 
