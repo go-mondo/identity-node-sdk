@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.20](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.19...identity-sdk-v0.0.2-beta.20) (2025-08-29)
+
+
+### Bug Fixes
+
+* use date schemas ([dd85f9a](https://github.com/go-mondo/identity-node-sdk/commit/dd85f9a6ef0969c5895134b1181baa731fe0a257))
+
 ## [0.0.2-beta.19](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.18...identity-sdk-v0.0.2-beta.19) (2025-08-28)
 
 
