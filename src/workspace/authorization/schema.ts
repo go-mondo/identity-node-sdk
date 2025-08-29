@@ -1,8 +1,11 @@
 import { z } from 'zod';
 import {
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
-  OptionalDateSchema,
-  RequiredDateSchema,
+  UpdatedAtPropertySchema,
 } from '../../common/schema/dates.js';
 import { Algorithm, AlgorithmSchema } from '../../common/schema/jwt.js';
 import {
@@ -24,9 +27,9 @@ const BaseAttributes = z.object({
 export const AuthorizationSchema = z.object({
   ...BaseAttributes.shape,
 
-  updatedAt: RequiredDateSchema.optional(),
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type AuthorizationProperties = z.input<typeof AuthorizationSchema>;
@@ -35,8 +38,8 @@ export type Authorization = z.output<typeof AuthorizationSchema>;
 export const AuthorizationPayloadSchema = z.object({
   ...BaseAttributes.shape,
   updatedAt: OptionalDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;

@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import {
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
   OptionalDateSchema,
 } from '../../common/schema/dates.js';
@@ -74,8 +78,8 @@ export const AuthorizationSchema = z.object({
   availableGrants: AvailableGrantSetSchema.optional(),
   defaultAudience: z.union([z.string(), z.undefined()]).optional(),
   updatedAt: OptionalDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type AuthorizationProperties = z.input<typeof AuthorizationSchema>;
@@ -89,8 +93,8 @@ export const AuthorizationPayloadSchema = z.object({
   availableGrants: AvailableGrantArraySchema.optional(),
   defaultAudience: z.union([z.string(), z.undefined()]).optional(),
   updatedAt: OptionalDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;

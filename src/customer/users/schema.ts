@@ -2,10 +2,16 @@ import { z } from 'zod';
 import { RoleIdAssociationsSchema } from '../../authorization/schema.js';
 import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
+  CreatedAtPropertyPayloadSchema,
+  CreatedAtPropertySchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
   OptionalDateSchema,
-  RequiredDatePayloadSchema,
-  RequiredDateSchema,
+  UpdatedAtPropertyPayloadSchema,
+  UpdatedAtPropertySchema,
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
@@ -94,10 +100,10 @@ const BaseSchema = z.object({
 export const UserSchema = z.object({
   ...BaseSchema.shape,
   lastLogin: OptionalDateSchema,
-  createdAt: RequiredDateSchema,
-  updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...CreatedAtPropertySchema.shape,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type UserProperties = z.input<typeof UserSchema>;
@@ -106,10 +112,10 @@ export type User = z.output<typeof UserSchema>;
 export const UserPayloadSchema = z.object({
   ...BaseSchema.shape,
   lastLogin: OptionalDatePayloadSchema,
-  createdAt: RequiredDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...CreatedAtPropertyPayloadSchema.shape,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type UserPayload = z.output<typeof UserPayloadSchema>;

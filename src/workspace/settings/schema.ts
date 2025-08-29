@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import {
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
   OptionalDateSchema,
 } from '../../common/schema/dates.js';
@@ -13,8 +17,8 @@ import {
  */
 export const SettingsSchema = z.object({
   updatedAt: OptionalDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type SettingsProperties = z.input<typeof SettingsSchema>;
@@ -22,8 +26,8 @@ export type Settings = z.output<typeof SettingsSchema>;
 
 export const SettingsPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type SettingsPayload = z.output<typeof SettingsPayloadSchema>;

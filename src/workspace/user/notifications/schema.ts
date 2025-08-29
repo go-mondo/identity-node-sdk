@@ -1,10 +1,14 @@
-import { z } from 'zod';
 import {
-  OptionalDatePayloadSchema,
-  OptionalDateSchema,
-  RequiredDatePayloadSchema,
-  RequiredDateSchema,
-} from '../../../common/schema/dates.js';
+  CreatedAtPropertyPayloadSchema,
+  CreatedAtPropertySchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
+  UpdatedAtPropertyPayloadSchema,
+  UpdatedAtPropertySchema,
+} from 'src/common/index.js';
+import { z } from 'zod';
 import { KSUIDSchema } from '../../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
@@ -47,10 +51,10 @@ export const UserNotificationSchema = z.object({
   ...BaseSchema.shape,
   type: z.enum([NotificationType.IMPORT, NotificationType.INFO] as const),
   action: z.union([ActionSchema, z.undefined()]).optional(),
-  createdAt: RequiredDateSchema,
-  updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...CreatedAtPropertySchema.shape,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type UserNotificationProperties = z.input<typeof UserNotificationSchema>;
@@ -61,10 +65,10 @@ export const UserNotificationPayloadSchema = z.object({
   ...BaseSchema.shape,
   type: z.enum([NotificationType.IMPORT, NotificationType.INFO] as const),
   action: z.union([ActionSchema, z.undefined()]).optional(),
-  createdAt: RequiredDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...CreatedAtPropertyPayloadSchema.shape,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type UserNotificationPayload = z.output<

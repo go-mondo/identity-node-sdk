@@ -5,10 +5,14 @@ import {
   RoleAssociationReferenceSchema,
 } from '../authorization/index.js';
 import {
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
   OptionalDateSchema,
-  RequiredDatePayloadSchema,
-  RequiredDateSchema,
+  UpdatedAtPropertyPayloadSchema,
+  UpdatedAtPropertySchema,
 } from '../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
@@ -65,10 +69,10 @@ export const ObjectPropertySchema = z.object({
 
 export const AssociationSchema = z.object({
   ...ObjectPropertySchema.shape,
-  expiresAt: RequiredDateSchema.optional(),
-  updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  expiresAt: OptionalDateSchema,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 const RootAssociationProperties = AssociationSchema.omit({ object: true });
@@ -88,9 +92,9 @@ export type Association<O extends AssociationObject = AssociationObject> =
 export const AssociationPayloadSchema = z.object({
   ...ObjectPropertySchema.shape,
   expiresAt: OptionalDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 type RootAssociationPayload = z.output<typeof AssociationPayloadSchema>;

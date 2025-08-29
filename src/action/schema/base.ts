@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import {
-  OptionalDatePayloadSchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeletedAtPropertyPayloadSchema,
   RequiredDatePayloadSchema,
+  UpdatedAtPropertyPayloadSchema,
 } from '../../common/schema/dates.js';
 import { KSUIDSchema } from '../../common/schema/id.js';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
@@ -38,8 +40,8 @@ export const BasePayloadSchema = z.object({
   ...ActionIdPropertySchema.shape,
   attempt: z.number(),
   expiresAt: RequiredDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });

@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import {
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
   OptionalDateSchema,
 } from '../../common/schema/dates.js';
@@ -25,8 +29,8 @@ const BaseSchema = z.object({
 export const RegistrationSchema = z.object({
   ...BaseSchema.shape,
   updatedAt: OptionalDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type RegistrationProperties = z.input<typeof RegistrationSchema>;
@@ -35,8 +39,8 @@ export type Registration = z.output<typeof RegistrationSchema>;
 export const RegistrationPayloadSchema = z.object({
   ...BaseSchema.shape,
   updatedAt: OptionalDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type RegistrationPayload = z.output<typeof RegistrationPayloadSchema>;

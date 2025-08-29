@@ -1,9 +1,13 @@
 import { z } from 'zod';
 import {
-  OptionalDatePayloadSchema,
-  OptionalDateSchema,
-  RequiredDatePayloadSchema,
-  RequiredDateSchema,
+  CreatedAtPropertyPayloadSchema,
+  CreatedAtPropertySchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
+  UpdatedAtPropertyPayloadSchema,
+  UpdatedAtPropertySchema,
 } from '../common/index.js';
 import { KSUIDSchema } from '../common/schema/id.js';
 import {
@@ -38,10 +42,10 @@ const BaseSchema = z.object({
 
 export const AppSchema = z.object({
   ...BaseSchema.shape,
-  createdAt: RequiredDateSchema,
-  updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...CreatedAtPropertySchema.shape,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type AppProperties = z.input<typeof AppSchema>;
@@ -50,10 +54,11 @@ export type App = z.output<typeof AppSchema>;
 export const AppPayloadSchema = z.object({
   ...BaseSchema.shape,
   ...AppIdPropertySchema.shape,
-  createdAt: RequiredDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...CreatedAtPropertyPayloadSchema.shape,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type AppPayload = z.output<typeof AppPayloadSchema>;

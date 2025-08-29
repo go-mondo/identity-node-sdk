@@ -1,11 +1,15 @@
+import {
+  CreatedAtPropertyPayloadSchema,
+  CreatedAtPropertySchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
+  UpdatedAtPropertyPayloadSchema,
+  UpdatedAtPropertySchema,
+} from 'src/common/index.js';
 import { z } from 'zod';
 import { AppIdAssociationsSchema } from '../../app/schema.js';
-import {
-  OptionalDatePayloadSchema,
-  OptionalDateSchema,
-  RequiredDatePayloadSchema,
-  RequiredDateSchema,
-} from '../../common/index.js';
 import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
   MetadataMapPropertySchema,
@@ -55,10 +59,10 @@ export const PermissionSchema = z.object({
   ...BaseSchema.shape,
   apps: AggregateSchema.optional(),
   roles: AggregateSchema.optional(),
-  createdAt: RequiredDateSchema,
-  updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...CreatedAtPropertySchema.shape,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type PermissionProperties = z.input<typeof PermissionSchema>;
@@ -68,10 +72,10 @@ export const PermissionPayloadSchema = z.object({
   ...BaseSchema.shape,
   apps: AggregateSchema.optional(),
   roles: AggregateSchema.optional(),
-  createdAt: RequiredDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...CreatedAtPropertyPayloadSchema.shape,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type PermissionPayload = z.output<typeof PermissionPayloadSchema>;

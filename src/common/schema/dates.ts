@@ -22,7 +22,7 @@ export const RequiredDatePayloadSchema = RequiredDateSchema.transform((d) =>
 );
 export const OptionalDatePayloadSchema = OptionalDateSchema.transform((d) =>
   d?.toISOString()
-);
+).optional();
 
 export type RequiredDatePayload = z.output<typeof RequiredDatePayloadSchema>;
 export type OptionalDatePayload = z.output<typeof OptionalDatePayloadSchema>;

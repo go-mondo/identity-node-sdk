@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import {
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
   OptionalDateSchema,
 } from '../../common/schema/dates.js';
@@ -27,8 +31,8 @@ const BaseOAuth = z.object({
 export const OAuthSchema = z.object({
   ...BaseOAuth.shape,
   updatedAt: OptionalDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type OAuthProperties = z.input<typeof OAuthSchema>;
@@ -37,8 +41,8 @@ export type OAuth = z.output<typeof OAuthSchema>;
 export const OAuthPayloadSchema = z.object({
   ...BaseOAuth.shape,
   updatedAt: OptionalDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type OAuthPayload = z.output<typeof OAuthPayloadSchema>;

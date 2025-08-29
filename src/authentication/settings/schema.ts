@@ -1,8 +1,12 @@
 import { z } from 'zod';
 import {
+  CreatedAtPropertySchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
-  OptionalDateSchema,
-  RequiredDateSchema,
+  UpdatedAtPropertySchema,
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
@@ -13,10 +17,10 @@ import { AuthenticationFactorsSchema } from '../factors/schema.js';
 
 export const SettingsSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
-  createdAt: RequiredDateSchema,
-  updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...CreatedAtPropertySchema.shape,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type SettingsProperties = z.input<typeof SettingsSchema>;
@@ -25,8 +29,8 @@ export type Settings = z.output<typeof SettingsSchema>;
 export const SettingsPayloadSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
   updatedAt: OptionalDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type SettingsPayload = z.output<typeof SettingsPayloadSchema>;

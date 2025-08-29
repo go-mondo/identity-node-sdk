@@ -1,8 +1,9 @@
-import { z } from 'zod';
 import {
-  OptionalDatePayloadSchema,
-  RequiredDatePayloadSchema,
-} from '../../common/schema/dates.js';
+  DeactivatedAtPropertyPayloadSchema,
+  DeletedAtPropertyPayloadSchema,
+  UpdatedAtPropertyPayloadSchema,
+} from 'src/common/index.js';
+import { z } from 'zod';
 import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
 import { UserIdSchema } from '../../customer/schema.js';
 import { StrategyIdSchema } from '../strategies/schema/base.js';
@@ -28,9 +29,9 @@ export const ProviderPayloadSchema = z.object({
   type: ProviderTypeSchema,
   user: UserIdSchema,
   strategy: StrategyIdSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type ProviderPayload = z.output<typeof ProviderPayloadSchema>;

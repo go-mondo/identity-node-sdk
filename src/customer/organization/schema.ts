@@ -1,10 +1,14 @@
-import { z } from 'zod';
 import {
-  OptionalDatePayloadSchema,
-  OptionalDateSchema,
-  RequiredDatePayloadSchema,
-  RequiredDateSchema,
-} from '../../common/index.js';
+  CreatedAtPropertyPayloadSchema,
+  CreatedAtPropertySchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
+  UpdatedAtPropertyPayloadSchema,
+  UpdatedAtPropertySchema,
+} from 'src/common/index.js';
+import { z } from 'zod';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
@@ -41,10 +45,10 @@ const BaseSchema = z.object({
 
 export const OrganizationSchema = z.object({
   ...BaseSchema.shape,
-  createdAt: RequiredDateSchema,
-  updatedAt: RequiredDateSchema,
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...CreatedAtPropertySchema.shape,
+  ...UpdatedAtPropertySchema.shape,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type OrganizationProperties = z.input<typeof OrganizationSchema>;
@@ -52,10 +56,10 @@ export type Organization = z.output<typeof OrganizationSchema>;
 
 export const OrganizationPayloadSchema = z.object({
   ...BaseSchema.shape,
-  createdAt: RequiredDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...CreatedAtPropertyPayloadSchema.shape,
+  ...UpdatedAtPropertyPayloadSchema.shape,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type OrganizationPayload = z.output<typeof OrganizationPayloadSchema>;

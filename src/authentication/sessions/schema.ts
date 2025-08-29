@@ -1,9 +1,15 @@
 import { z } from 'zod';
 import {
-  OptionalDatePayloadSchema,
-  OptionalDateSchema,
+  CreatedAtPropertyPayloadSchema,
+  CreatedAtPropertySchema,
+  DeactivatedAtPropertyPayloadSchema,
+  DeactivatedAtPropertySchema,
+  DeletedAtPropertyPayloadSchema,
+  DeletedAtPropertySchema,
   RequiredDatePayloadSchema,
   RequiredDateSchema,
+  UpdatedAtPropertyPayloadSchema,
+  UpdatedAtPropertySchema,
 } from '../../common/schema/dates.js';
 import { KSUIDSchema } from '../../common/schema/id.js';
 import {
@@ -84,14 +90,14 @@ const BaseSchema = z.object({
 export const SessionSchema = z.object({
   ...BaseSchema.shape,
   expiresAt: RequiredDateSchema,
-  createdAt: RequiredDateSchema,
-  updatedAt: RequiredDateSchema,
+  ...CreatedAtPropertySchema.shape,
+  ...UpdatedAtPropertySchema.shape,
   redirectTo: z
     .union([z.string(), z.instanceof(URL)])
     .pipe(z.transform((v) => (!v || v instanceof URL ? v : new URL(v))))
     .optional(),
-  deletedAt: OptionalDateSchema,
-  deactivatedAt: OptionalDateSchema,
+  ...DeletedAtPropertySchema.shape,
+  ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
 export type SessionProperties = z.input<typeof SessionSchema>;
@@ -100,14 +106,14 @@ export type Session = z.output<typeof SessionSchema>;
 export const SessionPayloadSchema = z.object({
   ...BaseSchema.shape,
   expiresAt: RequiredDatePayloadSchema,
-  createdAt: RequiredDatePayloadSchema,
-  updatedAt: RequiredDatePayloadSchema,
+  ...CreatedAtPropertyPayloadSchema.shape,
+  ...UpdatedAtPropertyPayloadSchema.shape,
   redirectTo: z
     .union([z.string(), z.instanceof(URL)])
     .transform((v) => (v instanceof URL ? v.toString() : v))
     .optional(),
-  deletedAt: OptionalDatePayloadSchema,
-  deactivatedAt: OptionalDatePayloadSchema,
+  ...DeletedAtPropertyPayloadSchema.shape,
+  ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
 export type SessionPayload = z.output<typeof SessionPayloadSchema>;
