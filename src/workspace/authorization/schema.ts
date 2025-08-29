@@ -26,7 +26,6 @@ const BaseAttributes = z.object({
 
 export const AuthorizationSchema = z.object({
   ...BaseAttributes.shape,
-
   ...UpdatedAtPropertySchema.shape,
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,

@@ -1,3 +1,4 @@
+import { AlgorithmSchema } from 'src/common/index.js';
 import {
   UniqueStringArraySchema,
   UniqueStringSetSchema,
@@ -19,7 +20,6 @@ import {
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
 import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
-import { AuthorizationPayloadSchema as WorkspaceAuthorizationPayloadSchema } from '../../workspace/authorization/schema.js';
 
 const CallbackUrlArraySchema = UniqueUrlArraySchema;
 const CallbackUrlSetSchema = UniqueUrlSetSchema;
@@ -44,10 +44,10 @@ const AvailableGrantArraySchema = z
   .union([z.undefined(), GrantArraySchema, GrantSetSchema])
   .pipe(z.transform((v) => (v instanceof Set ? Array.from(v.values()) : v)));
 
-const BaseAuthorization = WorkspaceAuthorizationPayloadSchema.pick({
-  refreshTokenDuration: true,
-  accessTokenDuration: true,
-  accessTokenSignatureAlgorithm: true,
+const BaseAuthorization = z.object({
+  refreshTokenDuration: z.number().optional(),
+  accessTokenDuration: z.number().optional(),
+  accessTokenSignatureAlgorithm: AlgorithmSchema.optional(),
 });
 
 export const AuthorizationSchema = z.object({
