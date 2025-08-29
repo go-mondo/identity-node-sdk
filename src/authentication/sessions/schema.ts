@@ -60,20 +60,29 @@ const AuthenticationFactorHistoryArraySchema = z.array(StrategyIdSchema);
 const AuthenticationFactorHistorySetSchema = z.instanceof(
   Set<z.output<typeof StrategyIdSchema>>
 );
-export const SessionAuthenticationFactorHistorySchema = z
-  .union([
-    z.undefined(),
-    AuthenticationFactorHistoryArraySchema,
-    AuthenticationFactorHistorySetSchema,
-  ])
-  .pipe(
+const SessionAuthenticationFactorHistoryInput = z.union([
+  z.undefined(),
+  AuthenticationFactorHistoryArraySchema,
+  AuthenticationFactorHistorySetSchema,
+]);
+
+const SessionAuthenticationFactorHistoryArraySchema =
+  SessionAuthenticationFactorHistoryInput.pipe(
     z.transform((s) =>
       (s instanceof Set ? Array.from(s) : s)?.length ? s : undefined
     )
   );
-export type SessionAuthenticationFactorHistory = z.output<
-  typeof SessionAuthenticationFactorHistorySchema
->;
+// type SessionAuthenticationFactorArrayHistory = z.output<
+//   typeof SessionAuthenticationFactorHistoryArraySchema
+// >;
+
+const SessionAuthenticationFactorHistorySetSchema =
+  SessionAuthenticationFactorHistoryInput.pipe(
+    z.transform((s) => (!s || s instanceof Set ? s : new Set(s)))
+  );
+// type SessionAuthenticationFactorSetHistory = z.output<
+//   typeof SessionAuthenticationFactorHistorySetSchema
+// >;
 
 const BaseSchema = z.object({
   ...SessionIdPropertySchema.shape,
@@ -84,7 +93,7 @@ const BaseSchema = z.object({
   factors: z
     .union([z.array(SessionAuthenticationFactorSchema), z.undefined()])
     .optional(),
-  factorHistory: SessionAuthenticationFactorHistorySchema.optional(),
+  factorHistory: SessionAuthenticationFactorHistoryArraySchema.optional(),
 });
 
 export const SessionSchema = z.object({
@@ -92,6 +101,7 @@ export const SessionSchema = z.object({
   expiresAt: RequiredDateSchema,
   ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
+  factorHistory: SessionAuthenticationFactorHistorySetSchema.optional(),
   redirectTo: z
     .union([z.string(), z.instanceof(URL)])
     .pipe(z.transform((v) => (!v || v instanceof URL ? v : new URL(v))))
