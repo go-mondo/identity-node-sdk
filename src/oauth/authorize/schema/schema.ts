@@ -11,3 +11,5 @@ export * from './grants/implicit.js';
  */
 export const Schema = AuthorizationCodeSchema.or(ImplicitSchema);
 export type Payload = z.output<typeof Schema>;
+
+export { CodeChallengeSchema } from './grants/authorization-code.js';
