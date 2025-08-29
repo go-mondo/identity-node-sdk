@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.24](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.23...identity-sdk-v0.0.2-beta.24) (2025-08-29)
+
+
+### Bug Fixes
+
+* export CodeChallengeSchema ([297e62f](https://github.com/go-mondo/identity-node-sdk/commit/297e62f759c93378afe03864b918f7e304d59878))
+
 ## [0.0.2-beta.23](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.22...identity-sdk-v0.0.2-beta.23) (2025-08-29)
 
 
