@@ -16,11 +16,7 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
-import {
-  PermissionIdSchema,
-  RoleIdAssociationsSchema,
-  generatePermissionId,
-} from '../schema.js';
+import { PermissionIdSchema, RoleIdAssociationsSchema } from '../schema.js';
 
 export const PermissionStatus = {
   ENABLED: 'enabled',
@@ -84,7 +80,7 @@ export type PermissionPayload = z.output<typeof PermissionPayloadSchema>;
  * Insert
  */
 export const InsertPermissionPayloadSchema = z.object({
-  id: PermissionIdSchema.default(() => generatePermissionId()),
+  id: PermissionIdSchema.optional(),
   name: z.string(),
   status: PermissionStatusSchema.default(PermissionStatus.ENABLED),
   description: z.string().optional(),

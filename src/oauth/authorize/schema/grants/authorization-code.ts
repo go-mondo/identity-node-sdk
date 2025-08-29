@@ -15,7 +15,7 @@ import {
 
 const ResponseTypeSchema = z.enum([ResponseType.CODE] as const);
 
-const CodeChallengeSchema = z
+export const CodeChallengeSchema = z
   .string()
   .min(43, 'Code challenge must be at least 43 characters long.')
   .max(128, 'Code challenge must be at most 128 characters long.')
