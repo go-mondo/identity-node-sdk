@@ -4,7 +4,6 @@ import { Algorithm, AlgorithmSchema } from './jwt.js';
 describe('Common Schema - JWT', () => {
   describe('Algorithm constants', () => {
     test('should have correct algorithm values', () => {
-      expect(Algorithm.DEFAULT).toBe('RS256');
       expect(Algorithm.HS256).toBe('HS256');
       expect(Algorithm.HS384).toBe('HS384');
       expect(Algorithm.HS512).toBe('HS512');

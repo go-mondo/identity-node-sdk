@@ -4,8 +4,6 @@ import { z } from 'zod';
  * Ref: https://datatracker.ietf.org/doc/html/rfc7518#section-3.1
  */
 export const Algorithm = {
-  // DEFAULT: 'ES256',
-  DEFAULT: 'RS256',
   HS256: 'HS256',
   HS384: 'HS384',
   HS512: 'HS512',
@@ -21,6 +19,8 @@ export const Algorithm = {
 } as const;
 
 export type AnyAlgorithm = (typeof Algorithm)[keyof typeof Algorithm];
+
+export const DEFAULT_ALGORITHM = Algorithm.RS256;
 
 export const AlgorithmSchema = z.enum([
   Algorithm.HS256,

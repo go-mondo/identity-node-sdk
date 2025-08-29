@@ -7,7 +7,7 @@ import {
   OptionalDatePayloadSchema,
   UpdatedAtPropertySchema,
 } from '../../common/schema/dates.js';
-import { Algorithm, AlgorithmSchema } from '../../common/schema/jwt.js';
+import { AlgorithmSchema, DEFAULT_ALGORITHM } from '../../common/schema/jwt.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
@@ -21,7 +21,7 @@ const BaseAttributes = z.object({
   sessionDuration: z.number().default(DEFAULT_SESSION_DURATION),
   refreshTokenDuration: z.number().default(DEFAULT_REFRESH_TOKEN_DURATION),
   accessTokenDuration: z.number().default(DEFAULT_ACCESS_TOKEN_DURATION),
-  accessTokenSignatureAlgorithm: AlgorithmSchema.default(Algorithm.DEFAULT),
+  accessTokenSignatureAlgorithm: AlgorithmSchema.default(DEFAULT_ALGORITHM),
 });
 
 export const AuthorizationSchema = z.object({
