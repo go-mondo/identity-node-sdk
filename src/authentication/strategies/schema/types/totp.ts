@@ -4,13 +4,14 @@ import {
   BaseStrategyPayloadSchema,
   BaseStrategySchema,
   BaseUpdateStrategyPayloadSchema,
+  StrategyType,
 } from '../base.js';
 
 export const DEFAULT_DIGITS = 6;
 export const DEFAULT_PERIOD = 30;
 
 const TypeSchema = z.object({
-  type: z.literal('totp'),
+  type: z.literal(StrategyType.TOTP),
 });
 
 export const TOTPAlgorithm = {

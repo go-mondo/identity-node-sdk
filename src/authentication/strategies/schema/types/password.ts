@@ -5,6 +5,7 @@ import {
   BaseStrategyPayloadSchema,
   BaseStrategySchema,
   BaseUpdateStrategyPayloadSchema,
+  StrategyType,
 } from '../base.js';
 
 export const PasswordPolicyDefaults = {
@@ -17,7 +18,7 @@ export const PasswordPolicyDefaults = {
 };
 
 const TypeSchema = z.object({
-  type: z.literal('password'),
+  type: z.literal(StrategyType.PASSWORD),
 });
 
 export const PasswordPolicySchema = z.object({

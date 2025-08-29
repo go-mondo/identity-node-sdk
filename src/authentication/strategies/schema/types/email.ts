@@ -4,10 +4,11 @@ import {
   BaseStrategyPayloadSchema,
   BaseStrategySchema,
   BaseUpdateStrategyPayloadSchema,
+  StrategyType,
 } from '../base.js';
 
 const TypeSchema = z.object({
-  type: z.literal('email'),
+  type: z.literal(StrategyType.EMAIL),
 });
 
 export const EmailStrategySchema = z.object({

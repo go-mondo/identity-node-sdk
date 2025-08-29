@@ -1,4 +1,4 @@
-import type { z } from 'zod';
+import { z } from 'zod';
 
 import { AuthorizationCodeSchema } from './grants/authorization-code.js';
 import { ClientCredentialsSchema } from './grants/client-credentials.js';
@@ -11,7 +11,9 @@ export * from './grants/refresh-token.js';
 /**
  * Union(s)
  */
-export const Schema = AuthorizationCodeSchema.or(ClientCredentialsSchema).or(
-  RefreshTokenSchema
-);
+export const Schema = z.discriminatedUnion('grant_type', [
+  AuthorizationCodeSchema,
+  ClientCredentialsSchema,
+  RefreshTokenSchema,
+]);
 export type Payload = z.output<typeof Schema>;
