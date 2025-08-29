@@ -22,16 +22,6 @@ export type AnyAlgorithm = (typeof Algorithm)[keyof typeof Algorithm];
 
 export const DEFAULT_ALGORITHM = Algorithm.RS256;
 
-export const AlgorithmSchema = z.enum([
-  Algorithm.HS256,
-  Algorithm.HS384,
-  Algorithm.HS512,
-  Algorithm.RS256,
-  Algorithm.RS384,
-  Algorithm.RS512,
-  Algorithm.ES256,
-  Algorithm.ES384,
-  Algorithm.PS256,
-  Algorithm.PS384,
-  Algorithm.PS512,
-] as const);
+export const AlgorithmSchema = z.enum(
+  Object.values(Algorithm)
+) satisfies z.ZodType<AnyAlgorithm>;
