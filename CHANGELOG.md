@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.21](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.20...identity-sdk-v0.0.2-beta.21) (2025-08-29)
+
+
+### Bug Fixes
+
+* unions ([3537692](https://github.com/go-mondo/identity-node-sdk/commit/35376929279cfd089d145f0face592103644a7b3))
+
 ## [0.0.2-beta.20](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.19...identity-sdk-v0.0.2-beta.20) (2025-08-29)
 
 
