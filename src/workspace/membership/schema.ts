@@ -7,6 +7,7 @@ import {
 
 export const FeatureFlag = {
   REMOVE_MEMBERSHIP: 'Membership.Remove',
+  REMOVE_BRANDING: 'Branding.Remove',
 } as const;
 export type AnyFeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag];
 
@@ -17,6 +18,7 @@ export type FeaturePayload = z.output<typeof FeaturePayloadSchema>;
 
 export const FeaturesPayloadSchema = z.object({
   [FeatureFlag.REMOVE_MEMBERSHIP]: FeaturePayloadSchema.optional(),
+  [FeatureFlag.REMOVE_BRANDING]: FeaturePayloadSchema.optional(),
 });
 export type FeaturesPayload = z.output<typeof FeaturesPayloadSchema>;
 
