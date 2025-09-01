@@ -6,7 +6,7 @@ import {
 } from '../../common/schema/dates.js';
 
 export const FeatureFlag = {
-  REMOVE_Membership: 'Membership.Remove',
+  REMOVE_MEMBERSHIP: 'Membership.Remove',
 } as const;
 export type AnyFeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag];
 
@@ -16,7 +16,7 @@ export const FeaturePayloadSchema = z.object({
 export type FeaturePayload = z.output<typeof FeaturePayloadSchema>;
 
 export const FeaturesPayloadSchema = z.object({
-  [FeatureFlag.REMOVE_Membership]: FeaturePayloadSchema.optional(),
+  [FeatureFlag.REMOVE_MEMBERSHIP]: FeaturePayloadSchema.optional(),
 });
 export type FeaturesPayload = z.output<typeof FeaturesPayloadSchema>;
 
