@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.29](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.28...identity-sdk-v0.0.2-beta.29) (2025-09-01)
+
+
+### Bug Fixes
+
+* remove branding ([b7e715d](https://github.com/go-mondo/identity-node-sdk/commit/b7e715d81f1c5dd73e547ba024da93ecf5221aab))
+
 ## [0.0.2-beta.28](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.27...identity-sdk-v0.0.2-beta.28) (2025-09-01)
 
 
