@@ -1,10 +1,3 @@
-import { AlgorithmSchema } from 'src/common/index.js';
-import {
-  UniqueStringArraySchema,
-  UniqueStringSetSchema,
-  UniqueUrlArraySchema,
-  UniqueUrlSetSchema,
-} from 'src/common/schema/sets.js';
 import { z } from 'zod';
 import {
   DeactivatedAtPropertyPayloadSchema,
@@ -14,11 +7,18 @@ import {
   OptionalDatePayloadSchema,
   OptionalDateSchema,
 } from '../../common/schema/dates.js';
+import { AlgorithmSchema } from '../../common/schema/jwt.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
+import {
+  UniqueStringArraySchema,
+  UniqueStringSetSchema,
+  UniqueUrlArraySchema,
+  UniqueUrlSetSchema,
+} from '../../common/schema/sets.js';
 import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
 
 const CallbackUrlArraySchema = UniqueUrlArraySchema;

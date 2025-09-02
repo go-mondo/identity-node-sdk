@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { AppIdAssociationsSchema } from '../../app/schema.js';
+import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {
   CreatedAtPropertyPayloadSchema,
   CreatedAtPropertySchema,
@@ -7,10 +10,7 @@ import {
   DeletedAtPropertySchema,
   UpdatedAtPropertyPayloadSchema,
   UpdatedAtPropertySchema,
-} from 'src/common/index.js';
-import { z } from 'zod';
-import { AppIdAssociationsSchema } from '../../app/schema.js';
-import { AggregateSchema } from '../../common/schema/aggregate.js';
+} from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,

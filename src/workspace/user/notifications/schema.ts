@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import {
   CreatedAtPropertyPayloadSchema,
   CreatedAtPropertySchema,
@@ -7,8 +8,7 @@ import {
   DeletedAtPropertySchema,
   UpdatedAtPropertyPayloadSchema,
   UpdatedAtPropertySchema,
-} from 'src/common/index.js';
-import { z } from 'zod';
+} from '../../../common/schema/dates.js';
 import { KSUIDSchema } from '../../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
