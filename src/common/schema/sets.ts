@@ -17,6 +17,7 @@ export const UniqueStringSetSchema = z
 const UrlSetTypeSchema = z.instanceof(Set<URL>);
 const UrlArrayTypeScheama = z
   .array(z.url().pipe(z.transform((url) => new URL(url))))
+  .or(z.array(z.instanceof(URL)))
   .pipe(z.transform((v) => v?.filter((i) => !!i)));
 
 export const UniqueUrlArraySchema = z
