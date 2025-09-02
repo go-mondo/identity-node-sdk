@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 import { UserIdSchema } from '../../../customer/schema.js';
 import { IdentityIdentifierSchema } from '../../../identity/schema.js';
 import { BasePayloadSchema } from '../base.js';

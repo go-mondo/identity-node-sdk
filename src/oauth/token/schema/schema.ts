@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 
 import { AuthorizationCodeSchema } from './grants/authorization-code.js';
 import { ClientCredentialsSchema } from './grants/client-credentials.js';

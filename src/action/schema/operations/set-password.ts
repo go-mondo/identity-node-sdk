@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 import { PasswordPolicySchema } from '../../../authentication/strategies/schema/schema.js';
 import { UserIdSchema } from '../../../customer/schema.js';
 import { IdentityIdentifierSchema } from '../../../identity/schema.js';

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 import { AppIdAssociationsSchema } from '../../app/schema.js';
 import { AggregateSchema } from '../../common/schema/aggregate.js';
 import {

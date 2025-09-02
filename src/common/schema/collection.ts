@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 import { type Pagination, PaginationSchema } from './pagination.js';
 
 export const CollectionSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>

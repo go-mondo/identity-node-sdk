@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 
 const StringSetTypeSchema = z.set(z.string());
 // const UrlStringSchema = type('string.url[]').pipe((v) => v?.filter((i) => !!i));

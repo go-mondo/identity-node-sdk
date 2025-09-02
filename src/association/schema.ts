@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 import { AppAssociationReferenceSchema } from '../app/schema.js';
 import {
   PermissionAssociationReferenceSchema,

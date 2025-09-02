@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 import { AppIdSchema } from '../../../../app/schema.js';
 import { GrantType, OptionalSchema } from '../../../common/schema.js';
 

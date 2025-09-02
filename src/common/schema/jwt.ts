@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 
 /**
  * Ref: https://datatracker.ietf.org/doc/html/rfc7518#section-3.1

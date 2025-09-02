@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod/v4';
 import { BasePayloadSchema, BaseSchema } from '../base.js';
 
 export const OperationType = {

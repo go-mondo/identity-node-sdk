@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import KSUID from 'ksuid';
+import * as z from 'zod/v4';
 import { KSUIDSchema } from '../common/schema/id.js';
 
 export const Model = {
