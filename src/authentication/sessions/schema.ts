@@ -78,7 +78,7 @@ const SessionAuthenticationFactorHistoryArraySchema =
 
 const SessionAuthenticationFactorHistorySetSchema =
   SessionAuthenticationFactorHistoryInput.pipe(
-    z.transform((s) => (!s || s instanceof Set ? s : new Set(s)))
+    z.transform((s) => (s instanceof Set ? s : new Set(s)))
   );
 // type SessionAuthenticationFactorSetHistory = z.output<
 //   typeof SessionAuthenticationFactorHistorySetSchema
@@ -101,7 +101,7 @@ export const SessionSchema = z.object({
   expiresAt: RequiredDateSchema,
   ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
-  factorHistory: SessionAuthenticationFactorHistorySetSchema.optional(),
+  factorHistory: SessionAuthenticationFactorHistorySetSchema,
   redirectTo: z
     .union([z.string(), z.instanceof(URL)])
     .pipe(z.transform((v) => (!v || v instanceof URL ? v : new URL(v))))
