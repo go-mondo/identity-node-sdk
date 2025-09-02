@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.32](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.31...identity-sdk-v0.0.2-beta.32) (2025-09-02)
+
+
+### Bug Fixes
+
+* remove ref to src ([c74be93](https://github.com/go-mondo/identity-node-sdk/commit/c74be93680756cb33e4d46328e6373ed16464ae4))
+
 ## [0.0.2-beta.31](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.30...identity-sdk-v0.0.2-beta.31) (2025-09-02)
 
 
