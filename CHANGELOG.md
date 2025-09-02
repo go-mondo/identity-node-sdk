@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.31](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.30...identity-sdk-v0.0.2-beta.31) (2025-09-02)
+
+
+### Bug Fixes
+
+* factory history is required ([06ff6c6](https://github.com/go-mondo/identity-node-sdk/commit/06ff6c6aa9eb12c7f6de0ad839c551a974cbc9e2))
+
 ## [0.0.2-beta.30](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.29...identity-sdk-v0.0.2-beta.30) (2025-09-02)
 
 
