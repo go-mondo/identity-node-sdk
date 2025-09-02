@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.30](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.29...identity-sdk-v0.0.2-beta.30) (2025-09-02)
+
+
+### Bug Fixes
+
+* allow array of urls ([83123fb](https://github.com/go-mondo/identity-node-sdk/commit/83123fb2de4a109ab7c3be041ce9081c9523c0da))
+
 ## [0.0.2-beta.29](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.28...identity-sdk-v0.0.2-beta.29) (2025-09-01)
 
 
