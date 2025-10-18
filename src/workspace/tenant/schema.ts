@@ -17,6 +17,7 @@ export const TenantIdPropertySchema = z.object({
 });
 
 const BaseSchema = z.object({
+  ...TenantIdPropertySchema.shape,
   handle: z.string(),
   supportEmail: z.email().optional(),
   authHost: z.url().optional(), // Not live yet (used for dev now)
