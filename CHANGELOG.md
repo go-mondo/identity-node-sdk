@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.36](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.35...identity-sdk-v0.0.2-beta.36) (2025-10-19)
+
+
+### Bug Fixes
+
+* default reg type ([7f4ca04](https://github.com/go-mondo/identity-node-sdk/commit/7f4ca0480e4d435f8a3c8a2a8ae113d8728f9965))
+
 ## [0.0.2-beta.35](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.34...identity-sdk-v0.0.2-beta.35) (2025-10-19)
 
 
