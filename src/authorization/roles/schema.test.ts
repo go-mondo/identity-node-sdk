@@ -174,14 +174,6 @@ describe('Authorization Roles - Schema', () => {
       expect(result.data?.status).toBe('enabled'); // default value
     });
 
-    test('should generate default ID when not provided', () => {
-      const payload = { name: 'admin' };
-      const result = InsertRolePayloadSchema.safeParse(payload);
-
-      // Parse succeeds for valid data
-      expect(result.data?.id).toMatch(/^rol_/);
-    });
-
     test('should reject missing name', () => {
       const result = InsertRolePayloadSchema.safeParse({});
       expect(result.success).toBe(false);

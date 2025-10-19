@@ -1,6 +1,5 @@
 import * as z from 'zod/v4';
 import {
-  CreatedAtPropertySchema,
   DeactivatedAtPropertyPayloadSchema,
   DeactivatedAtPropertySchema,
   DeletedAtPropertyPayloadSchema,
@@ -17,7 +16,6 @@ import { AuthenticationFactorsSchema } from '../factors/schema.js';
 
 export const SettingsSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
-  ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,

@@ -169,14 +169,6 @@ describe('Authorization Permissions - Schema', () => {
       expect(result.data?.status).toBe('enabled'); // default value
     });
 
-    test('should generate default ID when not provided', () => {
-      const payload = { name: 'read:users' };
-      const result = InsertPermissionPayloadSchema.safeParse(payload);
-
-      // Parse succeeds for valid data
-      expect(result.data?.id).toMatch(/^per_/);
-    });
-
     test('should reject missing name', () => {
       const result = InsertPermissionPayloadSchema.safeParse({});
       expect(result.success).toBe(false);

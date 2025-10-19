@@ -99,12 +99,12 @@ describe('App OIDC - Schema', () => {
       }
     });
 
-    test('should accept undefined', () => {
-      const result = InsertOIDCPayloadSchema.safeParse(undefined);
+    test('should accept empty object', () => {
+      const result = InsertOIDCPayloadSchema.safeParse({});
       // Parse succeeds for valid data
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data).toBeUndefined();
+        expect(result.data).toEqual({});
       }
     });
 
