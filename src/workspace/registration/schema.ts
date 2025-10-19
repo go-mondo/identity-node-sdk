@@ -11,7 +11,10 @@ import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
-import { IdentityIdentifierSchema } from '../../identity/schema.js';
+import {
+  IdentityIdentifier,
+  IdentityIdentifierSchema,
+} from '../../identity/schema.js';
 
 const IdentityIdentifierPropertySchema = z.array(
   z.object({
@@ -23,7 +26,11 @@ const AllowSelfRegistrationSchema = z.boolean();
 
 const BaseSchema = z.object({
   allowSelfRegistration: AllowSelfRegistrationSchema,
-  identifiers: IdentityIdentifierPropertySchema,
+  identifiers: IdentityIdentifierPropertySchema.default([
+    {
+      type: IdentityIdentifier.EMAIL,
+    },
+  ]),
 });
 
 export const RegistrationSchema = z.object({
