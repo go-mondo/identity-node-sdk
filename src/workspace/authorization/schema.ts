@@ -5,7 +5,7 @@ import {
   DeletedAtPropertyPayloadSchema,
   DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
-  UpdatedAtPropertySchema,
+  OptionalDateSchema,
 } from '../../common/schema/dates.js';
 import { AlgorithmSchema, DEFAULT_ALGORITHM } from '../../common/schema/jwt.js';
 import {
@@ -26,7 +26,7 @@ const BaseAttributes = z.object({
 
 export const AuthorizationSchema = z.object({
   ...BaseAttributes.shape,
-  ...UpdatedAtPropertySchema.shape,
+  updatedAt: OptionalDateSchema,
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
