@@ -1,5 +1,7 @@
 import * as z from 'zod/v4';
 
+import { UrlObjectSchema } from './url.js';
+
 const StringSetTypeSchema = z.set(z.string());
 // const UrlStringSchema = type('string.url[]').pipe((v) => v?.filter((i) => !!i));
 const StringArrayTypeSchema = z
@@ -16,8 +18,7 @@ export const UniqueStringSetSchema = z
 
 const UrlSetTypeSchema = z.instanceof(Set<URL>);
 const UrlArrayTypeScheama = z
-  .array(z.url().pipe(z.transform((url) => new URL(url))))
-  .or(z.array(z.instanceof(URL)))
+  .array(UrlObjectSchema)
   .pipe(z.transform((v) => v?.filter((i) => !!i)));
 
 export const UniqueUrlArraySchema = z

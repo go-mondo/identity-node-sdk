@@ -15,16 +15,16 @@ export function appendSearchParams(
   return [path, vals.filter(Boolean).join('&')].filter(Boolean).join('?');
 }
 
-const UrlObjectScheama = z
+export const UrlObjectSchema = z
   .url()
   .pipe(z.transform((url) => new URL(url)))
   .or(z.instanceof(URL));
-export type UrlObjectInput = z.input<typeof UrlObjectScheama>;
-export type UrlObject = z.output<typeof UrlObjectScheama>;
+export type UrlObjectInput = z.input<typeof UrlObjectSchema>;
+export type UrlObject = z.output<typeof UrlObjectSchema>;
 
-const UrlStringScheama = z
+export const UrlStringSchema = z
   .instanceof(URL)
   .pipe(z.transform((url) => url.toString()))
   .or(z.url());
-export type UrlStringInput = z.input<typeof UrlStringScheama>;
-export type UrlString = z.output<typeof UrlStringScheama>;
+export type UrlStringInput = z.input<typeof UrlStringSchema>;
+export type UrlString = z.output<typeof UrlStringSchema>;
