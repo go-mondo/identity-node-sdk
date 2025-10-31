@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.2-beta.38](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.37...identity-sdk-v0.0.2-beta.38) (2025-10-31)
+
+
+### Bug Fixes
+
+* url schemas ([b990b8a](https://github.com/go-mondo/identity-node-sdk/commit/b990b8a0532d11783f9bfadfd8358fe17c7540f6))
+* url sets ([cad2821](https://github.com/go-mondo/identity-node-sdk/commit/cad28212526f1336724406adf10040a0813d2589))
+
 ## [0.0.2-beta.37](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.36...identity-sdk-v0.0.2-beta.37) (2025-10-19)
 
 
