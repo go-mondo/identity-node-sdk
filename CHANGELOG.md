@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.39](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.38...identity-sdk-v0.0.2-beta.39) (2025-11-01)
+
+
+### Bug Fixes
+
+* auth strategy ([b33449c](https://github.com/go-mondo/identity-node-sdk/commit/b33449cf88470cdca7a7e781cf68aafddaff1a21))
+
 ## [0.0.2-beta.38](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.37...identity-sdk-v0.0.2-beta.38) (2025-10-31)
 
 
