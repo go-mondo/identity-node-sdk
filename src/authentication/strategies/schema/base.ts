@@ -63,6 +63,7 @@ export const BaseStrategySchema = z.object({
 });
 
 export const BaseStrategyPayloadSchema = z.object({
+  id: StrategyIdSchema,
   status: StrategyStatusSchema,
   label: StrategyLabelSchema,
   ...CreatedAtPropertyPayloadSchema.shape,

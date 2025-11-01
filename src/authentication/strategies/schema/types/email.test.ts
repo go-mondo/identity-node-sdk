@@ -54,6 +54,7 @@ describe('Authentication Strategies - Email', () => {
   describe('EmailStrategyPayloadSchema', () => {
     test('should accept complete payload', () => {
       const payload = {
+        id: generateStrategyId(),
         type: 'email',
         label: 'Test',
         status: 'enabled',
