@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.40](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.39...identity-sdk-v0.0.2-beta.40) (2025-11-20)
+
+
+### Bug Fixes
+
+* association schema ([05bc928](https://github.com/go-mondo/identity-node-sdk/commit/05bc9287d992e6533038045cee376b1dfd36df13))
+
 ## [0.0.2-beta.39](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.38...identity-sdk-v0.0.2-beta.39) (2025-11-01)
 
 
