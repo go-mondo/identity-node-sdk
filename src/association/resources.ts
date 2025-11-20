@@ -2,7 +2,7 @@ import type { MondoIdentity } from '../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
-  updateItemWithAuthorization,
+  putItemWithAuthorization,
 } from '../common/resources/operations.js';
 import { addPaginationToURL } from '../common/resources/utils.js';
 import {
@@ -104,7 +104,7 @@ export async function upsertAssociation<O extends AssociationObject>(
   item?: UpsertAssociationInput
 ): Promise<Association<O>> {
   return AssociationSchema.parse(
-    await updateItemWithAuthorization(
+    await putItemWithAuthorization(
       new URL(
         AssociationResources.buildPath(fromId, toId),
         instance.config.host

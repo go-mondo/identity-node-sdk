@@ -2,8 +2,8 @@ import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
-  insertItemWithAuthorization,
-  updateItemWithAuthorization,
+  patchItemWithAuthorization,
+  postItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
@@ -86,7 +86,7 @@ export async function insertRole(
   item: InsertRoleInput
 ): Promise<Role> {
   return RoleSchema.parse(
-    await insertItemWithAuthorization(
+    await postItemWithAuthorization(
       new URL(RoleResources.buildPath(), instance.config.host),
       instance.authorizer,
       InsertRolePayloadSchema.parse(item)
@@ -100,7 +100,7 @@ export async function updateRole(
   item: UpdateRoleInput
 ): Promise<Role> {
   return RoleSchema.parse(
-    await updateItemWithAuthorization(
+    await patchItemWithAuthorization(
       new URL(RoleResources.buildPath(id), instance.config.host),
       instance.authorizer,
       UpdateRolePayloadSchema.parse(item)

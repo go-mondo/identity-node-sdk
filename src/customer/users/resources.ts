@@ -2,9 +2,9 @@ import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
-  insertItemWithAuthorization,
   listItemsWithAuthorization,
-  updateItemWithAuthorization,
+  patchItemWithAuthorization,
+  postItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
@@ -88,7 +88,7 @@ export async function insertUser(
   item: InsertUserInput
 ): Promise<User> {
   return UserSchema.parse(
-    await insertItemWithAuthorization(
+    await postItemWithAuthorization(
       new URL(UserResources.buildPath(), instance.config.host),
       instance.authorizer,
       InsertUserPayloadSchema.parse(item)
@@ -102,7 +102,7 @@ export async function updateUser(
   item: UpdateUserInput
 ): Promise<User> {
   return UserSchema.parse(
-    await updateItemWithAuthorization(
+    await patchItemWithAuthorization(
       new URL(UserResources.buildPath(id), instance.config.host),
       instance.authorizer,
       UpdateUserPayloadSchema.parse(item)

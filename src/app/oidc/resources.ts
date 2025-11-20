@@ -2,8 +2,8 @@ import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
-  insertItemWithAuthorization,
-  updateItemWithAuthorization,
+  patchItemWithAuthorization,
+  postItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { PATH } from '../resources.js';
 import {
@@ -63,7 +63,7 @@ export async function insertOIDC(
   item?: InsertOIDCInput
 ): Promise<OIDC> {
   return OIDCSchema.parse(
-    await insertItemWithAuthorization(
+    await postItemWithAuthorization(
       new URL(OIDCResources.buildPath(appId), instance.config.host),
       instance.authorizer,
       item ? InsertOIDCPayloadSchema.parse(item) : undefined
@@ -77,7 +77,7 @@ export async function updateOIDC(
   item: UpdateOIDCInput
 ): Promise<OIDC> {
   return OIDCSchema.parse(
-    await updateItemWithAuthorization(
+    await patchItemWithAuthorization(
       new URL(OIDCResources.buildPath(appId), instance.config.host),
       instance.authorizer,
       UpdateOIDCPayloadSchema.parse(item)

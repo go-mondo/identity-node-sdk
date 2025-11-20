@@ -2,8 +2,8 @@ import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
-  insertItemWithAuthorization,
-  updateItemWithAuthorization,
+  patchItemWithAuthorization,
+  postItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
@@ -90,7 +90,7 @@ export async function insertPermission(
   item: InsertPermissionInput
 ): Promise<Permission> {
   return PermissionSchema.parse(
-    await insertItemWithAuthorization(
+    await postItemWithAuthorization(
       new URL(PermissionResources.buildPath(), instance.config.host),
       instance.authorizer,
       InsertPermissionPayloadSchema.parse(item)
@@ -104,7 +104,7 @@ export async function updatePermission(
   item: UpdatePermissionInput
 ): Promise<Permission> {
   return PermissionSchema.parse(
-    await updateItemWithAuthorization(
+    await patchItemWithAuthorization(
       new URL(PermissionResources.buildPath(id), instance.config.host),
       instance.authorizer,
       UpdatePermissionPayloadSchema.parse(item)

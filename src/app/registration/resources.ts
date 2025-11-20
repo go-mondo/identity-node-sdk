@@ -1,7 +1,7 @@
 import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
-  insertItemWithAuthorization,
+  postItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { PATH } from '../resources.js';
 import {
@@ -54,7 +54,7 @@ export async function upsertRegistration(
   item: UpsertRegistrationInput
 ): Promise<Registration> {
   return RegistrationSchema.parse(
-    await insertItemWithAuthorization(
+    await postItemWithAuthorization(
       new URL(RegistrationResources.buildPath(id), instance.config.host),
       instance.authorizer,
       UpsertRegistrationPayloadSchema.parse(item)

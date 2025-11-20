@@ -1,5 +1,6 @@
 import * as z from 'zod/v4';
 import { AppAssociationReferenceSchema } from '../app/schema.js';
+import { SessionAssociationReferenceSchema } from '../authentication/sessions/schema.js';
 import {
   PermissionAssociationReferenceSchema,
   RoleAssociationReferenceSchema,
@@ -27,26 +28,10 @@ export const AssociationObjectType = {
   ROLE: 'Role',
   APP: 'App',
   PERMISSION: 'Permission',
+  SESSION: 'Session',
 } as const;
 export type AnyAssociationObjectType =
   (typeof AssociationObjectType)[keyof typeof AssociationObjectType];
-
-export const AssociationIdReferenceSchema = z.object({
-  id: z.string(),
-});
-export type AssociationIdReference = z.output<
-  typeof AssociationIdReferenceSchema
->;
-
-export const AssociationAttributesReferenceSchema =
-  AssociationIdReferenceSchema.and(z.record(z.string(), z.unknown()));
-export type AssociationAttributesReference = z.output<
-  typeof AssociationAttributesReferenceSchema
->;
-
-export type AssociationReference =
-  | AssociationIdReference
-  | AssociationAttributesReference;
 
 export const AssociationObjectSchema = z.union([
   UserAssociationReferenceSchema,
@@ -54,6 +39,7 @@ export const AssociationObjectSchema = z.union([
   AppAssociationReferenceSchema,
   RoleAssociationReferenceSchema,
   PermissionAssociationReferenceSchema,
+  SessionAssociationReferenceSchema,
 ]);
 export type AssociationObject = z.output<typeof AssociationObjectSchema>;
 // export type AssociationObject =

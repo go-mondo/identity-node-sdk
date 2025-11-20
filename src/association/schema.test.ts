@@ -5,12 +5,7 @@ import {
   generateRoleId,
 } from '../authorization/schema.js';
 import { generateUserId } from '../customer/schema.js';
-import {
-  AssociationObjectType,
-  AssociationIdReferenceSchema,
-  AssociationAttributesReferenceSchema,
-  AssociationObjectSchema,
-} from './schema.js';
+import { AssociationObjectSchema, AssociationObjectType } from './schema.js';
 
 describe('Association - Schema', () => {
   describe('AssociationObjectType constants', () => {
@@ -20,63 +15,7 @@ describe('Association - Schema', () => {
       expect(AssociationObjectType.ROLE).toBe('Role');
       expect(AssociationObjectType.APP).toBe('App');
       expect(AssociationObjectType.PERMISSION).toBe('Permission');
-    });
-  });
-
-  describe('AssociationIdReferenceSchema', () => {
-    test('should accept valid id reference', () => {
-      const reference = { id: 'any_string_id' };
-      const result = AssociationIdReferenceSchema.safeParse(reference);
-      // Parse succeeds for valid data
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toEqual(reference);
-      }
-    });
-
-    test('should reject missing id', () => {
-      const result = AssociationIdReferenceSchema.safeParse({});
-      expect(result.success).toBe(false);
-    });
-
-    test('should reject non-string id', () => {
-      const reference = { id: 123 };
-      const result = AssociationIdReferenceSchema.safeParse(reference);
-      expect(result.success).toBe(false);
-    });
-  });
-
-  describe('AssociationAttributesReferenceSchema', () => {
-    test('should accept id with additional attributes', () => {
-      const reference = {
-        id: 'test_id',
-        name: 'Test Name',
-        status: 'active',
-        metadata: { key: 'value' },
-      };
-
-      const result = AssociationAttributesReferenceSchema.safeParse(reference);
-      // Parse succeeds for valid data
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toEqual(reference);
-      }
-    });
-
-    test('should accept minimal reference with just id', () => {
-      const reference = { id: 'minimal_id' };
-      const result = AssociationAttributesReferenceSchema.safeParse(reference);
-      // Parse succeeds for valid data
-      expect(result.success).toBe(true);
-      if (result.success) {
-        expect(result.data).toEqual(reference);
-      }
-    });
-
-    test('should reject missing id', () => {
-      const reference = { name: 'Test', status: 'active' };
-      const result = AssociationAttributesReferenceSchema.safeParse(reference);
-      expect(result.success).toBe(false);
+      expect(AssociationObjectType.SESSION).toBe('Session');
     });
   });
 

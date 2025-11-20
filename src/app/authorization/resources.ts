@@ -1,7 +1,7 @@
 import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
-  updateItemWithAuthorization,
+  putItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { PATH } from '../resources.js';
 import {
@@ -50,7 +50,7 @@ export async function upsertAuthorization(
   item: UpsertAuthorizationInput
 ): Promise<Authorization> {
   return AuthorizationSchema.parse(
-    await updateItemWithAuthorization(
+    await putItemWithAuthorization(
       new URL(AuthorizationResources.buildPath(appId), instance.config.host),
       instance.authorizer,
       UpsertAuthorizationPayloadSchema.parse(item)

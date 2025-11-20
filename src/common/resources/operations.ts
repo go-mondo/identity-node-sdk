@@ -37,7 +37,7 @@ export async function getItemWithAuthorization<Result>(
   authorization: Authorization
 ): Promise<Result> {
   try {
-    console.debug('Get item', { url });
+    console.debug('GET item', { url });
 
     const response = await fetch(
       url,
@@ -57,18 +57,35 @@ export async function getItemWithAuthorization<Result>(
   }
 }
 
-export async function updateItemWithAuthorization<Result, Mutation>(
+export async function patchItemWithAuthorization<Result, Mutation>(
+  url: URL,
+  authorization: Authorization,
+  item: Mutation
+): Promise<Result> {
+  return mutateItemWithAuthorization('PATCH', url, authorization, item);
+}
+
+export async function putItemWithAuthorization<Result, Mutation>(
+  url: URL,
+  authorization: Authorization,
+  item: Mutation
+): Promise<Result> {
+  return mutateItemWithAuthorization('PUT', url, authorization, item);
+}
+
+async function mutateItemWithAuthorization<Result, Mutation>(
+  method: 'PUT' | 'PATCH',
   url: URL,
   authorization: Authorization,
   item: Mutation
 ): Promise<Result> {
   try {
-    console.debug('Update item', { url, item });
+    console.debug(`${method} item`, { url, item });
 
     const response = await fetch(
       url,
       authorization({
-        method: 'PUT',
+        method,
         headers: defaultMutationRequestHeaders(),
         body: JSON.stringify(item),
       })
@@ -84,13 +101,13 @@ export async function updateItemWithAuthorization<Result, Mutation>(
   }
 }
 
-export async function insertItemWithAuthorization<Result, Mutation>(
+export async function postItemWithAuthorization<Result, Mutation>(
   url: URL,
   authorization: Authorization,
   item?: Mutation
 ): Promise<Result> {
   try {
-    console.debug('Insert item', { url, item });
+    console.debug('POST item', { url, item });
 
     const response = await fetch(
       url,

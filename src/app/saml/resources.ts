@@ -2,8 +2,8 @@ import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
-  insertItemWithAuthorization,
-  updateItemWithAuthorization,
+  patchItemWithAuthorization,
+  postItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { PATH } from '../resources.js';
 import {
@@ -63,7 +63,7 @@ export async function insertSAML(
   item?: InsertSAMLInput
 ): Promise<SAML> {
   return SAMLSchema.parse(
-    await insertItemWithAuthorization(
+    await postItemWithAuthorization(
       new URL(SAMLResources.buildPath(appId), instance.config.host),
       instance.authorizer,
       item ? InsertSAMLPayloadSchema.parse(item) : undefined
@@ -77,7 +77,7 @@ export async function updateSAML(
   item: UpdateSAMLInput
 ): Promise<SAML> {
   return SAMLSchema.parse(
-    await updateItemWithAuthorization(
+    await patchItemWithAuthorization(
       new URL(SAMLResources.buildPath(appId), instance.config.host),
       instance.authorizer,
       UpdateSAMLPayloadSchema.parse(item)

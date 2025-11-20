@@ -1,7 +1,7 @@
 import type { MondoIdentity } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
-  insertItemWithAuthorization,
+  postItemWithAuthorization,
 } from '../../common/resources/operations.js';
 import { PATH } from '../resources.js';
 import {
@@ -51,7 +51,7 @@ export async function rotateOAuthSecret(
   item?: InsertOAuthInput
 ): Promise<OAuth> {
   return OAuthSchema.parse(
-    await insertItemWithAuthorization(
+    await postItemWithAuthorization(
       new URL(OAuthResources.buildPath(appId), instance.config.host),
       instance.authorizer,
       InsertOAuthPayloadSchema.parse(item)

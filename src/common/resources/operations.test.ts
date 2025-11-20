@@ -13,9 +13,9 @@ import type { Authorization } from './authorization.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
-  insertItemWithAuthorization,
   listItemsWithAuthorization,
-  updateItemWithAuthorization,
+  postItemWithAuthorization,
+  putItemWithAuthorization,
 } from './operations.js';
 
 // Mock console.debug to avoid noise in tests
@@ -176,7 +176,7 @@ describe('Common Resources - Operations', () => {
 
       await getItemWithAuthorization(testUrl, mockAuthorization);
 
-      expect(console.debug).toHaveBeenCalledWith('Get item', { url: testUrl });
+      expect(console.debug).toHaveBeenCalledWith('GET item', { url: testUrl });
     });
   });
 
@@ -190,7 +190,7 @@ describe('Common Resources - Operations', () => {
         json: () => Promise.resolve(responseData),
       });
 
-      const result = await updateItemWithAuthorization(
+      const result = await putItemWithAuthorization(
         testUrl,
         mockAuthorization,
         updateData
@@ -215,7 +215,7 @@ describe('Common Resources - Operations', () => {
         json: () => Promise.resolve({}),
       });
 
-      await updateItemWithAuthorization(testUrl, mockAuthorization, updateData);
+      await putItemWithAuthorization(testUrl, mockAuthorization, updateData);
 
       const authCall = mockAuthorization.mock.calls[0][0];
       const headers = authCall.headers as Headers;
@@ -236,7 +236,7 @@ describe('Common Resources - Operations', () => {
       });
 
       await expect(
-        updateItemWithAuthorization(testUrl, mockAuthorization, {})
+        putItemWithAuthorization(testUrl, mockAuthorization, {})
       ).rejects.toThrow(ValidationError);
     });
 
@@ -248,9 +248,9 @@ describe('Common Resources - Operations', () => {
         json: () => Promise.resolve({}),
       });
 
-      await updateItemWithAuthorization(testUrl, mockAuthorization, updateData);
+      await putItemWithAuthorization(testUrl, mockAuthorization, updateData);
 
-      expect(console.debug).toHaveBeenCalledWith('Update item', {
+      expect(console.debug).toHaveBeenCalledWith('PUT item', {
         url: testUrl,
         item: updateData,
       });
@@ -267,7 +267,7 @@ describe('Common Resources - Operations', () => {
         json: () => Promise.resolve(responseData),
       });
 
-      const result = await insertItemWithAuthorization(
+      const result = await postItemWithAuthorization(
         testUrl,
         mockAuthorization,
         insertData
@@ -292,7 +292,7 @@ describe('Common Resources - Operations', () => {
         json: () => Promise.resolve(responseData),
       });
 
-      const result = await insertItemWithAuthorization(
+      const result = await postItemWithAuthorization(
         testUrl,
         mockAuthorization
       );
@@ -316,7 +316,7 @@ describe('Common Resources - Operations', () => {
         json: () => Promise.resolve(responseData),
       });
 
-      const result = await insertItemWithAuthorization(
+      const result = await postItemWithAuthorization(
         testUrl,
         mockAuthorization,
         null
@@ -344,7 +344,7 @@ describe('Common Resources - Operations', () => {
       });
 
       await expect(
-        insertItemWithAuthorization(testUrl, mockAuthorization, {})
+        postItemWithAuthorization(testUrl, mockAuthorization, {})
       ).rejects.toThrow(HttpError);
     });
 
@@ -356,9 +356,9 @@ describe('Common Resources - Operations', () => {
         json: () => Promise.resolve({}),
       });
 
-      await insertItemWithAuthorization(testUrl, mockAuthorization, insertData);
+      await postItemWithAuthorization(testUrl, mockAuthorization, insertData);
 
-      expect(console.debug).toHaveBeenCalledWith('Insert item', {
+      expect(console.debug).toHaveBeenCalledWith('POST item', {
         url: testUrl,
         item: insertData,
       });
@@ -452,8 +452,8 @@ describe('Common Resources - Operations', () => {
       const operations = [
         () => listItemsWithAuthorization(testUrl, mockAuthorization),
         () => getItemWithAuthorization(testUrl, mockAuthorization),
-        () => updateItemWithAuthorization(testUrl, mockAuthorization, {}),
-        () => insertItemWithAuthorization(testUrl, mockAuthorization, {}),
+        () => putItemWithAuthorization(testUrl, mockAuthorization, {}),
+        () => postItemWithAuthorization(testUrl, mockAuthorization, {}),
         () => deleteItemWithAuthorization(testUrl, mockAuthorization),
       ];
 
@@ -524,7 +524,7 @@ describe('Common Resources - Operations', () => {
       });
 
       await expect(
-        updateItemWithAuthorization(testUrl, mockAuthorization, {})
+        putItemWithAuthorization(testUrl, mockAuthorization, {})
       ).rejects.toThrow(HttpError);
     });
   });
