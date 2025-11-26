@@ -49,12 +49,12 @@ const BaseSchema = z.object({
   name: z.string(),
   status: PermissionStatusSchema,
   description: z.string().optional(),
+  apps: AggregateSchema.optional(),
+  roles: AggregateSchema.optional(),
 });
 
 export const PermissionSchema = z.object({
   ...BaseSchema.shape,
-  apps: AggregateSchema.optional(),
-  roles: AggregateSchema.optional(),
   ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
   ...DeletedAtPropertySchema.shape,
@@ -66,8 +66,6 @@ export type Permission = z.output<typeof PermissionSchema>;
 
 export const PermissionPayloadSchema = z.object({
   ...BaseSchema.shape,
-  apps: AggregateSchema.optional(),
-  roles: AggregateSchema.optional(),
   ...CreatedAtPropertyPayloadSchema.shape,
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,

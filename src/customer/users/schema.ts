@@ -40,11 +40,7 @@ export const UserStatus = {
 } as const;
 export type AnyUserStatus = (typeof UserStatus)[keyof typeof UserStatus];
 
-const UserStatusSchema = z.enum([
-  UserStatus.ACTIVE,
-  UserStatus.SUSPENDED,
-  UserStatus.UNVERIFIED,
-] as const);
+export const UserStatusSchema = z.enum(Object.values(UserStatus));
 
 export const UserNamePropertiesSchema = z.object({
   givenName: optionallyNullishToUndefined(z.string()),
@@ -122,6 +118,7 @@ export type UserPayload = z.output<typeof UserPayloadSchema>;
 
 export const InsertUserPayloadSchema = z.object({
   id: UserIdSchema.optional(),
+  status: UserStatusSchema.optional(),
   ...UserNamePropertiesSchema.shape,
   ...VerifiedEmailOrPhonePropertiesSchema.shape,
   ...UserAssociationsSchema.shape,
