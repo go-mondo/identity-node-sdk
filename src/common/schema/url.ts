@@ -17,7 +17,8 @@ export function appendSearchParams(
 
 const WebUrlString = z.url({
   protocol: /^https?$/,
-  hostname: z.regexes.domain,
+  hostname:
+    /^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|localhost$/,
 });
 
 const WebUrlObject = z.instanceof(URL);
