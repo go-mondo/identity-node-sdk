@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.43](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.42...identity-sdk-v0.0.2-beta.43) (2025-11-27)
+
+
+### Bug Fixes
+
+* loosen hostname to allow localhost ([6a9e6f6](https://github.com/go-mondo/identity-node-sdk/commit/6a9e6f6d4fc91853ee696ef357b6d43cd2a6e49e))
+
 ## [0.0.2-beta.42](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.41...identity-sdk-v0.0.2-beta.42) (2025-11-27)
 
 
