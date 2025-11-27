@@ -16,13 +16,14 @@ import {
 import {
   UniqueStringArraySchema,
   UniqueStringSetSchema,
-  UniqueUrlArraySchema,
-  UniqueUrlSetSchema,
 } from '../../common/schema/sets.js';
+import {
+  UniqueWebUrlObjectSetSchema,
+  UniqueWebUrlStringArraySchema,
+  WebUrlObjectSchema,
+  WebUrlStringSchema,
+} from '../../common/schema/url.js';
 import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
-
-const CallbackUrlArraySchema = UniqueUrlArraySchema;
-const CallbackUrlSetSchema = UniqueUrlSetSchema;
 
 const AudienceArraySchema = UniqueStringArraySchema;
 const AudienceSetSchema = UniqueStringSetSchema;
@@ -52,8 +53,8 @@ const BaseAuthorization = z.object({
 
 export const AuthorizationSchema = z.object({
   ...BaseAuthorization.shape,
-  loginUri: z.union([z.url(), z.undefined()]).optional(),
-  callbackUrls: CallbackUrlSetSchema.optional(),
+  loginUri: z.union([WebUrlObjectSchema, z.undefined()]).optional(),
+  callbackUrls: UniqueWebUrlObjectSetSchema.optional(),
   availableAudiences: AudienceSetSchema.optional(),
   availableGrants: AvailableGrantSetSchema.optional(),
   defaultAudience: z.union([z.string(), z.undefined()]).optional(),
@@ -67,8 +68,8 @@ export type Authorization = z.output<typeof AuthorizationSchema>;
 
 export const AuthorizationPayloadSchema = z.object({
   ...BaseAuthorization.shape,
-  loginUri: z.union([z.url(), z.undefined()]).optional(),
-  callbackUrls: CallbackUrlArraySchema.optional(),
+  loginUri: z.union([WebUrlStringSchema, z.undefined()]).optional(),
+  callbackUrls: UniqueWebUrlStringArraySchema.optional(),
   availableAudiences: AudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
   defaultAudience: z.union([z.string(), z.undefined()]).optional(),
@@ -81,8 +82,8 @@ export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;
 
 export const UpsertAuthorizationPayloadSchema = z.object({
   ...BaseAuthorization.shape,
-  loginUri: z.union([z.url(), z.undefined()]).optional(),
-  callbackUrls: CallbackUrlArraySchema.optional(),
+  loginUri: z.union([WebUrlStringSchema, z.undefined()]).optional(),
+  callbackUrls: UniqueWebUrlStringArraySchema.optional(),
   availableAudiences: AudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
   defaultAudience: z.union([z.string(), z.undefined()]).optional(),
