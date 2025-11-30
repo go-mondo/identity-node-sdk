@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.44](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.43...identity-sdk-v0.0.2-beta.44) (2025-11-30)
+
+
+### Bug Fixes
+
+* recursive object ([cbc9d97](https://github.com/go-mondo/identity-node-sdk/commit/cbc9d979ceea25b229a82f4470b7cb06585098af))
+
 ## [0.0.2-beta.43](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.42...identity-sdk-v0.0.2-beta.43) (2025-11-27)
 
 
