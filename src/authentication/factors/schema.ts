@@ -7,17 +7,23 @@ export type AuthenticationFactorType = {
   nextFactors?: AuthenticationFactorType[] | undefined | null;
 };
 
-const AuthenticationFactorBaseSchema: z.ZodType<AuthenticationFactorType> =
-  z.lazy(() =>
-    z.object({
-      id: StrategyIdSchema,
-      nextFactors: z
-        .array(AuthenticationFactorBaseSchema)
-        .or(z.undefined())
-        .or(z.null())
-        .optional(),
-    })
-  );
+const Category = z.object({
+  name: z.string(),
+  get subcategories() {
+    return z.array(Category);
+  },
+});
+
+const AuthenticationFactorBaseSchema = z.object({
+  id: StrategyIdSchema,
+  get nextFactors() {
+    return z
+      .array(AuthenticationFactorBaseSchema)
+      .or(z.undefined())
+      .or(z.null())
+      .optional();
+  },
+});
 
 export const AuthenticationFactorSchema = AuthenticationFactorBaseSchema;
 export type AuthenticationFactorProperties = z.input<
