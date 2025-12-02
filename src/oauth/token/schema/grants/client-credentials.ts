@@ -1,5 +1,9 @@
 import * as z from 'zod/v4';
-import { GrantType, ScopeSchema } from '../../../common/schema.js';
+import {
+  GrantType,
+  OptionalSchema,
+  ScopeSchema,
+} from '../../../common/schema.js';
 import { ClientRequestSchema } from './common.js';
 
 /**
@@ -27,6 +31,7 @@ export const ClientCredentialsRequestSchema = z.object({
   scope: ScopeSchema.optional(),
 
   ...ClientRequestSchema.shape,
+  ...OptionalSchema.shape,
 });
 export type ClientCredentialsRequestInput = z.input<
   typeof ClientCredentialsRequestSchema
