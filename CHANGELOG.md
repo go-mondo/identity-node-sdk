@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.46](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.45...identity-sdk-v0.0.2-beta.46) (2025-12-02)
+
+
+### Bug Fixes
+
+* default token_type ([aa5daf9](https://github.com/go-mondo/identity-node-sdk/commit/aa5daf956c1262b1a488fe40f2ea8dd3bef7eae1))
+
 ## [0.0.2-beta.45](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.44...identity-sdk-v0.0.2-beta.45) (2025-12-02)
 
 
