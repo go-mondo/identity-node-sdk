@@ -41,11 +41,17 @@ export const CodeChallengeSchema = z
 // });
 
 const OAuthSchema = z.object({
-  response_type: ResponseTypeSchema,
-  client_id: AppIdSchema,
-  redirect_uri: z.url().optional(),
-  scope: z.string().optional(),
-  state: z.string().optional(),
+  response_type: ResponseTypeSchema.describe(
+    'Must be set to "code" for Authorization Code flow.'
+  ),
+  client_id: AppIdSchema.describe('The Client ID.'),
+  redirect_uri: z.url().optional().describe('The callback URL.'),
+  scope: z
+    .string()
+    .min(1)
+    .optional()
+    .describe('Space-delimited scope strings.'),
+  state: z.string().min(1).optional().describe('Opaque value to prevent CSRF.'),
 });
 
 const OIDCSchema = z.object({
@@ -55,7 +61,7 @@ const OIDCSchema = z.object({
   max_age: z.number().int().min(0).optional(),
 });
 
-export const AuthorizationCodeSchema = z
+export const AuthorizationCodeRequestSchema = z
   .object({
     ...OAuthSchema.shape,
     ...OIDCSchema.shape,
@@ -81,4 +87,9 @@ export const AuthorizationCodeSchema = z
       });
     }
   });
-export type AuthorizationCodePayload = z.output<typeof AuthorizationCodeSchema>;
+export type AuthorizationCodeRequestInput = z.input<
+  typeof AuthorizationCodeRequestSchema
+>;
+export type AuthorizationCodeRequestPayload = z.output<
+  typeof AuthorizationCodeRequestSchema
+>;

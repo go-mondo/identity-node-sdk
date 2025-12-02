@@ -25,9 +25,10 @@ const OIDCSchema = z.object({
   nonce: z.string().optional(), // OIDC (this is required if resposne_type includes ID TOKEN)
 });
 
-export const ImplicitSchema = z.object({
+export const ImplicitRequestSchema = z.object({
   ...OAuthSchema.shape,
   ...OIDCSchema.shape,
   ...OptionalSchema.shape,
 });
-export type ImplicitPayload = z.output<typeof ImplicitSchema>;
+export type ImplicitRequestInput = z.input<typeof ImplicitRequestSchema>;
+export type ImplicitRequestPayload = z.output<typeof ImplicitRequestSchema>;

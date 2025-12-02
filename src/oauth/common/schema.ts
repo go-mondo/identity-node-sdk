@@ -31,10 +31,9 @@ export const CodeChallengeMethod = {
 } as const;
 export type AnyCodeChallengeMethod =
   (typeof CodeChallengeMethod)[keyof typeof CodeChallengeMethod];
-export const CodeChallengeMethodSchema = z.enum([
-  CodeChallengeMethod.PLAIN,
-  CodeChallengeMethod.S256,
-] as const);
+export const CodeChallengeMethodSchema = z
+  .enum([CodeChallengeMethod.PLAIN, CodeChallengeMethod.S256] as const)
+  .describe('PKCE Challenge Method.');
 
 export const AuthorizationDisplay = {
   PAGE: 'page',
@@ -89,4 +88,7 @@ export const Scope = {
   ...OAuthScope,
 };
 export type AnyScope = AnyOAuthScope | AnyOIDCScope | string;
-export const ScopeSchema = z.string();
+export const ScopeSchema = z
+  .string()
+  .min(1)
+  .describe('A list of space-delimited, case-sensitive strings.');

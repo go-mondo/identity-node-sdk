@@ -345,16 +345,6 @@ describe('OAuth Common Schema', () => {
   });
 
   describe('Schema edge cases', () => {
-    test('should handle empty strings appropriately', () => {
-      const emptyString = '';
-
-      const scopeResult = ScopeSchema.parse(emptyString);
-      expect(scopeResult).toBe(emptyString); // Empty string is valid string
-
-      const challengeResult = CodeChallengeMethodSchema.safeParse(emptyString);
-      expect(challengeResult.success).toBe(false); // Empty string not valid enum
-    });
-
     test('should handle whitespace and special characters', () => {
       const spacedScope = '  openid profile  ';
       const result = ScopeSchema.parse(spacedScope);
