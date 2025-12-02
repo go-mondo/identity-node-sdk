@@ -38,6 +38,7 @@ export const ResponseSchema = z.object({
    */
   token_type: z
     .literal('Bearer')
+    .default('Bearer')
     .describe('The type of the token issued. Must be "Bearer".'),
 
   /**
