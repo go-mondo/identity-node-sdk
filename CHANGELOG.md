@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.48](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.47...identity-sdk-v0.0.2-beta.48) (2025-12-02)
+
+
+### Bug Fixes
+
+* removing root path ([bd6b5a0](https://github.com/go-mondo/identity-node-sdk/commit/bd6b5a07463d460f633a688bf0346577289aaf70))
+
 ## [0.0.2-beta.47](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.46...identity-sdk-v0.0.2-beta.47) (2025-12-02)
 
 
