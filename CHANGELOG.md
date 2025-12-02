@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.47](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.46...identity-sdk-v0.0.2-beta.47) (2025-12-02)
+
+
+### Bug Fixes
+
+* adding audience param ([f7c7645](https://github.com/go-mondo/identity-node-sdk/commit/f7c76458237d1a4099abc65eecf2d40bcb4405bf))
+
 ## [0.0.2-beta.46](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.45...identity-sdk-v0.0.2-beta.46) (2025-12-02)
 
 
