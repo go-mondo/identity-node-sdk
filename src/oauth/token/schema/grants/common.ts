@@ -1,5 +1,5 @@
-import { AppIdSchema } from 'src/app';
 import * as z from 'zod/v4';
+import { AppIdSchema } from '../../../../app/schema.js';
 
 export const ClientRequestSchema = z.object({
   /**
