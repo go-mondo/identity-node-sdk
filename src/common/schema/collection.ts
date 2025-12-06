@@ -1,5 +1,5 @@
 import * as z from 'zod/v4';
-import { type Pagination, PaginationSchema } from './pagination.js';
+import { type PaginationPayload, PaginationSchema } from './pagination.js';
 
 export const CollectionSchema = <T extends z.ZodTypeAny>(itemSchema: T) =>
   z.object({ items: z.array(itemSchema) });
@@ -12,8 +12,6 @@ export const PaginationCollectionSchema = <T extends z.ZodTypeAny>(
 ) =>
   z.object({
     items: z.array(itemSchema),
-    pagination: PaginationSchema.optional(),
+    ...PaginationSchema.shape,
   });
-export type PaginationCollection<I> = Collection<I> & {
-  pagination?: Pagination;
-};
+export type PaginationCollection<I> = Collection<I> & PaginationPayload;

@@ -78,7 +78,7 @@ describe('Common Schema - Collection', () => {
         expect(result.data).toEqual({
           items: ['item1', 'item2'],
           pagination: {
-            pageSize: '10',
+            pageSize: 10,
             nextToken: 'token123',
           },
         });

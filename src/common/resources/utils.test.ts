@@ -49,7 +49,7 @@ describe('Common Resources - Utils', () => {
   describe('addPaginationToURL', () => {
     test('should add pagination params to URL', () => {
       const url = new URL('https://example.com/api');
-      const pagination = { nextToken: 'token123', pageSize: '10' };
+      const pagination = { nextToken: 'token123', pageSize: 10 };
 
       const result = addPaginationToURL(url, pagination);
 
@@ -77,7 +77,7 @@ describe('Common Resources - Utils', () => {
 
     test('should not add params when values are null', () => {
       const url = new URL('https://example.com/api');
-      const pagination = { nextToken: null, pageSize: null };
+      const pagination = {};
 
       const result = addPaginationToURL(url, pagination);
 
