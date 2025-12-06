@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.49](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.48...identity-sdk-v0.0.2-beta.49) (2025-12-06)
+
+
+### Bug Fixes
+
+* pagination ([f10f276](https://github.com/go-mondo/identity-node-sdk/commit/f10f276add2cf8f75eecdbb388231c21804a33b6))
+
 ## [0.0.2-beta.48](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.47...identity-sdk-v0.0.2-beta.48) (2025-12-02)
 
 
