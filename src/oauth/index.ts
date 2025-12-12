@@ -10,6 +10,7 @@ export {
   OAuthScope,
   OIDCScope,
   ResponseType,
+  ScopeStringSchema,
   type AnyAuthorizationDisplay,
   type AnyAuthorizationPrompt,
   type AnyCodeChallengeMethod,
@@ -18,6 +19,7 @@ export {
   type AnyOIDCScope,
   type AnyResponseType,
   type AnyScope,
+  type ScopeString,
 } from './common/schema.js';
 
 export * as Authorize from './authorize/index.js';

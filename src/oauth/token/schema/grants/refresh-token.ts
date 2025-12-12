@@ -1,5 +1,5 @@
 import * as z from 'zod/v4';
-import { GrantType, ScopeSchema } from '../../../common/schema.js';
+import { GrantType, ScopeStringSchema } from '../../../common/schema.js';
 import { ClientRequestSchema } from './common.js';
 
 /**
@@ -26,7 +26,7 @@ export const RefreshTokenRequestSchema = z.object({
    * unchanged from the original grant. If specified, it must be equal to or
    * a subset of the original scope.
    */
-  scope: ScopeSchema.optional(),
+  scope: ScopeStringSchema.optional(),
 
   ...ClientRequestSchema.shape,
 });

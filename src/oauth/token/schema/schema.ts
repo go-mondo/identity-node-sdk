@@ -1,6 +1,6 @@
 import * as z from 'zod/v4';
 
-import { ScopeSchema } from '../../common/schema.js';
+import { ScopeStringSchema } from '../../common/schema.js';
 import { AuthorizationCodeRequestSchema } from './grants/authorization-code.js';
 import { ClientCredentialsRequestSchema } from './grants/client-credentials.js';
 import { RefreshTokenRequestSchema } from './grants/refresh-token.js';
@@ -62,7 +62,7 @@ export const ResponseSchema = z.object({
    * OPTIONAL. The scope of the access token as issued by the authorization server.
    * If omitted, the scope is the same as the scope originally requested by the client.
    */
-  scope: ScopeSchema.optional(),
+  scope: ScopeStringSchema.optional(),
 
   /**
    * OPTIONAL, for OpenID Connect (OIDC). The ID token, a JWT that contains claims

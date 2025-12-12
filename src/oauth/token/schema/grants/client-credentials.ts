@@ -2,7 +2,7 @@ import * as z from 'zod/v4';
 import {
   GrantType,
   OptionalSchema,
-  ScopeSchema,
+  ScopeStringSchema,
 } from '../../../common/schema.js';
 import { ClientRequestSchema } from './common.js';
 
@@ -28,7 +28,7 @@ export const ClientCredentialsRequestSchema = z.object({
   /**
    * OPTIONAL. The scope of the access request.
    */
-  scope: ScopeSchema.optional(),
+  scope: ScopeStringSchema.optional(),
 
   ...ClientRequestSchema.shape,
   ...OptionalSchema.shape,

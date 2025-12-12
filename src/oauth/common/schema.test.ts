@@ -21,7 +21,7 @@ import {
   OptionalSchema,
   ResponseType,
   Scope,
-  ScopeSchema,
+  ScopeStringSchema,
 } from './schema.js';
 
 describe('OAuth Common Schema', () => {
@@ -295,7 +295,7 @@ describe('OAuth Common Schema', () => {
       ];
 
       for (const scope of validScopes) {
-        const result = ScopeSchema.parse(scope);
+        const result = ScopeStringSchema.parse(scope);
         expect(result).toBe(scope);
       }
     });
@@ -304,7 +304,7 @@ describe('OAuth Common Schema', () => {
       const invalidValues = [123, true, null, undefined, {}, []];
 
       for (const value of invalidValues) {
-        const result = ScopeSchema.safeParse(value);
+        const result = ScopeStringSchema.safeParse(value);
         expect(result.success).toBe(false);
       }
     });
@@ -347,11 +347,11 @@ describe('OAuth Common Schema', () => {
   describe('Schema edge cases', () => {
     test('should handle whitespace and special characters', () => {
       const spacedScope = '  openid profile  ';
-      const result = ScopeSchema.parse(spacedScope);
+      const result = ScopeStringSchema.parse(spacedScope);
       expect(result).toBe(spacedScope); // Preserves whitespace
 
       const specialScope = 'custom:read+write';
-      const specialResult = ScopeSchema.parse(specialScope);
+      const specialResult = ScopeStringSchema.parse(specialScope);
       expect(specialResult).toBe(specialScope);
     });
 

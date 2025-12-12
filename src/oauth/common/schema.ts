@@ -88,7 +88,8 @@ export const Scope = {
   ...OAuthScope,
 };
 export type AnyScope = AnyOAuthScope | AnyOIDCScope | string;
-export const ScopeSchema = z
+export const ScopeStringSchema = z
   .string()
   .min(1)
   .describe('A list of space-delimited, case-sensitive strings.');
+export type ScopeString = z.output<typeof ScopeStringSchema>;
