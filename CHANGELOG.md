@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.50](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.49...identity-sdk-v0.0.2-beta.50) (2025-12-12)
+
+
+### Bug Fixes
+
+* renaming ScopeSchema to ScopeStringSchema and exporting it ([d793d58](https://github.com/go-mondo/identity-node-sdk/commit/d793d5868490acba478fc4acd35df4b41ae7992a))
+
 ## [0.0.2-beta.49](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.48...identity-sdk-v0.0.2-beta.49) (2025-12-06)
 
 
