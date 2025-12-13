@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.55](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.54...identity-sdk-v0.0.2-beta.55) (2025-12-13)
+
+
+### Bug Fixes
+
+* restore token for now ([e94db3e](https://github.com/go-mondo/identity-node-sdk/commit/e94db3e3ba685167c91f24712dc26332fea02db5))
+
 ## [0.0.2-beta.54](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.53...identity-sdk-v0.0.2-beta.54) (2025-12-13)
 
 
