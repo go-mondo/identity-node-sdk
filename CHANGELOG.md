@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.54](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.53...identity-sdk-v0.0.2-beta.54) (2025-12-13)
+
+
+### Bug Fixes
+
+* remove env token ([478a0a0](https://github.com/go-mondo/identity-node-sdk/commit/478a0a06e6450000575dc8cdfed7f12a6c5138c9))
+
 ## [0.0.2-beta.53](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.52...identity-sdk-v0.0.2-beta.53) (2025-12-13)
 
 
