@@ -58,12 +58,9 @@ export const AuthorizationPrompt = {
 } as const;
 export type AnyAuthorizationPrompt =
   (typeof AuthorizationPrompt)[keyof typeof AuthorizationPrompt];
-export const AuthorizationPromptSchema = z.enum([
-  AuthorizationPrompt.NONE,
-  AuthorizationPrompt.LOGIN,
-  AuthorizationPrompt.CONSENT,
-  AuthorizationPrompt.SELECT_ACCOUNT,
-] as const);
+export const AuthorizationPromptSchema = z.enum(
+  Object.values(AuthorizationPrompt)
+);
 
 export const OptionalSchema = z.object({
   audience: z.string().optional(),
