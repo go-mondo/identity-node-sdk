@@ -88,6 +88,7 @@ export const Scope = {
   ...OAuthScope,
 };
 export type AnyScope = AnyOAuthScope | AnyOIDCScope | string;
+
 export const ScopeStringSchema = z
   .string()
   .min(1)
