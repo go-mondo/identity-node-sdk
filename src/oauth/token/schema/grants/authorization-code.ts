@@ -12,7 +12,7 @@ const GrantTypeSchema = z.enum([GrantType.AUTHORIZATION_CODE] as const);
 /**
  * @see https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
  */
-export const AuthorizationCodeRequestSchema = z.object({
+export const AuthorizationCodeTokenSchema = z.object({
   /**
    * REQUIRED. Must be set to "authorization_code".
    */
@@ -43,9 +43,9 @@ export const AuthorizationCodeRequestSchema = z.object({
    */
   code_verifier: z.string().min(1).optional().describe('PKCE Code Verifier.'),
 });
-export type AuthorizationCodeRequestInput = z.input<
-  typeof AuthorizationCodeRequestSchema
+export type AuthorizationCodeTokenInput = z.input<
+  typeof AuthorizationCodeTokenSchema
 >;
-export type AuthorizationCodeRequestPayload = z.output<
-  typeof AuthorizationCodeRequestSchema
+export type AuthorizationCodeToken = z.output<
+  typeof AuthorizationCodeTokenSchema
 >;

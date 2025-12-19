@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { generateAppId } from '../../../app/utils.js';
-import { RequestSchema } from './schema.js';
+import { TokenRequestSchema } from './schema.js';
 
 describe('OAuth Token - Schema', () => {
   describe('Schema union', () => {
@@ -13,7 +13,7 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       // Parse succeeds for valid data
       expect(result.success).toBe(true);
       if (result.success) {
@@ -31,7 +31,7 @@ describe('OAuth Token - Schema', () => {
         code_verifier: 'pkce_verifier_123',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       // Parse succeeds for valid data
       expect(result.success).toBe(true);
       if (result.success) {
@@ -48,7 +48,7 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       // Parse succeeds for valid data
       expect(result.success).toBe(true);
       if (result.success) {
@@ -64,7 +64,7 @@ describe('OAuth Token - Schema', () => {
         scope: 'read write',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       // Parse succeeds for valid data
       expect(result.success).toBe(true);
       if (result.success) {
@@ -81,7 +81,7 @@ describe('OAuth Token - Schema', () => {
         scope: 'read',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       // Parse succeeds for valid data
       expect(result.success).toBe(true);
       if (result.success) {
@@ -97,7 +97,7 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'https://example.com/callback',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       expect(result.success).toBe(false);
     });
 
@@ -108,7 +108,7 @@ describe('OAuth Token - Schema', () => {
         // missing code and redirect_uri
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       expect(result.success).toBe(false);
     });
 
@@ -120,7 +120,7 @@ describe('OAuth Token - Schema', () => {
         redirect_uri: 'not-a-valid-url',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       expect(result.success).toBe(false);
     });
 
@@ -131,7 +131,7 @@ describe('OAuth Token - Schema', () => {
         // missing client_secret
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       expect(result.success).toBe(false);
     });
 
@@ -142,7 +142,7 @@ describe('OAuth Token - Schema', () => {
         // missing refresh_token and client_secret
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       expect(result.success).toBe(false);
     });
 
@@ -151,7 +151,7 @@ describe('OAuth Token - Schema', () => {
         invalid: 'data',
       };
 
-      const result = RequestSchema.safeParse(payload);
+      const result = TokenRequestSchema.safeParse(payload);
       expect(result.success).toBe(false);
     });
   });

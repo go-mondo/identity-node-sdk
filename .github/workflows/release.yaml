@@ -4,9 +4,8 @@ on:
     branches:
       - prerelease
 
-
 env:
-  NODE_VERSION: 20
+  NODE_VERSION: 24
   PNPM_VERSION: 10
 
 permissions:
@@ -101,6 +100,3 @@ jobs:
         # these if statements ensure that a publication only occurs when
         # a new release is created:
       - run: npm publish
-        if: ${{ steps.release.outputs.release_created }}
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

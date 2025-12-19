@@ -22,5 +22,5 @@ export {
   type ScopeString,
 } from './common/schema.js';
 
-export * as Authorize from './authorize/index.js';
-export * as Token from './token/index.js';
+export * from './authorize/index.js';
+export * from './token/index.js';
