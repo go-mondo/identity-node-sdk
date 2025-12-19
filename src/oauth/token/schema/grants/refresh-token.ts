@@ -10,7 +10,7 @@ const GrantTypeSchema = z.enum([GrantType.REFRESH_TOKEN] as const);
 /**
  * @see https://datatracker.ietf.org/doc/html/rfc6749#section-6
  */
-export const RefreshTokenSchema = z.object({
+export const RefreshTokenGrantTokenSchema = z.object({
   /**
    * REQUIRED. Value MUST be set to "refresh_token".
    */
@@ -30,5 +30,9 @@ export const RefreshTokenSchema = z.object({
 
   ...ClientRequestSchema.shape,
 });
-export type RefreshTokenInput = z.input<typeof RefreshTokenSchema>;
-export type RefreshTokenPayload = z.output<typeof RefreshTokenSchema>;
+export type RefreshTokenGrantTokenInput = z.input<
+  typeof RefreshTokenGrantTokenSchema
+>;
+export type RefreshTokenGrantToken = z.output<
+  typeof RefreshTokenGrantTokenSchema
+>;

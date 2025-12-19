@@ -19,7 +19,7 @@ const GrantTypeSchema = z.enum([GrantType.CLIENT_CREDENTIALS] as const);
  *
  * @see https://datatracker.ietf.org/doc/html/rfc6749#section-4.4.2
  */
-export const ClientCredentialsTokenSchema = z.object({
+export const ClientCredentialsGrantTokenSchema = z.object({
   /**
    * REQUIRED. Value MUST be set to "client_credentials".
    */
@@ -33,9 +33,9 @@ export const ClientCredentialsTokenSchema = z.object({
   ...ClientRequestSchema.shape,
   ...OptionalSchema.shape,
 });
-export type ClientCredentialsTokenInput = z.input<
-  typeof ClientCredentialsTokenSchema
+export type ClientCredentialsGrantTokenInput = z.input<
+  typeof ClientCredentialsGrantTokenSchema
 >;
-export type ClientCredentialsToken = z.output<
-  typeof ClientCredentialsTokenSchema
+export type ClientCredentialsGrantToken = z.output<
+  typeof ClientCredentialsGrantTokenSchema
 >;

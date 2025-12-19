@@ -25,14 +25,14 @@ const OIDCSchema = z.object({
   nonce: z.string().optional(), // OIDC (this is required if resposne_type includes ID TOKEN)
 });
 
-export const ImplicitAuthorizationSchema = z.object({
+export const ImplicitGrantAuthorizationSchema = z.object({
   ...OAuthSchema.shape,
   ...OIDCSchema.shape,
   ...OptionalSchema.shape,
 });
-export type ImplicitAuthorizationInput = z.input<
-  typeof ImplicitAuthorizationSchema
+export type ImplicitGrantAuthorizationInput = z.input<
+  typeof ImplicitGrantAuthorizationSchema
 >;
-export type ImplicitAuthorization = z.output<
-  typeof ImplicitAuthorizationSchema
+export type ImplicitGrantAuthorization = z.output<
+  typeof ImplicitGrantAuthorizationSchema
 >;

@@ -61,7 +61,7 @@ const OIDCSchema = z.object({
   max_age: z.number().int().min(0).optional(),
 });
 
-export const AuthorizationCodeAuthorizationSchema = z
+export const AuthorizationCodeGrantAuthorizationSchema = z
   .object({
     ...OAuthSchema.shape,
     ...OIDCSchema.shape,
@@ -87,9 +87,9 @@ export const AuthorizationCodeAuthorizationSchema = z
       });
     }
   });
-export type AuthorizationCodeAuthorizationInput = z.input<
-  typeof AuthorizationCodeAuthorizationSchema
+export type AuthorizationCodeGrantAuthorizationInput = z.input<
+  typeof AuthorizationCodeGrantAuthorizationSchema
 >;
-export type AuthorizationCodeAuthorization = z.output<
-  typeof AuthorizationCodeAuthorizationSchema
+export type AuthorizationCodeGrantAuthorization = z.output<
+  typeof AuthorizationCodeGrantAuthorizationSchema
 >;

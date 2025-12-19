@@ -1,9 +1,9 @@
 import * as z from 'zod/v4';
 
 import { ScopeStringSchema } from '../../common/schema.js';
-import { AuthorizationCodeTokenSchema } from './grants/authorization-code.js';
-import { ClientCredentialsTokenSchema } from './grants/client-credentials.js';
-import { RefreshTokenSchema } from './grants/refresh-token.js';
+import { AuthorizationCodeGrantTokenSchema } from './grants/authorization-code.js';
+import { ClientCredentialsGrantTokenSchema } from './grants/client-credentials.js';
+import { RefreshTokenGrantTokenSchema } from './grants/refresh-token.js';
 
 export * from './grants/authorization-code.js';
 export * from './grants/client-credentials.js';
@@ -12,18 +12,18 @@ export * from './grants/refresh-token.js';
 /**
  * Union(s)
  */
-export const TokenRequestSchema = z.discriminatedUnion('grant_type', [
-  AuthorizationCodeTokenSchema,
-  ClientCredentialsTokenSchema,
-  RefreshTokenSchema,
+export const TokenGrantSchema = z.discriminatedUnion('grant_type', [
+  AuthorizationCodeGrantTokenSchema,
+  ClientCredentialsGrantTokenSchema,
+  RefreshTokenGrantTokenSchema,
 ]);
-export type TokenRequestInput = z.input<typeof TokenRequestSchema>;
-export type TokenRequest = z.output<typeof TokenRequestSchema>;
+export type TokenGrantInput = z.input<typeof TokenGrantSchema>;
+export type TokenGrant = z.output<typeof TokenGrantSchema>;
 
 /*
  * @see https://datatracker.ietf.org/doc/html/rfc6749#section-5.1
  */
-export const TokenResponseSchema = z.object({
+export const TokenSchema = z.object({
   /**
    * REQUIRED. The access token issued by the authorization server.
    * Typically a JWT or an opaque string.
@@ -71,5 +71,5 @@ export const TokenResponseSchema = z.object({
   id_token: z.string().min(1).optional().describe('The ID Token (OIDC only).'),
 });
 
-export type TokenResponseInput = z.input<typeof TokenResponseSchema>;
-export type TokenResponse = z.output<typeof TokenResponseSchema>;
+export type TokenInput = z.input<typeof TokenSchema>;
+export type Token = z.output<typeof TokenSchema>;
