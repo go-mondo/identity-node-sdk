@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.59](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.58...identity-sdk-v0.0.2-beta.59) (2025-12-19)
+
+
+### Bug Fixes
+
+* renaming oauth grant schemas ([4f4f7d6](https://github.com/go-mondo/identity-node-sdk/commit/4f4f7d698cf6a202dfceabce320b1459d1749f89))
+
 ## [0.0.2-beta.58](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.57...identity-sdk-v0.0.2-beta.58) (2025-12-19)
 
 
