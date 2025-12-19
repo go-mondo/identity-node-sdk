@@ -5,7 +5,7 @@ on:
       - prerelease
 
 env:
-  NODE_VERSION: 24
+  NODE_VERSION: 20
   PNPM_VERSION: 10
 
 permissions:
