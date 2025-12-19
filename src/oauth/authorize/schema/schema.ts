@@ -9,10 +9,11 @@ export * from './grants/implicit.js';
 /**
  * Union(s)
  */
-export const AuthorizationSchema = AuthorizationCodeGrantAuthorizationSchema.or(
-  ImplicitGrantAuthorizationSchema
-);
-export type AuthorizationInput = z.input<typeof AuthorizationSchema>;
-export type Authorization = z.output<typeof AuthorizationSchema>;
+export const AuthorizationGrantSchema =
+  AuthorizationCodeGrantAuthorizationSchema.or(
+    ImplicitGrantAuthorizationSchema
+  );
+export type AuthorizationGrantInput = z.input<typeof AuthorizationGrantSchema>;
+export type AuthorizationGrant = z.output<typeof AuthorizationGrantSchema>;
 
 export { CodeChallengeSchema } from './grants/authorization-code.js';
