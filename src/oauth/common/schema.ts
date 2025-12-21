@@ -1,4 +1,9 @@
 import * as z from 'zod/v4';
+import {
+  SpaceDelimitedStringToArraySchema,
+  StringSetTypeSchema,
+  UniqueStringArraySchema,
+} from '../../common';
 
 export const GrantType = {
   CLIENT_CREDENTIALS: 'client_credentials',
@@ -91,3 +96,11 @@ export const ScopeStringSchema = z
   .min(1)
   .describe('A list of space-delimited, case-sensitive strings.');
 export type ScopeString = z.output<typeof ScopeStringSchema>;
+
+export const ScopeSetSchema = z
+  .union([
+    SpaceDelimitedStringToArraySchema,
+    UniqueStringArraySchema,
+    StringSetTypeSchema,
+  ])
+  .pipe(z.transform((v) => (!v || v instanceof Set ? v : new Set(v))));

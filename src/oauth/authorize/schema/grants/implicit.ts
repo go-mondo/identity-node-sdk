@@ -1,5 +1,6 @@
 import * as z from 'zod/v4';
 import { OptionalSchema, ResponseType } from '../../../common/schema.js';
+import { ExtraGrantSchema } from './common.js';
 
 /**
  * @see https://datatracker.ietf.org/doc/html/rfc6749#section-4.2.1
@@ -29,6 +30,8 @@ export const ImplicitGrantAuthorizationSchema = z.object({
   ...OAuthSchema.shape,
   ...OIDCSchema.shape,
   ...OptionalSchema.shape,
+  // Custom
+  ...ExtraGrantSchema.shape,
 });
 export type ImplicitGrantAuthorizationInput = z.input<
   typeof ImplicitGrantAuthorizationSchema

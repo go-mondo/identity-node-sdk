@@ -1,8 +1,13 @@
 import * as z from 'zod/v4';
 
-const StringSetTypeSchema = z.set(z.string());
+export const StringSetTypeSchema = z.set(z.string());
+export const SpaceDelimitedStringToArraySchema = z
+  .string()
+  .pipe(z.transform((v) => v.split(' ')));
+// const StringToArraySchema = z.string().pipe(z.transform((v) => v.split(' ')));
+
 // const UrlStringSchema = type('string.url[]').pipe((v) => v?.filter((i) => !!i));
-const StringArrayTypeSchema = z
+export const StringArrayTypeSchema = z
   .array(z.string())
   .pipe(z.transform((v) => v?.filter((i) => !!i)));
 

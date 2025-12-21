@@ -6,7 +6,9 @@ import {
   CodeChallengeMethodSchema,
   OptionalSchema,
   ResponseType,
+  ScopeStringSchema,
 } from '../../../common/schema.js';
+import { ExtraGrantSchema } from './common.js';
 
 /**
  * @see https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
@@ -46,11 +48,7 @@ const OAuthSchema = z.object({
   ),
   client_id: AppIdSchema.describe('The Client ID.'),
   redirect_uri: z.url().optional().describe('The callback URL.'),
-  scope: z
-    .string()
-    .min(1)
-    .optional()
-    .describe('Space-delimited scope strings.'),
+  scope: ScopeStringSchema.optional(),
   state: z.string().min(1).optional().describe('Opaque value to prevent CSRF.'),
 });
 
@@ -68,6 +66,8 @@ export const AuthorizationCodeGrantAuthorizationSchema = z
     ...OptionalSchema.shape,
     code_challenge_method: CodeChallengeMethodSchema.optional(),
     code_challenge: CodeChallengeSchema.optional(),
+    // Custom
+    ...ExtraGrantSchema.shape,
   })
   .superRefine((data, ctx) => {
     // If one is present, the other must also be present
