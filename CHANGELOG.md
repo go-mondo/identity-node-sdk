@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.62](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.61...identity-sdk-v0.0.2-beta.62) (2025-12-21)
+
+
+### Bug Fixes
+
+* export scope set ([6d3f5c6](https://github.com/go-mondo/identity-node-sdk/commit/6d3f5c69fc80b5eb4e91a8bca173c7a43a4cd82a))
+
 ## [0.0.2-beta.61](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.60...identity-sdk-v0.0.2-beta.61) (2025-12-21)
 
 
