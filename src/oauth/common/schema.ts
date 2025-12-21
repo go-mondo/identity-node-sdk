@@ -104,3 +104,4 @@ export const ScopeSetSchema = z
     StringSetTypeSchema,
   ])
   .pipe(z.transform((v) => (!v || v instanceof Set ? v : new Set(v))));
+export type ScopeSet = z.output<typeof ScopeSetSchema>;

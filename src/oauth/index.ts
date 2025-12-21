@@ -10,6 +10,7 @@ export {
   OAuthScope,
   OIDCScope,
   ResponseType,
+  ScopeSetSchema,
   ScopeStringSchema,
   type AnyAuthorizationDisplay,
   type AnyAuthorizationPrompt,
@@ -19,6 +20,7 @@ export {
   type AnyOIDCScope,
   type AnyResponseType,
   type AnyScope,
+  type ScopeSet,
   type ScopeString,
 } from './common/schema.js';
 
