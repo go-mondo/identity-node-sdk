@@ -73,3 +73,11 @@ export const TokenSchema = z.object({
 
 export type TokenInput = z.input<typeof TokenSchema>;
 export type Token = z.output<typeof TokenSchema>;
+
+export const ImplicitTokenSchema = z.object({
+  ...TokenSchema.omit({ refresh_token: true, access_token: true }).shape,
+  ...TokenSchema.pick({ access_token: true }).partial().shape,
+});
+
+export type ImplicitTokenInput = z.input<typeof ImplicitTokenSchema>;
+export type ImplicitToken = z.output<typeof ImplicitTokenSchema>;

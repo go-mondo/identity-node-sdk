@@ -3,7 +3,7 @@ import {
   SpaceDelimitedStringToArraySchema,
   StringSetTypeSchema,
   UniqueStringArraySchema,
-} from '../../common';
+} from '../../common/schema/sets.js';
 
 export const GrantType = {
   CLIENT_CREDENTIALS: 'client_credentials',
