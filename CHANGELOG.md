@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.63](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.62...identity-sdk-v0.0.2-beta.63) (2026-02-11)
+
+
+### Bug Fixes
+
+* imports | implicit token ([a361826](https://github.com/go-mondo/identity-node-sdk/commit/a3618269417a068dd8c1bebef3565d491424e0f4))
+
 ## [0.0.2-beta.62](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.61...identity-sdk-v0.0.2-beta.62) (2025-12-21)
 
 
