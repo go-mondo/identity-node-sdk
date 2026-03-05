@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.68](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.67...identity-sdk-v0.0.2-beta.68) (2026-03-05)
+
+
+### Bug Fixes
+
+* add logic to require at least one identifier ([f524f5a](https://github.com/go-mondo/identity-node-sdk/commit/f524f5ac26b5a7524e05caad965e0dcaf748ccda))
+
 ## [0.0.2-beta.67](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.66...identity-sdk-v0.0.2-beta.67) (2026-03-05)
 
 
