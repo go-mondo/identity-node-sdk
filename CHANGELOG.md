@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.64](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.63...identity-sdk-v0.0.2-beta.64) (2026-03-05)
+
+
+### Bug Fixes
+
+* self reg response ([b11c6ec](https://github.com/go-mondo/identity-node-sdk/commit/b11c6ec2452c59c28ea1e6192cae0efcc68b58c7))
+
 ## [0.0.2-beta.63](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.62...identity-sdk-v0.0.2-beta.63) (2026-02-11)
 
 
