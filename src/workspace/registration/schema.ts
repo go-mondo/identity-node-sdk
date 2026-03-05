@@ -25,7 +25,7 @@ const IdentityIdentifierPropertySchema = z.array(
 const AllowSelfRegistrationSchema = z.boolean();
 
 const BaseSchema = z.object({
-  allowSelfRegistration: AllowSelfRegistrationSchema,
+  allowSelfRegistration: AllowSelfRegistrationSchema.default(false),
   identifiers: IdentityIdentifierPropertySchema.default([
     {
       type: IdentityIdentifier.EMAIL,
