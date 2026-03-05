@@ -5,7 +5,7 @@ import {
   DeletedAtPropertyPayloadSchema,
   DeletedAtPropertySchema,
   OptionalDatePayloadSchema,
-  UpdatedAtPropertySchema,
+  OptionalDateSchema,
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
@@ -16,7 +16,7 @@ import { AuthenticationFactorsSchema } from '../factors/schema.js';
 
 export const SettingsSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
-  ...UpdatedAtPropertySchema.shape,
+  updatedAt: OptionalDateSchema,
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
