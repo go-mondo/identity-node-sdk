@@ -134,15 +134,46 @@ export const UserPayloadSchema = UserPayloadSchemaBase.transform((user) => ({
 }));
 export type UserPayload = z.output<typeof UserPayloadSchema>;
 
-export const InsertUserPayloadSchema = z.object({
-  id: UserIdSchema.optional(),
-  status: UserStatusSchema.optional(),
-  ...UserNamePropertiesSchema.shape,
-  ...VerifiedEmailOrPhonePropertiesSchema.shape,
-  ...UnverifiedEmailOrPhonePropertiesSchema.shape,
-  ...UserAssociationsSchema.shape,
-  ...UpsertMetadataPropertyPayloadSchema.shape,
-});
+const requiredEmailOrPhoneMessage =
+  'At least one of verifiedEmail, verifiedPhoneNumber, unverifiedEmail, or unverifiedPhoneNumber is required';
+
+const hasEmailOrPhone = (data: {
+  verifiedEmail?: string;
+  verifiedPhoneNumber?: string;
+  unverifiedEmail?: string;
+  unverifiedPhoneNumber?: string;
+}) =>
+  data.verifiedEmail !== undefined ||
+  data.verifiedPhoneNumber !== undefined ||
+  data.unverifiedEmail !== undefined ||
+  data.unverifiedPhoneNumber !== undefined;
+
+export const InsertUserPayloadSchema = z
+  .object({
+    id: UserIdSchema.optional(),
+    status: UserStatusSchema.optional(),
+    ...UserNamePropertiesSchema.shape,
+    ...VerifiedEmailOrPhonePropertiesSchema.shape,
+    ...UnverifiedEmailOrPhonePropertiesSchema.shape,
+    ...UserAssociationsSchema.shape,
+    ...UpsertMetadataPropertyPayloadSchema.shape,
+  })
+  .refine(hasEmailOrPhone, {
+    message: requiredEmailOrPhoneMessage,
+    path: ['verifiedEmail'],
+  })
+  .refine(hasEmailOrPhone, {
+    message: requiredEmailOrPhoneMessage,
+    path: ['verifiedPhoneNumber'],
+  })
+  .refine(hasEmailOrPhone, {
+    message: requiredEmailOrPhoneMessage,
+    path: ['unverifiedEmail'],
+  })
+  .refine(hasEmailOrPhone, {
+    message: requiredEmailOrPhoneMessage,
+    path: ['unverifiedPhoneNumber'],
+  });
 export type InsertUserInput = z.input<typeof InsertUserPayloadSchema>;
 export type InsertUserPayload = z.output<typeof InsertUserPayloadSchema>;
 

@@ -245,7 +245,7 @@ describe('Customer - User', () => {
       const item = {
         foo: 'bar',
         id: generateUserId(),
-        verifiedPhoneNumber: '123',
+        verifiedPhoneNumber: '+12025551234',
         status: UserStatus.ACTIVE,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -479,7 +479,7 @@ describe('Customer - User', () => {
         foo: 'bar',
         id: generateUserId(),
         familyName: 'Foo',
-        verifiedPhoneNumber: '123',
+        verifiedPhoneNumber: '+12025551234',
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -515,7 +515,7 @@ describe('Customer - User', () => {
       const item = {
         foo: 'bar',
         id: generateUserId(),
-        verifiedPhoneNumber: '123',
+        verifiedPhoneNumber: '+12025551234',
         metadata: new Map(),
       };
 
@@ -560,6 +560,64 @@ describe('Customer - User', () => {
           'rol_2NfYOTzVqhCHgWFzUL0WPfRRuhI',
         ]);
       }
+    });
+
+    test('should reject when no email or phone number is provided', async () => {
+      const item = {
+        id: generateUserId(),
+        familyName: 'Doe',
+      };
+
+      const result = InsertUserPayloadSchema.safeParse(item);
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const paths = result.error.issues.map((issue) => issue.path[0]);
+        expect(paths).toContain('verifiedEmail');
+        expect(paths).toContain('verifiedPhoneNumber');
+        expect(paths).toContain('unverifiedEmail');
+        expect(paths).toContain('unverifiedPhoneNumber');
+      }
+    });
+
+    test('should accept with only verifiedEmail', async () => {
+      const item = {
+        verifiedEmail: 'test@example.com',
+      };
+
+      const result = InsertUserPayloadSchema.safeParse(item);
+
+      expect(result.success).toBe(true);
+    });
+
+    test('should accept with only verifiedPhoneNumber', async () => {
+      const item = {
+        verifiedPhoneNumber: '+12025551234',
+      };
+
+      const result = InsertUserPayloadSchema.safeParse(item);
+
+      expect(result.success).toBe(true);
+    });
+
+    test('should accept with only unverifiedEmail', async () => {
+      const item = {
+        unverifiedEmail: 'test@example.com',
+      };
+
+      const result = InsertUserPayloadSchema.safeParse(item);
+
+      expect(result.success).toBe(true);
+    });
+
+    test('should accept with only unverifiedPhoneNumber', async () => {
+      const item = {
+        unverifiedPhoneNumber: '+12025551234',
+      };
+
+      const result = InsertUserPayloadSchema.safeParse(item);
+
+      expect(result.success).toBe(true);
     });
   });
 
