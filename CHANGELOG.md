@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.67](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.66...identity-sdk-v0.0.2-beta.67) (2026-03-05)
+
+
+### Bug Fixes
+
+* format phone numbers to e164 ([c28dce7](https://github.com/go-mondo/identity-node-sdk/commit/c28dce7cd79b2e300cef50a39d7cde7f9ed005c3))
+
 ## [0.0.2-beta.66](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.65...identity-sdk-v0.0.2-beta.66) (2026-03-05)
 
 
