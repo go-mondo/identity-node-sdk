@@ -66,7 +66,7 @@ export const UserIdPropertySchema = z.object({
 export type UserIdProperty = z.output<typeof UserIdPropertySchema>;
 
 export const RequiredEmailSchema = z.email();
-export const RequiredPhoneNumberSchema = z.string();
+export const RequiredPhoneNumberSchema = z.e164();
 
 export const VerifiedEmailOrPhonePropertiesSchema = z.object({
   verifiedEmail: optionallyNullishToUndefined(RequiredEmailSchema),
