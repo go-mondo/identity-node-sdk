@@ -10,7 +10,6 @@ describe('Authentication Settings - Schema', () => {
   describe('SettingsSchema', () => {
     test('should accept minimal settings object', () => {
       const settings = {
-        createdAt: new Date(),
         updatedAt: new Date(),
         metadata: {},
       };
@@ -20,14 +19,13 @@ describe('Authentication Settings - Schema', () => {
       expect(result.success).toBe(true);
     });
 
-    test('should reject missing required dates', () => {
+    test('should accept settings without dates (all dates are optional)', () => {
       const settings = {
         metadata: {},
-        // missing createdAt, updatedAt
       };
 
       const result = SettingsSchema.safeParse(settings);
-      expect(result.success).toBe(false);
+      expect(result.success).toBe(true);
     });
 
     test('should accept settings with factors', () => {

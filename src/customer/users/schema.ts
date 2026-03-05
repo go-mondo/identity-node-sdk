@@ -69,10 +69,15 @@ export const RequiredEmailSchema = z.email();
 export const RequiredPhoneNumberSchema = z.string();
 
 export const VerifiedEmailOrPhonePropertiesSchema = z.object({
-  email: optionallyNullishToUndefined(RequiredEmailSchema),
-  verifiedEmail: optionallyNullishToUndefined(z.boolean()),
-  phoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
-  verifiedPhoneNumber: optionallyNullishToUndefined(z.boolean()),
+  verifiedEmail: optionallyNullishToUndefined(RequiredEmailSchema),
+  verifiedPhoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
+});
+
+export const UnverifiedEmailOrPhonePropertiesSchema = z.object({
+  unverifiedEmail: optionallyNullishToUndefined(RequiredEmailSchema),
+  unverifiedPhoneNumber: optionallyNullishToUndefined(
+    RequiredPhoneNumberSchema
+  ),
 });
 
 export const EmailOrPhonePropertiesSchema = z.object({
@@ -89,11 +94,12 @@ const BaseSchema = z.object({
   ...UserIdPropertySchema.shape,
   ...UserNamePropertiesSchema.shape,
   ...VerifiedEmailOrPhonePropertiesSchema.shape,
+  ...UnverifiedEmailOrPhonePropertiesSchema.shape,
   status: UserStatusSchema,
   roles: optionallyUndefined(AggregateSchema),
 });
 
-export const UserSchema = z.object({
+const UserSchemaBase = z.object({
   ...BaseSchema.shape,
   lastLogin: OptionalDateSchema,
   ...CreatedAtPropertySchema.shape,
@@ -102,10 +108,16 @@ export const UserSchema = z.object({
   ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
 });
+
+export const UserSchema = UserSchemaBase.transform((user) => ({
+  ...user,
+  email: user.verifiedEmail,
+  phoneNumber: user.verifiedPhoneNumber,
+}));
 export type UserProperties = z.input<typeof UserSchema>;
 export type User = z.output<typeof UserSchema>;
 
-export const UserPayloadSchema = z.object({
+const UserPayloadSchemaBase = z.object({
   ...BaseSchema.shape,
   lastLogin: OptionalDatePayloadSchema,
   ...CreatedAtPropertyPayloadSchema.shape,
@@ -114,6 +126,12 @@ export const UserPayloadSchema = z.object({
   ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
 });
+
+export const UserPayloadSchema = UserPayloadSchemaBase.transform((user) => ({
+  ...user,
+  email: user.verifiedEmail,
+  phoneNumber: user.verifiedPhoneNumber,
+}));
 export type UserPayload = z.output<typeof UserPayloadSchema>;
 
 export const InsertUserPayloadSchema = z.object({
@@ -121,6 +139,7 @@ export const InsertUserPayloadSchema = z.object({
   status: UserStatusSchema.optional(),
   ...UserNamePropertiesSchema.shape,
   ...VerifiedEmailOrPhonePropertiesSchema.shape,
+  ...UnverifiedEmailOrPhonePropertiesSchema.shape,
   ...UserAssociationsSchema.shape,
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
@@ -131,6 +150,7 @@ export const UpdateUserPayloadSchema = z.object({
   suspended: z.boolean().optional(),
   ...UpdateUserNamePropertiesSchema.shape,
   ...VerifiedEmailOrPhonePropertiesSchema.shape,
+  ...UnverifiedEmailOrPhonePropertiesSchema.shape,
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
 export type UpdateUserInput = z.input<typeof UpdateUserPayloadSchema>;
