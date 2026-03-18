@@ -7,12 +7,6 @@ import {
   UpdateEmailStrategyPayloadSchema,
 } from './types/email.js';
 import {
-  InsertPasswordStrategyPayloadSchema,
-  PasswordStrategyPayloadSchema,
-  PasswordStrategySchema,
-  UpdatePasswordStrategyPayloadSchema,
-} from './types/password.js';
-import {
   InsertTOTPStrategyPayloadSchema,
   TOTPStrategyPayloadSchema,
   TOTPStrategySchema,
@@ -23,7 +17,6 @@ import {
  * Union(s)
  */
 export const InsertStrategyPayloadSchema = z.discriminatedUnion('type', [
-  InsertPasswordStrategyPayloadSchema,
   InsertEmailStrategyPayloadSchema,
   InsertTOTPStrategyPayloadSchema,
 ]);
@@ -33,7 +26,6 @@ export type InsertStrategyPayload = z.output<
 >;
 
 export const UpdateStrategyPayloadSchema = z.discriminatedUnion('type', [
-  UpdatePasswordStrategyPayloadSchema,
   UpdateEmailStrategyPayloadSchema,
   UpdateTOTPStrategyPayloadSchema,
 ]);
@@ -43,14 +35,12 @@ export type UpdateStrategyPayload = z.output<
 >;
 
 export const StrategyPayloadSchema = z.discriminatedUnion('type', [
-  PasswordStrategyPayloadSchema,
   EmailStrategyPayloadSchema,
   TOTPStrategyPayloadSchema,
 ]);
 export type StrategyPayload = z.input<typeof StrategyPayloadSchema>;
 
 export const StrategySchema = z.discriminatedUnion('type', [
-  PasswordStrategySchema,
   EmailStrategySchema,
   TOTPStrategySchema,
 ]);
@@ -73,5 +63,4 @@ export {
   type StrategyIdProperty,
 } from './base.js';
 export * from './types/email.js';
-export * from './types/password.js';
 export * from './types/totp.js';

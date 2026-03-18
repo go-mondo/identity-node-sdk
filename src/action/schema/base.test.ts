@@ -1,17 +1,16 @@
 import { describe, expect, test } from 'vitest';
 import {
-  ActionOperation,
-  ActionIdSchema,
   ActionIdPropertySchema,
-  OperationSchema,
+  ActionIdSchema,
+  ActionOperation,
   BasePayloadSchema,
+  OperationSchema,
 } from './base.js';
 import { generateActionId } from './utils.js';
 
 describe('Action Schema - Base', () => {
   describe('ActionOperation constants', () => {
     test('should have correct operation values', () => {
-      expect(ActionOperation.SET_PASSWORD).toBe('set-password');
       expect(ActionOperation.USER_ATTRIBUTE_VERIFICATION).toBe(
         'user-attribute-verification'
       );

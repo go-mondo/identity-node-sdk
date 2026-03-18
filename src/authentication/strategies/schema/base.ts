@@ -18,7 +18,6 @@ import { Model } from '../../utils.js';
 
 export const StrategyType = {
   EMAIL: 'email',
-  PASSWORD: 'password',
   TOTP: 'totp',
 } as const;
 
@@ -46,7 +45,6 @@ export const StrategyStatusSchema = z.enum([
 ] as const);
 export const StrategyTypeSchema = z.enum([
   StrategyType.EMAIL,
-  StrategyType.PASSWORD,
   StrategyType.TOTP,
 ] as const);
 export const StrategyLabelSchema = z.string();

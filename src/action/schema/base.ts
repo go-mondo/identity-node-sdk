@@ -10,8 +10,6 @@ import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
 import { Model } from './utils.js';
 
 export const ActionOperation = {
-  SET_PASSWORD: 'set-password',
-
   USER_ATTRIBUTE_VERIFICATION: 'user-attribute-verification',
 
   SIGN_UP: 'sign-up',
@@ -32,7 +30,6 @@ export type ActionIdProperty = z.output<typeof ActionIdPropertySchema>;
 export const OperationSchema = z.enum([
   ActionOperation.SIGN_UP,
   ActionOperation.SIGN_UP_VERIFICATION,
-  ActionOperation.SET_PASSWORD,
   ActionOperation.USER_ATTRIBUTE_VERIFICATION,
 ] as const);
 

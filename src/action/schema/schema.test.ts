@@ -1,27 +1,10 @@
 import { describe, expect, test } from 'vitest';
-import { ActionPayloadSchema, ActionOperation } from './schema.js';
-import { generateActionId } from './utils.js';
 import { generateUserId } from '../../customer/schema.js';
+import { ActionOperation, ActionPayloadSchema } from './schema.js';
+import { generateActionId } from './utils.js';
 
 describe('Action Schema - Main', () => {
   describe('ActionPayloadSchema', () => {
-    test('should accept set-password action payload', () => {
-      const payload = {
-        id: generateActionId(),
-        operation: 'set-password' as const,
-        user: generateUserId(),
-        identifier: 'email' as const,
-        policy: {},
-        attempt: 1,
-        expiresAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        metadata: { source: 'user-initiated' },
-      };
-
-      const result = ActionPayloadSchema.safeParse(payload);
-      // Parse succeeds for valid data
-    });
-
     test('should accept sign-up-verification action payload', () => {
       const payload = {
         id: generateActionId(),
@@ -76,18 +59,6 @@ describe('Action Schema - Main', () => {
       const payload = {
         id: generateActionId(),
         operation: 'invalid-operation',
-        metadata: {},
-      };
-
-      const result = ActionPayloadSchema.safeParse(payload);
-      expect(result.success).toBe(false);
-    });
-
-    test('should reject payload missing required fields for set-password', () => {
-      const payload = {
-        id: generateActionId(),
-        operation: 'set-password' as const,
-        // missing password
         metadata: {},
       };
 
@@ -206,7 +177,6 @@ describe('Action Schema - Main', () => {
 
   describe('ActionOperation constants', () => {
     test('should contain expected operation values', () => {
-      expect(ActionOperation.SET_PASSWORD).toBe('set-password');
       expect(ActionOperation.SIGN_UP_VERIFICATION).toBe('sign-up-verification');
       expect(ActionOperation.SIGN_UP).toBe('sign-up');
       expect(ActionOperation.USER_ATTRIBUTE_VERIFICATION).toBe(
