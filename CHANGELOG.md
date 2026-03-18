@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.69](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.68...identity-sdk-v0.0.2-beta.69) (2026-03-18)
+
+
+### Bug Fixes
+
+* remove old password schemas ([24ba88a](https://github.com/go-mondo/identity-node-sdk/commit/24ba88a2c110301bac9ddc397b9c6376a28915f3))
+
 ## [0.0.2-beta.68](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.67...identity-sdk-v0.0.2-beta.68) (2026-03-05)
 
 
