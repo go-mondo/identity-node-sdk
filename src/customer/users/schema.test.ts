@@ -610,7 +610,7 @@ describe('Customer - User', () => {
       const item = {
         unverifiedEmail: 'test@example.com',
         verifiedEmail: true,
-        unverifiedPhoneNumber: undefined,
+        unverifiedPhoneNumber: null,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -618,7 +618,7 @@ describe('Customer - User', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.unverifiedEmail).toBe('test@example.com');
-        expect(result.data.unverifiedPhoneNumber).toBeUndefined();
+        expect(result.data.unverifiedPhoneNumber).toBeNull();
         expect(result.data.verifiedEmail).toBe(true);
         expect(result.data.verifiedPhoneNumber).toBeUndefined();
       }
@@ -626,7 +626,7 @@ describe('Customer - User', () => {
 
     test('should succeed with only unverifiedPhoneNumber', async () => {
       const item = {
-        unverifiedEmail: undefined,
+        unverifiedEmail: null,
         unverifiedPhoneNumber: '+12025551234',
         verifiedPhoneNumber: true,
       };
@@ -636,7 +636,7 @@ describe('Customer - User', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.unverifiedPhoneNumber).toBe('+12025551234');
-        expect(result.data.unverifiedEmail).toBeUndefined();
+        expect(result.data.unverifiedEmail).toBeNull();
         expect(result.data.verifiedEmail).toBeUndefined();
         expect(result.data.verifiedPhoneNumber).toBe(true);
       }

@@ -80,6 +80,11 @@ export const UnverifiedEmailOrPhonePropertiesSchema = z.object({
   ),
 });
 
+const UpsertUnverifiedEmailOrPhonePropertiesSchema = z.object({
+  unverifiedEmail: optionallyNullish(RequiredEmailSchema),
+  unverifiedPhoneNumber: optionallyNullish(RequiredPhoneNumberSchema),
+});
+
 export const EmailOrPhonePropertiesSchema = z.object({
   email: optionallyNullishToUndefined(RequiredEmailSchema),
   phoneNumber: optionallyNullishToUndefined(RequiredPhoneNumberSchema),
@@ -140,13 +145,13 @@ const requiredEmailOrPhoneMessage =
 const hasEmailOrPhone = (data: {
   verifiedEmail?: boolean;
   verifiedPhoneNumber?: boolean;
-  unverifiedEmail?: string;
-  unverifiedPhoneNumber?: string;
+  unverifiedEmail?: string | null;
+  unverifiedPhoneNumber?: string | null;
 }) =>
   data.verifiedEmail !== undefined ||
   data.verifiedPhoneNumber !== undefined ||
-  data.unverifiedEmail !== undefined ||
-  data.unverifiedPhoneNumber !== undefined;
+  data.unverifiedEmail != null ||
+  data.unverifiedPhoneNumber != null;
 
 export const InsertUserPayloadSchema = z
   .object({
@@ -155,7 +160,7 @@ export const InsertUserPayloadSchema = z
     ...UserNamePropertiesSchema.shape,
     verifiedEmail: optionallyNullishToUndefined(z.boolean()),
     verifiedPhoneNumber: optionallyNullishToUndefined(z.boolean()),
-    ...UnverifiedEmailOrPhonePropertiesSchema.shape,
+    ...UpsertUnverifiedEmailOrPhonePropertiesSchema.shape,
     ...UserAssociationsSchema.shape,
     ...UpsertMetadataPropertyPayloadSchema.shape,
   })
@@ -182,7 +187,7 @@ export const UpdateUserPayloadSchema = z.object({
   suspended: z.boolean().optional(),
   ...UpdateUserNamePropertiesSchema.shape,
   ...VerifiedEmailOrPhonePropertiesSchema.shape,
-  ...UnverifiedEmailOrPhonePropertiesSchema.shape,
+  ...UpsertUnverifiedEmailOrPhonePropertiesSchema.shape,
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
 export type UpdateUserInput = z.input<typeof UpdateUserPayloadSchema>;
