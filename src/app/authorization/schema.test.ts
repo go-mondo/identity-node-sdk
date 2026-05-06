@@ -11,7 +11,7 @@ describe('App Authorization - Schema', () => {
       const authorization = {
         refreshTokenDuration: 3600,
         accessTokenDuration: 900,
-        accessTokenSignatureAlgorithm: 'HS256' as const,
+        accessTokenSignatureAlgorithm: 'RS256' as const,
         loginUri: 'https://app.example.com/login',
         callbackUrls: [
           'https://app.example.com/callback',
@@ -174,12 +174,27 @@ describe('App Authorization - Schema', () => {
       expect(result.success).toBe(false);
     });
 
-    test('should reject null values for removable fields', () => {
+    test('should transform null removable fields to undefined', () => {
       const authorization = {
         loginUri: null,
         refreshTokenDuration: null,
         accessTokenDuration: null,
         accessTokenSignatureAlgorithm: null,
+        metadata: {},
+      };
+
+      const result = AuthorizationSchema.safeParse(authorization);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.loginUri).toBeUndefined();
+        expect(result.data.refreshTokenDuration).toBeUndefined();
+        expect(result.data.accessTokenDuration).toBeUndefined();
+        expect(result.data.accessTokenSignatureAlgorithm).toBeUndefined();
+      }
+    });
+
+    test('should reject null values for non-removable fields', () => {
+      const authorization = {
         defaultAudience: null,
         metadata: {},
       };
@@ -194,7 +209,7 @@ describe('App Authorization - Schema', () => {
       const payload = {
         refreshTokenDuration: 3600,
         accessTokenDuration: 900,
-        accessTokenSignatureAlgorithm: 'HS256' as const,
+        accessTokenSignatureAlgorithm: 'RS256' as const,
         loginUri: 'https://app.example.com/login',
         callbackUrls: ['https://app.example.com/callback'],
         availableAudiences: ['api.example.com'],
@@ -331,6 +346,25 @@ describe('App Authorization - Schema', () => {
       const result = AuthorizationPayloadSchema.safeParse(payload);
       expect(result.success).toBe(false);
     });
+
+    test('should transform null removable fields to undefined', () => {
+      const payload = {
+        loginUri: null,
+        refreshTokenDuration: null,
+        accessTokenDuration: null,
+        accessTokenSignatureAlgorithm: null,
+        metadata: {},
+      };
+
+      const result = AuthorizationPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.loginUri).toBeUndefined();
+        expect(result.data.refreshTokenDuration).toBeUndefined();
+        expect(result.data.accessTokenDuration).toBeUndefined();
+        expect(result.data.accessTokenSignatureAlgorithm).toBeUndefined();
+      }
+    });
   });
 
   describe('UpsertAuthorizationPayloadSchema', () => {
@@ -338,7 +372,7 @@ describe('App Authorization - Schema', () => {
       const payload = {
         refreshTokenDuration: 3600,
         accessTokenDuration: 900,
-        accessTokenSignatureAlgorithm: 'HS256' as const,
+        accessTokenSignatureAlgorithm: 'RS256' as const,
         loginUri: 'https://updated.example.com/login',
         callbackUrls: ['https://updated.example.com/callback'],
         availableAudiences: ['updated-api.example.com'],

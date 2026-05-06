@@ -13,6 +13,7 @@ import {
   MetadataPayloadPropertySchema,
   UpsertMetadataPropertyPayloadSchema,
 } from '../../common/schema/metadata.js';
+import { optionallyNullishToUndefined } from '../../common/schema/schema.js';
 import {
   UniqueStringArraySchema,
   UniqueStringSetSchema,
@@ -20,7 +21,6 @@ import {
 import {
   UniqueWebUrlObjectSetSchema,
   UniqueWebUrlStringArraySchema,
-  WebUrlObjectSchema,
   WebUrlStringSchema,
 } from '../../common/schema/url.js';
 import { type AnyGrantType, GrantType } from '../../oauth/common/schema.js';
@@ -46,14 +46,14 @@ const AvailableGrantArraySchema = z
   .pipe(z.transform((v) => (v instanceof Set ? Array.from(v.values()) : v)));
 
 const BaseAuthorization = z.object({
-  refreshTokenDuration: z.number().optional(),
-  accessTokenDuration: z.number().optional(),
-  accessTokenSignatureAlgorithm: AlgorithmSchema.optional(),
+  refreshTokenDuration: optionallyNullishToUndefined(z.number()),
+  accessTokenDuration: optionallyNullishToUndefined(z.number()),
+  accessTokenSignatureAlgorithm: optionallyNullishToUndefined(AlgorithmSchema),
+  loginUri: optionallyNullishToUndefined(WebUrlStringSchema),
 });
 
 export const AuthorizationSchema = z.object({
   ...BaseAuthorization.shape,
-  loginUri: z.union([WebUrlObjectSchema, z.undefined()]).optional(),
   callbackUrls: UniqueWebUrlObjectSetSchema.optional(),
   availableAudiences: AudienceSetSchema.optional(),
   availableGrants: AvailableGrantSetSchema.optional(),
@@ -68,7 +68,6 @@ export type Authorization = z.output<typeof AuthorizationSchema>;
 
 export const AuthorizationPayloadSchema = z.object({
   ...BaseAuthorization.shape,
-  loginUri: z.union([WebUrlStringSchema, z.undefined()]).optional(),
   callbackUrls: UniqueWebUrlStringArraySchema.optional(),
   availableAudiences: AudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
