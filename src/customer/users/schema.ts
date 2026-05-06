@@ -138,8 +138,8 @@ const requiredEmailOrPhoneMessage =
   'At least one of verifiedEmail, verifiedPhoneNumber, unverifiedEmail, or unverifiedPhoneNumber is required';
 
 const hasEmailOrPhone = (data: {
-  verifiedEmail?: string;
-  verifiedPhoneNumber?: string;
+  verifiedEmail?: boolean;
+  verifiedPhoneNumber?: boolean;
   unverifiedEmail?: string;
   unverifiedPhoneNumber?: string;
 }) =>
@@ -153,7 +153,8 @@ export const InsertUserPayloadSchema = z
     id: UserIdSchema.optional(),
     status: UserStatusSchema.optional(),
     ...UserNamePropertiesSchema.shape,
-    ...VerifiedEmailOrPhonePropertiesSchema.shape,
+    verifiedEmail: optionallyNullishToUndefined(z.boolean()),
+    verifiedPhoneNumber: optionallyNullishToUndefined(z.boolean()),
     ...UnverifiedEmailOrPhonePropertiesSchema.shape,
     ...UserAssociationsSchema.shape,
     ...UpsertMetadataPropertyPayloadSchema.shape,

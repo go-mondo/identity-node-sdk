@@ -1,19 +1,19 @@
 import { describe, expect, test } from 'vitest';
 import { generateUserId } from '../schema.js';
 import {
+  EmailOrPhonePropertiesSchema,
   InsertUserPayloadSchema,
+  UnverifiedEmailOrPhonePropertiesSchema,
+  UpdateUserNamePropertiesSchema,
   UpdateUserPayloadSchema,
+  UserAssociationReferenceSchema,
+  UserNamePropertiesSchema,
   UserPayloadSchema,
   UserSchema,
   UserStatus,
   UserStatusSchema,
-  VerifiedEmailOrPhonePropertiesSchema,
-  UnverifiedEmailOrPhonePropertiesSchema,
   VerifiableAttribute,
-  UserNamePropertiesSchema,
-  UpdateUserNamePropertiesSchema,
-  EmailOrPhonePropertiesSchema,
-  UserAssociationReferenceSchema,
+  VerifiedEmailOrPhonePropertiesSchema,
 } from './schema.js';
 
 describe('Customer - User', () => {
@@ -479,7 +479,7 @@ describe('Customer - User', () => {
         foo: 'bar',
         id: generateUserId(),
         familyName: 'Foo',
-        verifiedPhoneNumber: '+12025551234',
+        verifiedPhoneNumber: true,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -494,9 +494,9 @@ describe('Customer - User', () => {
     test('should parse with all verified and unverified email/phone properties', async () => {
       const item = {
         id: generateUserId(),
-        verifiedEmail: 'verified@example.com',
+        verifiedEmail: true,
         unverifiedEmail: 'pending@example.com',
-        verifiedPhoneNumber: '+1234567890',
+        verifiedPhoneNumber: true,
         unverifiedPhoneNumber: '+0987654321',
       };
 
@@ -504,9 +504,9 @@ describe('Customer - User', () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.verifiedEmail).toBe('verified@example.com');
+        expect(result.data.verifiedEmail).toBe(true);
         expect(result.data.unverifiedEmail).toBe('pending@example.com');
-        expect(result.data.verifiedPhoneNumber).toBe('+1234567890');
+        expect(result.data.verifiedPhoneNumber).toBe(true);
         expect(result.data.unverifiedPhoneNumber).toBe('+0987654321');
       }
     });
@@ -515,7 +515,7 @@ describe('Customer - User', () => {
       const item = {
         foo: 'bar',
         id: generateUserId(),
-        verifiedPhoneNumber: '+12025551234',
+        verifiedPhoneNumber: true,
         metadata: new Map(),
       };
 
@@ -529,7 +529,7 @@ describe('Customer - User', () => {
 
     test('should allow optional id and status', async () => {
       const item = {
-        verifiedEmail: 'test@example.com',
+        verifiedEmail: true,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -544,7 +544,7 @@ describe('Customer - User', () => {
     test('should parse with roles association', async () => {
       const item = {
         id: generateUserId(),
-        verifiedEmail: 'test@example.com',
+        verifiedEmail: true,
         roles: [
           'rol_2NfYOTzVqhCHgWFzUL0WPfRRuhH',
           'rol_2NfYOTzVqhCHgWFzUL0WPfRRuhI',
@@ -582,42 +582,64 @@ describe('Customer - User', () => {
 
     test('should accept with only verifiedEmail', async () => {
       const item = {
-        verifiedEmail: 'test@example.com',
+        verifiedEmail: true,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
 
       expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.verifiedEmail).toBe(true);
+      }
     });
 
     test('should accept with only verifiedPhoneNumber', async () => {
       const item = {
-        verifiedPhoneNumber: '+12025551234',
+        verifiedPhoneNumber: true,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
 
       expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.verifiedPhoneNumber).toBe(true);
+      }
     });
 
-    test('should accept with only unverifiedEmail', async () => {
+    test('should succeed with only unverifiedEmail', async () => {
       const item = {
         unverifiedEmail: 'test@example.com',
+        verifiedEmail: true,
+        unverifiedPhoneNumber: undefined,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
 
       expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.unverifiedEmail).toBe('test@example.com');
+        expect(result.data.unverifiedPhoneNumber).toBeUndefined();
+        expect(result.data.verifiedEmail).toBe(true);
+        expect(result.data.verifiedPhoneNumber).toBeUndefined();
+      }
     });
 
-    test('should accept with only unverifiedPhoneNumber', async () => {
+    test('should succeed with only unverifiedPhoneNumber', async () => {
       const item = {
+        unverifiedEmail: undefined,
         unverifiedPhoneNumber: '+12025551234',
+        verifiedPhoneNumber: true,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
 
       expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.unverifiedPhoneNumber).toBe('+12025551234');
+        expect(result.data.unverifiedEmail).toBeUndefined();
+        expect(result.data.verifiedEmail).toBeUndefined();
+        expect(result.data.verifiedPhoneNumber).toBe(true);
+      }
     });
   });
 
