@@ -90,7 +90,7 @@ export async function insertApp(
     await postItemWithAuthorization(
       new URL(AppResources.buildPath(), instance.config.host),
       instance.authorizer,
-      InsertAppPayloadSchema.parse
+      InsertAppPayloadSchema.parse(item)
     )
   );
 }
