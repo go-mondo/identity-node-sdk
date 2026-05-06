@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.74](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.73...identity-sdk-v0.0.2-beta.74) (2026-05-06)
+
+
+### Bug Fixes
+
+* accept null values ([7c493d3](https://github.com/go-mondo/identity-node-sdk/commit/7c493d37979c106b619d67d962b3fc007af15287))
+
 ## [0.0.2-beta.73](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.72...identity-sdk-v0.0.2-beta.73) (2026-05-06)
 
 
