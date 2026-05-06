@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.73](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.72...identity-sdk-v0.0.2-beta.73) (2026-05-06)
+
+
+### Bug Fixes
+
+* user insert schema verified attributes ([6ec4826](https://github.com/go-mondo/identity-node-sdk/commit/6ec48269a59f5ba6f3647ba40fdb74479ee3c83f))
+
 ## [0.0.2-beta.72](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.71...identity-sdk-v0.0.2-beta.72) (2026-05-06)
 
 
