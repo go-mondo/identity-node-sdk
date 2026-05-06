@@ -4,9 +4,6 @@ import * as z from 'zod/v4';
  * Ref: https://datatracker.ietf.org/doc/html/rfc7518#section-3.1
  */
 export const Algorithm = {
-  HS256: 'HS256',
-  HS384: 'HS384',
-  HS512: 'HS512',
   RS256: 'RS256',
   RS384: 'RS384',
   RS512: 'RS512',

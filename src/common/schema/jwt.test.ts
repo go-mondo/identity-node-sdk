@@ -4,9 +4,6 @@ import { Algorithm, AlgorithmSchema } from './jwt.js';
 describe('Common Schema - JWT', () => {
   describe('Algorithm constants', () => {
     test('should have correct algorithm values', () => {
-      expect(Algorithm.HS256).toBe('HS256');
-      expect(Algorithm.HS384).toBe('HS384');
-      expect(Algorithm.HS512).toBe('HS512');
       expect(Algorithm.RS256).toBe('RS256');
       expect(Algorithm.RS384).toBe('RS384');
       expect(Algorithm.RS512).toBe('RS512');
@@ -20,12 +17,6 @@ describe('Common Schema - JWT', () => {
   });
 
   describe('AlgorithmSchema', () => {
-    test('should accept valid HMAC algorithms', () => {
-      expect(AlgorithmSchema.safeParse('HS256').success).toBe(true);
-      expect(AlgorithmSchema.safeParse('HS384').success).toBe(true);
-      expect(AlgorithmSchema.safeParse('HS512').success).toBe(true);
-    });
-
     test('should accept valid RSA algorithms', () => {
       expect(AlgorithmSchema.safeParse('RS256').success).toBe(true);
       expect(AlgorithmSchema.safeParse('RS384').success).toBe(true);
