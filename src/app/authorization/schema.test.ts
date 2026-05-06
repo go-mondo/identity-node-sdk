@@ -173,6 +173,20 @@ describe('App Authorization - Schema', () => {
       const result = AuthorizationSchema.safeParse(authorization);
       expect(result.success).toBe(false);
     });
+
+    test('should reject null values for removable fields', () => {
+      const authorization = {
+        loginUri: null,
+        refreshTokenDuration: null,
+        accessTokenDuration: null,
+        accessTokenSignatureAlgorithm: null,
+        defaultAudience: null,
+        metadata: {},
+      };
+
+      const result = AuthorizationSchema.safeParse(authorization);
+      expect(result.success).toBe(false);
+    });
   });
 
   describe('AuthorizationPayloadSchema', () => {
@@ -378,6 +392,23 @@ describe('App Authorization - Schema', () => {
         defaultAudience: undefined,
         metadata: {
           reset_fields: 'loginUri',
+        },
+      };
+
+      const result = UpsertAuthorizationPayloadSchema.safeParse(payload);
+      expect(result.success).toBe(true);
+    });
+
+    test('should accept upsert with null values for removable fields', () => {
+      const payload = {
+        loginUri: null,
+        refreshTokenDuration: null,
+        accessTokenDuration: null,
+        accessTokenSignatureAlgorithm: null,
+        defaultAudience: null,
+        metadata: {
+          reset_fields:
+            'loginUri,refreshTokenDuration,accessTokenDuration,accessTokenSignatureAlgorithm,defaultAudience',
         },
       };
 

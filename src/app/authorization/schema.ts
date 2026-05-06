@@ -81,12 +81,14 @@ export const AuthorizationPayloadSchema = z.object({
 export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;
 
 export const UpsertAuthorizationPayloadSchema = z.object({
-  ...BaseAuthorization.shape,
-  loginUri: z.union([WebUrlStringSchema, z.undefined()]).optional(),
+  loginUri: z.union([WebUrlStringSchema, z.null(), z.undefined()]).optional(),
+  refreshTokenDuration: z.number().nullish(),
+  accessTokenDuration: z.number().nullish(),
+  accessTokenSignatureAlgorithm: AlgorithmSchema.nullish(),
   callbackUrls: UniqueWebUrlStringArraySchema.optional(),
   availableAudiences: AudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
-  defaultAudience: z.union([z.string(), z.undefined()]).optional(),
+  defaultAudience: z.union([z.string(), z.null(), z.undefined()]).optional(),
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
 export type UpsertAuthorizationInput = z.input<
