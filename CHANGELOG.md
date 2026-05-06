@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.77](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.76...identity-sdk-v0.0.2-beta.77) (2026-05-06)
+
+
+### Bug Fixes
+
+* authorization result schema ([549f07b](https://github.com/go-mondo/identity-node-sdk/commit/549f07b9b971cbd9a4e156b8baa8f86ed5c57963))
+
 ## [0.0.2-beta.76](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.75...identity-sdk-v0.0.2-beta.76) (2026-05-06)
 
 
