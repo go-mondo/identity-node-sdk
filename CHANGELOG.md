@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.76](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.75...identity-sdk-v0.0.2-beta.76) (2026-05-06)
+
+
+### Bug Fixes
+
+* allow null auth values for removal ([067e3e9](https://github.com/go-mondo/identity-node-sdk/commit/067e3e9404506dbf1f9548d879523bf58b1480ba))
+
 ## [0.0.2-beta.75](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.74...identity-sdk-v0.0.2-beta.75) (2026-05-06)
 
 
