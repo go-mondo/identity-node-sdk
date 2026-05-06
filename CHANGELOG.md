@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.72](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.71...identity-sdk-v0.0.2-beta.72) (2026-05-06)
+
+
+### Bug Fixes
+
+* issue w/ insertApp ([20fe453](https://github.com/go-mondo/identity-node-sdk/commit/20fe4537192204c6640ca13705e25d29bc37ce7c))
+
 ## [0.0.2-beta.71](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.70...identity-sdk-v0.0.2-beta.71) (2026-03-18)
 
 
