@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.75](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.74...identity-sdk-v0.0.2-beta.75) (2026-05-06)
+
+
+### Bug Fixes
+
+* remove symmetric algos ([e020d2c](https://github.com/go-mondo/identity-node-sdk/commit/e020d2c2e917a2fc49761731abb96bfdf067132d))
+
 ## [0.0.2-beta.74](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.73...identity-sdk-v0.0.2-beta.74) (2026-05-06)
 
 
