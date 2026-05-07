@@ -86,7 +86,7 @@ const SessionAuthenticationFactorHistorySetSchema =
 
 const RedirectPathSchema = z
   .string()
-  .regex(/^\/[a-zA-Z0-9\-\._~%!$&'()*+,;=:@\/]*$/, {
+  .regex(/^\/[a-zA-Z0-9\-\._~%!$&'()*+,;=:@\/?]*$/, {
     message: 'Must be a valid relative path starting with /',
   })
   .default('/');
