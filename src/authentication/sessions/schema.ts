@@ -16,6 +16,7 @@ import {
   MetadataMapPropertySchema,
   MetadataPayloadPropertySchema,
 } from '../../common/schema/metadata.js';
+import { RelativeUrlPathSchema } from '../../common/schema/url.js';
 import { UserIdSchema } from '../../customer/schema.js';
 import {
   StrategyIdSchema,
@@ -84,12 +85,6 @@ const SessionAuthenticationFactorHistorySetSchema =
 //   typeof SessionAuthenticationFactorHistorySetSchema
 // >;
 
-export const SessionRedirectPathSchema = z
-  .string()
-  .regex(/^\/[a-zA-Z0-9\-\._~%!$&'()*+,;=:@\/?]*$/, {
-    message: 'Must be a valid relative path starting with /',
-  });
-
 const BaseSchema = z.object({
   ...SessionIdPropertySchema.shape,
   status: SessionStatusSchema,
@@ -108,7 +103,7 @@ export const SessionSchema = z.object({
   ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
   factorHistory: SessionAuthenticationFactorHistorySetSchema,
-  redirectPath: SessionRedirectPathSchema.default('/'),
+  redirectPath: RelativeUrlPathSchema.default('/'),
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
@@ -121,7 +116,7 @@ export const SessionPayloadSchema = z.object({
   expiresAt: RequiredDatePayloadSchema,
   ...CreatedAtPropertyPayloadSchema.shape,
   ...UpdatedAtPropertyPayloadSchema.shape,
-  redirectPath: SessionRedirectPathSchema.default('/'),
+  redirectPath: RelativeUrlPathSchema.default('/'),
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,

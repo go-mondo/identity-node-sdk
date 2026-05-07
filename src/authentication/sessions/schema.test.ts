@@ -59,6 +59,15 @@ describe('Authentication Sessions - Schema', () => {
       expect(result.success).toBe(false);
     });
 
+    test('should reject paths that start with a double slash', () => {
+      const result = SessionSchema.safeParse({
+        ...baseSession,
+        redirectPath: '//example.com/oauth/authorize?client_id=123',
+      });
+
+      expect(result.success).toBe(false);
+    });
+
     test('should reject paths that do not start with slash', () => {
       const result = SessionSchema.safeParse({
         ...baseSession,

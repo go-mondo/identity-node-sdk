@@ -1,7 +1,25 @@
 import { describe, expect, test } from 'vitest';
-import { appendSearchParams } from './url.js';
+import { RelativeUrlPathSchema, appendSearchParams } from './url.js';
 
 describe('Common Schema - URL', () => {
+  describe('RelativeUrlPathSchema', () => {
+    test('should accept a relative path with query parameters', () => {
+      const result = RelativeUrlPathSchema.safeParse(
+        '/oauth/authorize?client_id=123'
+      );
+
+      expect(result.success).toBe(true);
+    });
+
+    test('should reject paths that start with a double slash', () => {
+      const result = RelativeUrlPathSchema.safeParse(
+        '//example.com/oauth/authorize?client_id=123'
+      );
+
+      expect(result.success).toBe(false);
+    });
+  });
+
   describe('appendSearchParams', () => {
     test('should append search params from Map to path', () => {
       const params = new Map([

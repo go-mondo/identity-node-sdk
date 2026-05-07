@@ -15,6 +15,13 @@ export function appendSearchParams(
   return [path, vals.filter(Boolean).join('&')].filter(Boolean).join('?');
 }
 
+export const RelativeUrlPathSchema = z
+  .string()
+  .regex(/^\/(?!\/)[a-zA-Z0-9\-\._~%!$&'()*+,;=:@\/?]*$/, {
+    message: 'Must be a valid relative path starting with /',
+  });
+export type RelativeUrlPath = z.output<typeof RelativeUrlPathSchema>;
+
 const WebUrlString = z.url({
   protocol: /^https?$/,
   hostname:
