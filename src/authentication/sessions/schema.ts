@@ -84,12 +84,11 @@ const SessionAuthenticationFactorHistorySetSchema =
 //   typeof SessionAuthenticationFactorHistorySetSchema
 // >;
 
-const RedirectPathSchema = z
+export const SessionRedirectPathSchema = z
   .string()
   .regex(/^\/[a-zA-Z0-9\-\._~%!$&'()*+,;=:@\/?]*$/, {
     message: 'Must be a valid relative path starting with /',
-  })
-  .default('/');
+  });
 
 const BaseSchema = z.object({
   ...SessionIdPropertySchema.shape,
@@ -109,7 +108,7 @@ export const SessionSchema = z.object({
   ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
   factorHistory: SessionAuthenticationFactorHistorySetSchema,
-  redirectPath: RedirectPathSchema,
+  redirectPath: SessionRedirectPathSchema.default('/'),
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
@@ -122,7 +121,7 @@ export const SessionPayloadSchema = z.object({
   expiresAt: RequiredDatePayloadSchema,
   ...CreatedAtPropertyPayloadSchema.shape,
   ...UpdatedAtPropertyPayloadSchema.shape,
-  redirectPath: RedirectPathSchema,
+  redirectPath: SessionRedirectPathSchema.default('/'),
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
