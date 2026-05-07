@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.80](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.79...identity-sdk-v0.0.2-beta.80) (2026-05-07)
+
+
+### Bug Fixes
+
+* correct session redirectPath regex ([516761a](https://github.com/go-mondo/identity-node-sdk/commit/516761a704b597a53d7d372618a68e34e880f3c9))
+
 ## [0.0.2-beta.79](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.78...identity-sdk-v0.0.2-beta.79) (2026-05-07)
 
 
