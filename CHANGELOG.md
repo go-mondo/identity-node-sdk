@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.81](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.80...identity-sdk-v0.0.2-beta.81) (2026-05-07)
+
+
+### Bug Fixes
+
+* export redirect path schema ([f8f7f67](https://github.com/go-mondo/identity-node-sdk/commit/f8f7f67cb1ae1ac63d7511a5f2511ca18fe1b35d))
+
 ## [0.0.2-beta.80](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.79...identity-sdk-v0.0.2-beta.80) (2026-05-07)
 
 
