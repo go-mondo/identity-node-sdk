@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.79](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.78...identity-sdk-v0.0.2-beta.79) (2026-05-07)
+
+
+### Bug Fixes
+
+* use redirect path ov ([45203a6](https://github.com/go-mondo/identity-node-sdk/commit/45203a6c2ba920edfa3d757f0ddd9d7607cc3285))
+
 ## [0.0.2-beta.78](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.77...identity-sdk-v0.0.2-beta.78) (2026-05-07)
 
 
