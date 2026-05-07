@@ -84,6 +84,13 @@ const SessionAuthenticationFactorHistorySetSchema =
 //   typeof SessionAuthenticationFactorHistorySetSchema
 // >;
 
+const RedirectPathSchema = z
+  .string()
+  .regex(/^\/[a-zA-Z0-9\-\._~%!$&'()*+,;=:@\/]*$/, {
+    message: 'Must be a valid relative path starting with /',
+  })
+  .default('/');
+
 const BaseSchema = z.object({
   ...SessionIdPropertySchema.shape,
   status: SessionStatusSchema,
@@ -102,10 +109,7 @@ export const SessionSchema = z.object({
   ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
   factorHistory: SessionAuthenticationFactorHistorySetSchema,
-  redirectTo: z
-    .union([z.string(), z.instanceof(URL)])
-    .pipe(z.transform((v) => (!v || v instanceof URL ? v : new URL(v))))
-    .optional(),
+  redirectPath: RedirectPathSchema,
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,
   ...MetadataMapPropertySchema.shape,
@@ -118,10 +122,7 @@ export const SessionPayloadSchema = z.object({
   expiresAt: RequiredDatePayloadSchema,
   ...CreatedAtPropertyPayloadSchema.shape,
   ...UpdatedAtPropertyPayloadSchema.shape,
-  redirectTo: z
-    .union([z.string(), z.instanceof(URL)])
-    .transform((v) => (v instanceof URL ? v.toString() : v))
-    .optional(),
+  redirectPath: RedirectPathSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
   ...MetadataPayloadPropertySchema.shape,
