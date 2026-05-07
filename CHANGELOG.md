@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.78](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.77...identity-sdk-v0.0.2-beta.78) (2026-05-07)
+
+
+### Bug Fixes
+
+* reverting incorrect user schema changes ([4c25013](https://github.com/go-mondo/identity-node-sdk/commit/4c25013fb3b62bbb7fcc70466c92d957877f07dc))
+
 ## [0.0.2-beta.77](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.76...identity-sdk-v0.0.2-beta.77) (2026-05-06)
 
 
