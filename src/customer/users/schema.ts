@@ -80,7 +80,9 @@ export const UnverifiedEmailOrPhonePropertiesSchema = z.object({
   ),
 });
 
-const UpsertUnverifiedEmailOrPhonePropertiesSchema = z.object({
+const UpsertEmailOrPhonePropertiesSchema = z.object({
+  verifiedEmail: optionallyNullish(RequiredEmailSchema),
+  verifiedPhoneNumber: optionallyNullish(RequiredPhoneNumberSchema),
   unverifiedEmail: optionallyNullish(RequiredEmailSchema),
   unverifiedPhoneNumber: optionallyNullish(RequiredPhoneNumberSchema),
 });
@@ -143,13 +145,13 @@ const requiredEmailOrPhoneMessage =
   'At least one of verifiedEmail, verifiedPhoneNumber, unverifiedEmail, or unverifiedPhoneNumber is required';
 
 const hasEmailOrPhone = (data: {
-  verifiedEmail?: boolean;
-  verifiedPhoneNumber?: boolean;
+  verifiedEmail?: string | null;
+  verifiedPhoneNumber?: string | null;
   unverifiedEmail?: string | null;
   unverifiedPhoneNumber?: string | null;
 }) =>
-  data.verifiedEmail !== undefined ||
-  data.verifiedPhoneNumber !== undefined ||
+  data.verifiedEmail != null ||
+  data.verifiedPhoneNumber != null ||
   data.unverifiedEmail != null ||
   data.unverifiedPhoneNumber != null;
 
@@ -158,9 +160,7 @@ export const InsertUserPayloadSchema = z
     id: UserIdSchema.optional(),
     status: UserStatusSchema.optional(),
     ...UserNamePropertiesSchema.shape,
-    verifiedEmail: optionallyNullishToUndefined(z.boolean()),
-    verifiedPhoneNumber: optionallyNullishToUndefined(z.boolean()),
-    ...UpsertUnverifiedEmailOrPhonePropertiesSchema.shape,
+    ...UpsertEmailOrPhonePropertiesSchema.shape,
     ...UserAssociationsSchema.shape,
     ...UpsertMetadataPropertyPayloadSchema.shape,
   })
@@ -187,7 +187,7 @@ export const UpdateUserPayloadSchema = z.object({
   suspended: z.boolean().optional(),
   ...UpdateUserNamePropertiesSchema.shape,
   ...VerifiedEmailOrPhonePropertiesSchema.shape,
-  ...UpsertUnverifiedEmailOrPhonePropertiesSchema.shape,
+  ...UpsertEmailOrPhonePropertiesSchema.shape,
   ...UpsertMetadataPropertyPayloadSchema.shape,
 });
 export type UpdateUserInput = z.input<typeof UpdateUserPayloadSchema>;

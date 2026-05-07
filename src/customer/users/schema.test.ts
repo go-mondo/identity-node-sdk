@@ -479,7 +479,7 @@ describe('Customer - User', () => {
         foo: 'bar',
         id: generateUserId(),
         familyName: 'Foo',
-        verifiedPhoneNumber: true,
+        verifiedPhoneNumber: '+12025551234',
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -494,9 +494,9 @@ describe('Customer - User', () => {
     test('should parse with all verified and unverified email/phone properties', async () => {
       const item = {
         id: generateUserId(),
-        verifiedEmail: true,
+        verifiedEmail: 'verified@example.com',
         unverifiedEmail: 'pending@example.com',
-        verifiedPhoneNumber: true,
+        verifiedPhoneNumber: '+1234567890',
         unverifiedPhoneNumber: '+0987654321',
       };
 
@@ -504,9 +504,9 @@ describe('Customer - User', () => {
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.verifiedEmail).toBe(true);
+        expect(result.data.verifiedEmail).toBe('verified@example.com');
         expect(result.data.unverifiedEmail).toBe('pending@example.com');
-        expect(result.data.verifiedPhoneNumber).toBe(true);
+        expect(result.data.verifiedPhoneNumber).toBe('+1234567890');
         expect(result.data.unverifiedPhoneNumber).toBe('+0987654321');
       }
     });
@@ -515,7 +515,7 @@ describe('Customer - User', () => {
       const item = {
         foo: 'bar',
         id: generateUserId(),
-        verifiedPhoneNumber: true,
+        verifiedPhoneNumber: '+12025551234',
         metadata: new Map(),
       };
 
@@ -529,7 +529,7 @@ describe('Customer - User', () => {
 
     test('should allow optional id and status', async () => {
       const item = {
-        verifiedEmail: true,
+        verifiedEmail: 'test@example.com',
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -544,7 +544,7 @@ describe('Customer - User', () => {
     test('should parse with roles association', async () => {
       const item = {
         id: generateUserId(),
-        verifiedEmail: true,
+        verifiedEmail: 'test@example.com',
         roles: [
           'rol_2NfYOTzVqhCHgWFzUL0WPfRRuhH',
           'rol_2NfYOTzVqhCHgWFzUL0WPfRRuhI',
@@ -582,34 +582,33 @@ describe('Customer - User', () => {
 
     test('should accept with only verifiedEmail', async () => {
       const item = {
-        verifiedEmail: true,
+        verifiedEmail: 'test@example.com',
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.verifiedEmail).toBe(true);
+        expect(result.data.verifiedEmail).toBe('test@example.com');
       }
     });
 
     test('should accept with only verifiedPhoneNumber', async () => {
       const item = {
-        verifiedPhoneNumber: true,
+        verifiedPhoneNumber: '+12025551234',
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.verifiedPhoneNumber).toBe(true);
+        expect(result.data.verifiedPhoneNumber).toBe('+12025551234');
       }
     });
 
     test('should succeed with only unverifiedEmail', async () => {
       const item = {
         unverifiedEmail: 'test@example.com',
-        verifiedEmail: true,
         unverifiedPhoneNumber: null,
       };
 
@@ -619,7 +618,7 @@ describe('Customer - User', () => {
       if (result.success) {
         expect(result.data.unverifiedEmail).toBe('test@example.com');
         expect(result.data.unverifiedPhoneNumber).toBeNull();
-        expect(result.data.verifiedEmail).toBe(true);
+        expect(result.data.verifiedEmail).toBeUndefined();
         expect(result.data.verifiedPhoneNumber).toBeUndefined();
       }
     });
@@ -628,7 +627,6 @@ describe('Customer - User', () => {
       const item = {
         unverifiedEmail: null,
         unverifiedPhoneNumber: '+12025551234',
-        verifiedPhoneNumber: true,
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -638,7 +636,7 @@ describe('Customer - User', () => {
         expect(result.data.unverifiedPhoneNumber).toBe('+12025551234');
         expect(result.data.unverifiedEmail).toBeNull();
         expect(result.data.verifiedEmail).toBeUndefined();
-        expect(result.data.verifiedPhoneNumber).toBe(true);
+        expect(result.data.verifiedPhoneNumber).toBeUndefined();
       }
     });
   });
