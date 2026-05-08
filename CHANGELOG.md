@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.84](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.83...identity-sdk-v0.0.2-beta.84) (2026-05-08)
+
+
+### Bug Fixes
+
+* adding instance export ([dd5077b](https://github.com/go-mondo/identity-node-sdk/commit/dd5077bd80d9ef33622775fb39454dbeb80f5ec5))
+
 ## [0.0.2-beta.83](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.82...identity-sdk-v0.0.2-beta.83) (2026-05-08)
 
 
