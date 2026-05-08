@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.83](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.82...identity-sdk-v0.0.2-beta.83) (2026-05-08)
+
+
+### Bug Fixes
+
+* updated how we handle auth ([49664df](https://github.com/go-mondo/identity-node-sdk/commit/49664df3f72d3f722cf03c8984d3db9b0a03407d))
+
 ## [0.0.2-beta.82](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.81...identity-sdk-v0.0.2-beta.82) (2026-05-07)
 
 
