@@ -27,7 +27,34 @@ const ConfigSchema = AccessTokenConfigSchema;
 export type ConfigProps = z.input<typeof ConfigSchema>;
 export type Config = z.output<typeof ConfigSchema>;
 
-export class MondoIdentity {
+/**
+ * Interface representing a configured Mondo SDK instance.
+ * Provides the base URL and authorization function for API requests.
+ */
+export type MondoInstance = {
+  /** The base URL for API requests */
+  readonly baseUrl: URL;
+  /** Function that adds authorization headers to requests */
+  readonly authorize: Authorizer;
+};
+
+/**
+ * Type guard to check if a value is a MondoInstance.
+ * @param value - The value to check
+ * @returns True if the value is a MondoInstance
+ */
+export function isMondoInstance(value: unknown): value is MondoInstance {
+  const maybeInstance = value as Partial<MondoInstance> | null;
+
+  return (
+    maybeInstance !== null &&
+    typeof maybeInstance === 'object' &&
+    maybeInstance.baseUrl instanceof URL &&
+    typeof maybeInstance.authorize === 'function'
+  );
+}
+
+export class MondoIdentity implements MondoInstance {
   readonly config: Config;
   public readonly authorize: Authorizer;
 
