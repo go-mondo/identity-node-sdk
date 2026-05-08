@@ -9,7 +9,7 @@ import {
 } from 'vitest';
 import { HttpError } from '../errors/http.js';
 import { ValidationError } from '../errors/validation.js';
-import type { Authorization } from './authorization.js';
+import type { Authorizer } from './authorization.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -26,7 +26,7 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 describe('Common Resources - Operations', () => {
-  let mockAuthorization: Mock<Authorization>;
+  let mockAuthorization: Mock<Authorizer>;
   let testUrl: URL;
 
   beforeEach(() => {
@@ -88,7 +88,7 @@ describe('Common Resources - Operations', () => {
 
       await listItemsWithAuthorization(testUrl, mockAuthorization);
 
-      const authCall = mockAuthorization.mock.calls[0][0];
+      const authCall = mockAuthorization.mock.calls[0][0] as RequestInit;
       const headers = authCall.headers as Headers;
       expect(headers.get('accept')).toBe('application/json');
     });
@@ -153,7 +153,7 @@ describe('Common Resources - Operations', () => {
     });
 
     test('should handle authorization errors', async () => {
-      mockFetch.mockResolvedValueOnce({
+      const unauthorizedResponse = {
         ok: false,
         status: 401,
         json: () =>
@@ -161,11 +161,53 @@ describe('Common Resources - Operations', () => {
             error: 'unauthorized',
             error_description: 'Invalid token',
           }),
-      });
+      };
+      mockFetch
+        .mockResolvedValueOnce(unauthorizedResponse)
+        .mockResolvedValueOnce(unauthorizedResponse);
 
       await expect(
         getItemWithAuthorization(testUrl, mockAuthorization)
       ).rejects.toThrow(HttpError);
+    });
+
+    test('should retry once with refresh when authorization fails', async () => {
+      const mockData = { id: 1, name: 'Refreshed Item' };
+
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: false,
+          status: 401,
+          json: () =>
+            Promise.resolve({
+              error: 'unauthorized',
+              error_description: 'Expired token',
+            }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve(mockData),
+        });
+
+      const result = await getItemWithAuthorization(testUrl, mockAuthorization);
+
+      expect(result).toEqual(mockData);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+      expect(mockAuthorization).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          method: 'GET',
+          headers: expect.any(Headers),
+        })
+      );
+      expect(mockAuthorization).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          method: 'GET',
+          headers: expect.any(Headers),
+        }),
+        { refresh: true }
+      );
     });
 
     test('should log debug information', async () => {
@@ -217,7 +259,7 @@ describe('Common Resources - Operations', () => {
 
       await putItemWithAuthorization(testUrl, mockAuthorization, updateData);
 
-      const authCall = mockAuthorization.mock.calls[0][0];
+      const authCall = mockAuthorization.mock.calls[0][0] as RequestInit;
       const headers = authCall.headers as Headers;
       expect(headers.get('accept')).toBe('application/json');
       expect(headers.get('content-type')).toBe('application/json');
@@ -411,7 +453,7 @@ describe('Common Resources - Operations', () => {
 
       await deleteItemWithAuthorization(testUrl, mockAuthorization);
 
-      const authCall = mockAuthorization.mock.calls[0][0];
+      const authCall = mockAuthorization.mock.calls[0][0] as RequestInit;
       const headers = authCall.headers as Headers;
       expect(headers.get('accept')).toBe('application/json');
       expect(headers.get('content-type')).toBeNull();
@@ -471,7 +513,7 @@ describe('Common Resources - Operations', () => {
     });
 
     test('should preserve authorization modifications across operations', async () => {
-      const customAuth: Authorization = (request) => ({
+      const customAuth: Authorizer = (request) => ({
         ...request,
         headers: new Headers({
           ...Object.fromEntries((request.headers as Headers)?.entries() || []),

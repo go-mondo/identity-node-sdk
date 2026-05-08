@@ -68,7 +68,7 @@ export async function listSessions(
   );
 
   return PaginationCollectionSchema(SessionSchema).parse(
-    await getItemWithAuthorization(url, instance.authorizer)
+    await getItemWithAuthorization(url, instance.authorize)
   );
 }
 
@@ -79,7 +79,7 @@ export async function deleteSession(
   return SessionSchema.parse(
     await deleteItemWithAuthorization(
       new URL(SessionResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

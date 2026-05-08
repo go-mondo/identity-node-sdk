@@ -66,7 +66,7 @@ export async function listStrategies(
     pagination
   );
   return PaginationCollectionSchema(StrategySchema).parse(
-    await getItemWithAuthorization(url, instance.authorizer)
+    await getItemWithAuthorization(url, instance.authorize)
   );
 }
 
@@ -77,7 +77,7 @@ export async function getStrategy(
   return StrategySchema.parse(
     await getItemWithAuthorization(
       new URL(StrategyResources.buildItemPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -89,7 +89,7 @@ export async function insertStrategy(
   return StrategySchema.parse(
     await postItemWithAuthorization(
       new URL(StrategyResources.buildPath(), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       InsertStrategyPayloadSchema.parse(item)
     )
   );
@@ -103,7 +103,7 @@ export async function updateStrategy(
   return StrategySchema.parse(
     await patchItemWithAuthorization(
       new URL(StrategyResources.buildItemPath(id), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpdateStrategyPayloadSchema.parse(item)
     )
   );
@@ -116,7 +116,7 @@ export async function deleteStrategy(
   return StrategySchema.parse(
     await deleteItemWithAuthorization(
       new URL(StrategyResources.buildItemPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

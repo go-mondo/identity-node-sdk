@@ -52,7 +52,7 @@ export async function getSAML(
   return SAMLSchema.parse(
     await getItemWithAuthorization(
       new URL(SAMLResources.buildPath(appId), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -65,7 +65,7 @@ export async function insertSAML(
   return SAMLSchema.parse(
     await postItemWithAuthorization(
       new URL(SAMLResources.buildPath(appId), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       item ? InsertSAMLPayloadSchema.parse(item) : undefined
     )
   );
@@ -79,7 +79,7 @@ export async function updateSAML(
   return SAMLSchema.parse(
     await patchItemWithAuthorization(
       new URL(SAMLResources.buildPath(appId), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpdateSAMLPayloadSchema.parse(item)
     )
   );
@@ -92,7 +92,7 @@ export async function deleteSAML(
   return SAMLSchema.parse(
     await deleteItemWithAuthorization(
       new URL(SAMLResources.buildPath(appId), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

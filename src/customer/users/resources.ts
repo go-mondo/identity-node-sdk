@@ -67,7 +67,7 @@ export async function listUsers(
   );
 
   return PaginationCollectionSchema(UserSchema).parse(
-    await listItemsWithAuthorization(url, instance.authorizer)
+    await listItemsWithAuthorization(url, instance.authorize)
   );
 }
 
@@ -78,7 +78,7 @@ export async function getUser(
   return UserSchema.parse(
     await getItemWithAuthorization(
       new URL(UserResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -90,7 +90,7 @@ export async function insertUser(
   return UserSchema.parse(
     await postItemWithAuthorization(
       new URL(UserResources.buildPath(), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       InsertUserPayloadSchema.parse(item)
     )
   );
@@ -104,7 +104,7 @@ export async function updateUser(
   return UserSchema.parse(
     await patchItemWithAuthorization(
       new URL(UserResources.buildPath(id), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpdateUserPayloadSchema.parse(item)
     )
   );
@@ -117,7 +117,7 @@ export async function deleteUser(
   return UserSchema.parse(
     await deleteItemWithAuthorization(
       new URL(UserResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

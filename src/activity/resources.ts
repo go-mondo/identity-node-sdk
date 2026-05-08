@@ -40,6 +40,6 @@ export async function listActivities(
   );
 
   return PaginationCollectionSchema(ActivitySchema).parse(
-    await getItemWithAuthorization(url, instance.authorizer)
+    await getItemWithAuthorization(url, instance.authorize)
   );
 }

@@ -39,7 +39,7 @@ export async function getAuthorization(
   return AuthorizationSchema.parse(
     await getItemWithAuthorization(
       new URL(AuthorizationResources.buildPath(appId), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -52,7 +52,7 @@ export async function upsertAuthorization(
   return AuthorizationSchema.parse(
     await putItemWithAuthorization(
       new URL(AuthorizationResources.buildPath(appId), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpsertAuthorizationPayloadSchema.parse(item)
     )
   );

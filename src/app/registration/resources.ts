@@ -43,7 +43,7 @@ export async function getRegistration(
   return RegistrationSchema.parse(
     await getItemWithAuthorization(
       new URL(RegistrationResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -56,7 +56,7 @@ export async function upsertRegistration(
   return RegistrationSchema.parse(
     await postItemWithAuthorization(
       new URL(RegistrationResources.buildPath(id), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpsertRegistrationPayloadSchema.parse(item)
     )
   );

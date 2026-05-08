@@ -52,7 +52,7 @@ export async function getOIDC(
   return OIDCSchema.parse(
     await getItemWithAuthorization(
       new URL(OIDCResources.buildPath(appId), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -65,7 +65,7 @@ export async function insertOIDC(
   return OIDCSchema.parse(
     await postItemWithAuthorization(
       new URL(OIDCResources.buildPath(appId), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       item ? InsertOIDCPayloadSchema.parse(item) : undefined
     )
   );
@@ -79,7 +79,7 @@ export async function updateOIDC(
   return OIDCSchema.parse(
     await patchItemWithAuthorization(
       new URL(OIDCResources.buildPath(appId), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpdateOIDCPayloadSchema.parse(item)
     )
   );
@@ -92,7 +92,7 @@ export async function deleteOIDC(
   return OIDCSchema.parse(
     await deleteItemWithAuthorization(
       new URL(OIDCResources.buildPath(appId), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

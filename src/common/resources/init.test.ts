@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { type ConfigProps, MondoIdentity } from './init.js';
 
 describe('Common Resources - Init', () => {
@@ -23,7 +23,7 @@ describe('Common Resources - Init', () => {
         const mondoIdentity = new MondoIdentity(config);
         expect(mondoIdentity.config.accessToken).toBe('test-access-token');
         expect(mondoIdentity.config.host.toString()).toBe(
-          'https://manage-api.mondoidentity.com/'
+          'https://api.mondoidentity.com/'
         );
       });
 
@@ -90,6 +90,14 @@ describe('Common Resources - Init', () => {
           () => new MondoIdentity(config as unknown as ConfigProps)
         ).toThrow('Invalid configuration');
       });
+
+      test('should initialize with an access token provider', () => {
+        const accessToken = vi.fn(() => 'provided-token');
+
+        const mondoIdentity = new MondoIdentity({ accessToken });
+
+        expect(mondoIdentity.config.accessToken).toBe(accessToken);
+      });
     });
 
     describe('config property', () => {
@@ -119,36 +127,36 @@ describe('Common Resources - Init', () => {
       });
     });
 
-    describe('authorizer property', () => {
-      test('should return function that adds authorization header when access token is provided', () => {
+    describe('authorize property', () => {
+      test('should return function that adds authorization header when access token is provided', async () => {
         const config = {
           accessToken: 'bearer-token-123',
         };
 
         const mondoIdentity = new MondoIdentity(config);
-        const authorizer = mondoIdentity.authorizer;
+        const authorize = mondoIdentity.authorize;
 
-        expect(typeof authorizer).toBe('function');
+        expect(typeof authorize).toBe('function');
 
         const mockRequest: RequestInit = {
           method: 'GET',
           headers: {},
         };
 
-        const authorizedRequest = authorizer(mockRequest);
+        const authorizedRequest = await authorize(mockRequest);
 
         expect(authorizedRequest.headers).toBeInstanceOf(Headers);
         const headers = authorizedRequest.headers as Headers;
         expect(headers.get('authorization')).toBe('bearer-token-123');
       });
 
-      test('should preserve existing headers when adding authorization', () => {
+      test('should preserve existing headers when adding authorization', async () => {
         const config = {
           accessToken: 'test-token',
         };
 
         const mondoIdentity = new MondoIdentity(config);
-        const authorizer = mondoIdentity.authorizer;
+        const authorize = mondoIdentity.authorize;
 
         const mockRequest: RequestInit = {
           method: 'POST',
@@ -158,7 +166,7 @@ describe('Common Resources - Init', () => {
           },
         };
 
-        const authorizedRequest = authorizer(mockRequest);
+        const authorizedRequest = await authorize(mockRequest);
         const headers = authorizedRequest.headers as Headers;
 
         expect(headers.get('authorization')).toBe('test-token');
@@ -166,13 +174,13 @@ describe('Common Resources - Init', () => {
         expect(headers.get('user-agent')).toBe('test-client');
       });
 
-      test('should handle Headers object as input', () => {
+      test('should handle Headers object as input', async () => {
         const config = {
           accessToken: 'header-token',
         };
 
         const mondoIdentity = new MondoIdentity(config);
-        const authorizer = mondoIdentity.authorizer;
+        const authorize = mondoIdentity.authorize;
 
         const existingHeaders = new Headers({
           accept: 'application/json',
@@ -183,46 +191,46 @@ describe('Common Resources - Init', () => {
           headers: existingHeaders,
         };
 
-        const authorizedRequest = authorizer(mockRequest);
+        const authorizedRequest = await authorize(mockRequest);
         const headers = authorizedRequest.headers as Headers;
 
         expect(headers.get('authorization')).toBe('header-token');
         expect(headers.get('accept')).toBe('application/json');
       });
 
-      test('should handle undefined headers', () => {
+      test('should handle undefined headers', async () => {
         const config = {
           accessToken: 'undefined-headers-token',
         };
 
         const mondoIdentity = new MondoIdentity(config);
-        const authorizer = mondoIdentity.authorizer;
+        const authorize = mondoIdentity.authorize;
 
         const mockRequest: RequestInit = {
           method: 'GET',
           // headers intentionally undefined
         };
 
-        const authorizedRequest = authorizer(mockRequest);
+        const authorizedRequest = await authorize(mockRequest);
         const headers = authorizedRequest.headers as Headers;
 
         expect(headers.get('authorization')).toBe('undefined-headers-token');
       });
 
-      test('should return same request reference with modified headers', () => {
+      test('should return same request reference with modified headers', async () => {
         const config = {
           accessToken: 'reference-token',
         };
 
         const mondoIdentity = new MondoIdentity(config);
-        const authorizer = mondoIdentity.authorizer;
+        const authorize = mondoIdentity.authorize;
 
         const mockRequest: RequestInit = {
           method: 'PUT',
           body: 'test-body',
         };
 
-        const authorizedRequest = authorizer(mockRequest);
+        const authorizedRequest = await authorize(mockRequest);
 
         // Should be the same object reference
         expect(authorizedRequest).toBe(mockRequest);
@@ -230,22 +238,21 @@ describe('Common Resources - Init', () => {
         expect(authorizedRequest.body).toBe('test-body');
       });
 
-      test('should be a getter that returns consistent function', () => {
+      test('should expose a consistent function', async () => {
         const config = {
           accessToken: 'consistent-token',
         };
 
         const mondoIdentity = new MondoIdentity(config);
 
-        // Getting authorizer multiple times should return the same function behavior
-        const authorizer1 = mondoIdentity.authorizer;
-        const authorizer2 = mondoIdentity.authorizer;
+        const authorize1 = mondoIdentity.authorize;
+        const authorize2 = mondoIdentity.authorize;
 
         const mockRequest1: RequestInit = { method: 'GET' };
         const mockRequest2: RequestInit = { method: 'POST' };
 
-        const result1 = authorizer1(mockRequest1);
-        const result2 = authorizer2(mockRequest2);
+        const result1 = await authorize1(mockRequest1);
+        const result2 = await authorize2(mockRequest2);
 
         const headers1 = result1.headers as Headers;
         const headers2 = result2.headers as Headers;
@@ -253,17 +260,55 @@ describe('Common Resources - Init', () => {
         expect(headers1.get('authorization')).toBe('consistent-token');
         expect(headers2.get('authorization')).toBe('consistent-token');
       });
+
+      test('should resolve access token providers with authorize options', async () => {
+        const accessToken = vi.fn((options) =>
+          options?.refresh ? 'refreshed-token' : 'cached-token'
+        );
+        const mondoIdentity = new MondoIdentity({ accessToken });
+
+        const cachedRequest = await mondoIdentity.authorize({ method: 'GET' });
+        const refreshedRequest = await mondoIdentity.authorize(
+          { method: 'GET' },
+          { refresh: true }
+        );
+
+        expect(accessToken).toHaveBeenNthCalledWith(1, undefined);
+        expect(accessToken).toHaveBeenNthCalledWith(2, { refresh: true });
+        expect((cachedRequest.headers as Headers).get('authorization')).toBe(
+          'cached-token'
+        );
+        expect((refreshedRequest.headers as Headers).get('authorization')).toBe(
+          'refreshed-token'
+        );
+      });
+
+      test('should use the accessToken value from provider token objects', async () => {
+        const accessToken = vi.fn(() => ({
+          accessToken: 'object-token',
+          expiresAt: Date.now() + 60_000,
+          scope: 'workspace:read',
+          type: 'Bearer',
+        }));
+        const mondoIdentity = new MondoIdentity({ accessToken });
+
+        const request = await mondoIdentity.authorize({ method: 'GET' });
+
+        expect((request.headers as Headers).get('authorization')).toBe(
+          'object-token'
+        );
+      });
     });
 
     describe('integration tests', () => {
-      test('should work with real-world configuration', () => {
+      test('should work with real-world configuration', async () => {
         const config = {
           accessToken: 'prod_12345abcdef67890',
           host: 'https://api.mondoidentity.com/v1',
         };
 
         const mondoIdentity = new MondoIdentity(config);
-        const authorizer = mondoIdentity.authorizer;
+        const authorize = mondoIdentity.authorize;
 
         // Test configuration
         expect(mondoIdentity.config.accessToken).toBe('prod_12345abcdef67890');
@@ -279,7 +324,7 @@ describe('Common Resources - Init', () => {
           },
         };
 
-        const authorizedRequest = authorizer(apiRequest);
+        const authorizedRequest = await authorize(apiRequest);
         const headers = authorizedRequest.headers as Headers;
 
         expect(headers.get('authorization')).toBe('prod_12345abcdef67890');
@@ -287,7 +332,7 @@ describe('Common Resources - Init', () => {
         expect(headers.get('user-agent')).toBe('mondo-identity-sdk/1.0.0');
       });
 
-      test('should handle edge cases gracefully', () => {
+      test('should handle edge cases gracefully', async () => {
         const config = {
           accessToken: 'edge-case-token-with-special-chars!@#$%^&*()',
           host: 'https://localhost:3000',
@@ -295,9 +340,8 @@ describe('Common Resources - Init', () => {
 
         const mondoIdentity = new MondoIdentity(config);
 
-        expect(() => {
-          const authorizer = mondoIdentity.authorizer;
-          const request = authorizer({ method: 'OPTIONS' });
+        await expect(async () => {
+          const request = await mondoIdentity.authorize({ method: 'OPTIONS' });
           const headers = request.headers as Headers;
           headers.get('authorization');
         }).not.toThrow();

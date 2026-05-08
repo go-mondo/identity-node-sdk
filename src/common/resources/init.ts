@@ -1,15 +1,25 @@
 import * as z from 'zod/v4';
+import {
+  type AccessTokenProvider,
+  type Authorizer,
+  getAccessTokenValue,
+} from './authorization.js';
 
 const BaseConfigSchema = z.object({
   host: z
     .url()
-    .default('https://manage-api.mondoidentity.com')
+    .default('https://api.mondoidentity.com')
     .pipe(z.transform((v) => new URL(v))),
 });
 
 const AccessTokenConfigSchema = z.object({
   ...BaseConfigSchema.shape,
-  accessToken: z.string().min(1),
+  accessToken: z.union([
+    z.string().min(1),
+    z.custom<AccessTokenProvider>((value) => typeof value === 'function', {
+      error: 'Access token must be a string or token provider function',
+    }),
+  ]),
 });
 
 const ConfigSchema = AccessTokenConfigSchema;
@@ -19,47 +29,26 @@ export type Config = z.output<typeof ConfigSchema>;
 
 export class MondoIdentity {
   readonly config: Config;
+  public readonly authorize: Authorizer;
 
   public constructor(config: ConfigProps) {
     this.config = initConfig(config);
+    this.authorize = async (request, options) => {
+      const accessToken =
+        typeof this.config.accessToken === 'function'
+          ? await this.config.accessToken(options)
+          : this.config.accessToken;
+
+      request.headers = new Headers(request.headers);
+      request.headers.set('authorization', getAccessTokenValue(accessToken));
+      return request;
+    };
   }
 
-  /**
-   * Builds an authorizer function based on the type of access token
-   */
-  public get authorizer(): (request: RequestInit) => RequestInit {
-    if (this.config.accessToken) {
-      return (request) => {
-        request.headers = new Headers(request.headers);
-        request.headers.append('authorization', this.config.accessToken);
-        return request;
-      };
-    }
-
-    return (request) => request;
+  /** The base URL for API requests. */
+  public get baseUrl(): URL {
+    return this.config.host;
   }
-
-  // public getItemWithAuthorization<Result>(url: URL): Promise<Result> {
-  //     try {
-  //         console.debug("Get item", { url });
-
-  //         const response = await fetch(
-  //             url,
-  //             authorization.applyAuthorization({
-  //                 method: "GET",
-  //                 headers: defaultRequestHeaders(),
-  //             })
-  //         );
-
-  //         if (response.ok) {
-  //             return await response.json();
-  //         }
-
-  //         throw await responseToHttpError(response);
-  //     } catch (error) {
-  //         throw toHttpError(error);
-  //     }
-  // };
 }
 
 function initConfig(config: ConfigProps): Config {

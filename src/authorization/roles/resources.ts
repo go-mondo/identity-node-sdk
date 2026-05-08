@@ -65,7 +65,7 @@ export async function listRoles(
     pagination
   );
   return PaginationCollectionSchema(RoleSchema).parse(
-    await getItemWithAuthorization(url, instance.authorizer)
+    await getItemWithAuthorization(url, instance.authorize)
   );
 }
 
@@ -76,7 +76,7 @@ export async function getRole(
   return RoleSchema.parse(
     await getItemWithAuthorization(
       new URL(RoleResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -88,7 +88,7 @@ export async function insertRole(
   return RoleSchema.parse(
     await postItemWithAuthorization(
       new URL(RoleResources.buildPath(), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       InsertRolePayloadSchema.parse(item)
     )
   );
@@ -102,7 +102,7 @@ export async function updateRole(
   return RoleSchema.parse(
     await patchItemWithAuthorization(
       new URL(RoleResources.buildPath(id), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpdateRolePayloadSchema.parse(item)
     )
   );
@@ -115,7 +115,7 @@ export async function deleteRole(
   return RoleSchema.parse(
     await deleteItemWithAuthorization(
       new URL(RoleResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

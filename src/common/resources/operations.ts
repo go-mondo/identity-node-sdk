@@ -1,4 +1,4 @@
-import type { Authorization } from './authorization.js';
+import type { Authorizer } from './authorization.js';
 import {
   defaultMutationRequestHeaders,
   defaultRequestHeaders,
@@ -9,18 +9,15 @@ import {
 
 export async function listItemsWithAuthorization<Result>(
   url: URL,
-  authorization: Authorization
+  authorizer: Authorizer
 ): Promise<Result> {
   try {
     console.debug('List items', { url });
 
-    const response = await fetch(
-      url,
-      authorization({
-        method: 'GET',
-        headers: defaultRequestHeaders(),
-      })
-    );
+    const response = await fetchWithAuthorization(url, authorizer, {
+      method: 'GET',
+      headers: defaultRequestHeaders(),
+    });
 
     if (response.ok) {
       return await response.json();
@@ -34,18 +31,15 @@ export async function listItemsWithAuthorization<Result>(
 
 export async function getItemWithAuthorization<Result>(
   url: URL,
-  authorization: Authorization
+  authorizer: Authorizer
 ): Promise<Result> {
   try {
     console.debug('GET item', { url });
 
-    const response = await fetch(
-      url,
-      authorization({
-        method: 'GET',
-        headers: defaultRequestHeaders(),
-      })
-    );
+    const response = await fetchWithAuthorization(url, authorizer, {
+      method: 'GET',
+      headers: defaultRequestHeaders(),
+    });
 
     if (response.ok) {
       return await response.json();
@@ -59,37 +53,34 @@ export async function getItemWithAuthorization<Result>(
 
 export async function patchItemWithAuthorization<Result, Mutation>(
   url: URL,
-  authorization: Authorization,
+  authorizer: Authorizer,
   item: Mutation
 ): Promise<Result> {
-  return mutateItemWithAuthorization('PATCH', url, authorization, item);
+  return mutateItemWithAuthorization('PATCH', url, authorizer, item);
 }
 
 export async function putItemWithAuthorization<Result, Mutation>(
   url: URL,
-  authorization: Authorization,
+  authorizer: Authorizer,
   item: Mutation
 ): Promise<Result> {
-  return mutateItemWithAuthorization('PUT', url, authorization, item);
+  return mutateItemWithAuthorization('PUT', url, authorizer, item);
 }
 
 async function mutateItemWithAuthorization<Result, Mutation>(
   method: 'PUT' | 'PATCH',
   url: URL,
-  authorization: Authorization,
+  authorizer: Authorizer,
   item: Mutation
 ): Promise<Result> {
   try {
     console.debug(`${method} item`, { url, item });
 
-    const response = await fetch(
-      url,
-      authorization({
-        method,
-        headers: defaultMutationRequestHeaders(),
-        body: JSON.stringify(item),
-      })
-    );
+    const response = await fetchWithAuthorization(url, authorizer, {
+      method,
+      headers: defaultMutationRequestHeaders(),
+      body: JSON.stringify(item),
+    });
 
     if (response.ok) {
       return await response.json();
@@ -103,20 +94,17 @@ async function mutateItemWithAuthorization<Result, Mutation>(
 
 export async function postItemWithAuthorization<Result, Mutation>(
   url: URL,
-  authorization: Authorization,
+  authorizer: Authorizer,
   item?: Mutation
 ): Promise<Result> {
   try {
     console.debug('POST item', { url, item });
 
-    const response = await fetch(
-      url,
-      authorization({
-        method: 'POST',
-        headers: defaultMutationRequestHeaders(),
-        body: item ? JSON.stringify(item) : undefined,
-      })
-    );
+    const response = await fetchWithAuthorization(url, authorizer, {
+      method: 'POST',
+      headers: defaultMutationRequestHeaders(),
+      body: item ? JSON.stringify(item) : undefined,
+    });
 
     if (response.ok) {
       return await response.json();
@@ -130,18 +118,15 @@ export async function postItemWithAuthorization<Result, Mutation>(
 
 export async function deleteItemWithAuthorization<Result>(
   url: URL,
-  authorization: Authorization
+  authorizer: Authorizer
 ): Promise<Result> {
   try {
     console.debug('Delete item', { url });
 
-    const response = await fetch(
-      url,
-      authorization({
-        method: 'DELETE',
-        headers: defaultRequestHeaders(),
-      })
-    );
+    const response = await fetchWithAuthorization(url, authorizer, {
+      method: 'DELETE',
+      headers: defaultRequestHeaders(),
+    });
 
     if (response.ok) {
       return (await jsonBody<Result>(response)) as Result;
@@ -151,4 +136,35 @@ export async function deleteItemWithAuthorization<Result>(
   } catch (error) {
     throw toHttpError(error);
   }
+}
+
+async function fetchWithAuthorization(
+  url: URL,
+  authorizer: Authorizer,
+  request: RequestInit
+): Promise<Response> {
+  const response = await fetch(
+    url,
+    await authorizer(cloneRequestInit(request))
+  );
+
+  if (!isAuthorizationResponse(response)) {
+    return response;
+  }
+
+  return fetch(
+    url,
+    await authorizer(cloneRequestInit(request), { refresh: true })
+  );
+}
+
+function isAuthorizationResponse(response: Response): boolean {
+  return [401, 403].includes(response.status);
+}
+
+function cloneRequestInit(request: RequestInit): RequestInit {
+  return {
+    ...request,
+    headers: new Headers(request.headers),
+  };
 }

@@ -33,7 +33,7 @@ export async function getSettings(instance: MondoIdentity): Promise<Settings> {
   return SettingsSchema.parse(
     await getItemWithAuthorization(
       new URL(SettingsResources.buildPath(), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -45,7 +45,7 @@ export async function upsertSettings(
   return SettingsSchema.parse(
     await postItemWithAuthorization(
       new URL(SettingsResources.buildPath(), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpsertSettingsPayloadSchema.parse(item)
     )
   );

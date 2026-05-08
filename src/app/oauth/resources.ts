@@ -40,7 +40,7 @@ export async function getOAuth(
   return OAuthSchema.parse(
     await getItemWithAuthorization(
       new URL(OAuthResources.buildPath(appId), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -53,7 +53,7 @@ export async function rotateOAuthSecret(
   return OAuthSchema.parse(
     await postItemWithAuthorization(
       new URL(OAuthResources.buildPath(appId), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       InsertOAuthPayloadSchema.parse(item)
     )
   );

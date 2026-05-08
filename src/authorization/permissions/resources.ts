@@ -69,7 +69,7 @@ export async function listPermissions(
   );
 
   return PaginationCollectionSchema(PermissionSchema).parse(
-    await getItemWithAuthorization(url, instance.authorizer)
+    await getItemWithAuthorization(url, instance.authorize)
   );
 }
 
@@ -80,7 +80,7 @@ export async function getPermission(
   return PermissionSchema.parse(
     await getItemWithAuthorization(
       new URL(PermissionResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -92,7 +92,7 @@ export async function insertPermission(
   return PermissionSchema.parse(
     await postItemWithAuthorization(
       new URL(PermissionResources.buildPath(), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       InsertPermissionPayloadSchema.parse(item)
     )
   );
@@ -106,7 +106,7 @@ export async function updatePermission(
   return PermissionSchema.parse(
     await patchItemWithAuthorization(
       new URL(PermissionResources.buildPath(id), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpdatePermissionPayloadSchema.parse(item)
     )
   );
@@ -119,7 +119,7 @@ export async function deletePermission(
   return PermissionSchema.parse(
     await deleteItemWithAuthorization(
       new URL(PermissionResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

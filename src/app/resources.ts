@@ -66,7 +66,7 @@ export async function listApps(
   );
 
   return PaginationCollectionSchema(AppSchema).parse(
-    await getItemWithAuthorization(url, instance.authorizer)
+    await getItemWithAuthorization(url, instance.authorize)
   );
 }
 
@@ -77,7 +77,7 @@ export async function getApp(
   return AppSchema.parse(
     await getItemWithAuthorization(
       new URL(AppResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }
@@ -89,7 +89,7 @@ export async function insertApp(
   return AppSchema.parse(
     await postItemWithAuthorization(
       new URL(AppResources.buildPath(), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       InsertAppPayloadSchema.parse(item)
     )
   );
@@ -103,7 +103,7 @@ export async function updateApp(
   return AppSchema.parse(
     await patchItemWithAuthorization(
       new URL(AppResources.buildPath(id), instance.config.host),
-      instance.authorizer,
+      instance.authorize,
       UpdateAppPayloadSchema.parse(item)
     )
   );
@@ -116,7 +116,7 @@ export async function deleteApp(
   return AppSchema.parse(
     await deleteItemWithAuthorization(
       new URL(AppResources.buildPath(id), instance.config.host),
-      instance.authorizer
+      instance.authorize
     )
   );
 }

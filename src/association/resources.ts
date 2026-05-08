@@ -93,7 +93,7 @@ export async function listAssociations<O extends AssociationObject>(
   );
 
   return PaginationCollectionSchema(AssociationSchema).parse(
-    await getItemWithAuthorization(url, instance.authorizer)
+    await getItemWithAuthorization(url, instance.authorize)
   ) as unknown as Promise<PaginationCollection<Association<O>>>;
 }
 
@@ -109,7 +109,7 @@ export async function upsertAssociation<O extends AssociationObject>(
         AssociationResources.buildPath(fromId, toId),
         instance.config.host
       ),
-      instance.authorizer,
+      instance.authorize,
       item ? UpsertAssociationPayloadSchema.parse(item) : undefined
     )
   ) as unknown as Promise<Association<O>>;
@@ -126,7 +126,7 @@ export async function deleteAssociation<O extends AssociationObject>(
         AssociationResources.buildPath(fromId, toId),
         instance.config.host
       ),
-      instance.authorizer
+      instance.authorize
     )
   ) as unknown as Promise<Association<O>>;
 }

@@ -15,7 +15,7 @@ describe('App Resources', () => {
         host: 'https://api.example.com',
         accessToken: 'test-token',
       },
-      authorizer: vi.fn((req) => req),
+      authorize: vi.fn((req) => req),
     } as unknown as MondoIdentity;
 
     appResources = new AppResources(mockInstance);
@@ -176,11 +176,11 @@ describe('App Resources', () => {
       expect(internalInstance.config.accessToken).toBe('test-token');
     });
 
-    test('should maintain reference to authorizer function', () => {
+    test('should maintain reference to authorize function', () => {
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       const internalInstance = appResources['instance'];
-      expect(typeof internalInstance.authorizer).toBe('function');
-      expect(internalInstance.authorizer).toBe(mockInstance.authorizer);
+      expect(typeof internalInstance.authorize).toBe('function');
+      expect(internalInstance.authorize).toBe(mockInstance.authorize);
     });
 
     test('should work with different MondoIdentity configurations', () => {
@@ -189,7 +189,7 @@ describe('App Resources', () => {
           host: 'https://custom-apps.api.com',
           accessToken: 'custom-app-token',
         },
-        authorizer: vi.fn(),
+        authorize: vi.fn(),
       } as unknown as MondoIdentity;
 
       const customResources = new AppResources(customInstance);
