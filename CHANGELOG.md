@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.88](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.87...identity-sdk-v0.0.2-beta.88) (2026-05-09)
+
+
+### Bug Fixes
+
+* use list items wrapper ([4d617eb](https://github.com/go-mondo/identity-node-sdk/commit/4d617ebdf8b033e1e83ff67905ec38c78c27d944))
+
 ## [0.0.2-beta.87](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.86...identity-sdk-v0.0.2-beta.87) (2026-05-09)
 
 
