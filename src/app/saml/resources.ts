@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -18,7 +18,7 @@ import {
 const RESOURCE = 'saml';
 
 export class SAMLResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(appId: string): string {
     if (appId?.startsWith(PATH)) {
@@ -46,25 +46,25 @@ export class SAMLResources {
 }
 
 export async function getSAML(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string
 ): Promise<SAML> {
   return SAMLSchema.parse(
     await getItemWithAuthorization(
-      new URL(SAMLResources.buildPath(appId), instance.config.host),
+      new URL(SAMLResources.buildPath(appId), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function insertSAML(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string,
   item?: InsertSAMLInput
 ): Promise<SAML> {
   return SAMLSchema.parse(
     await postItemWithAuthorization(
-      new URL(SAMLResources.buildPath(appId), instance.config.host),
+      new URL(SAMLResources.buildPath(appId), instance.baseUrl),
       instance.authorize,
       item ? InsertSAMLPayloadSchema.parse(item) : undefined
     )
@@ -72,13 +72,13 @@ export async function insertSAML(
 }
 
 export async function updateSAML(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string,
   item: UpdateSAMLInput
 ): Promise<SAML> {
   return SAMLSchema.parse(
     await patchItemWithAuthorization(
-      new URL(SAMLResources.buildPath(appId), instance.config.host),
+      new URL(SAMLResources.buildPath(appId), instance.baseUrl),
       instance.authorize,
       UpdateSAMLPayloadSchema.parse(item)
     )
@@ -86,12 +86,12 @@ export async function updateSAML(
 }
 
 export async function deleteSAML(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string
 ): Promise<SAML> {
   return SAMLSchema.parse(
     await deleteItemWithAuthorization(
-      new URL(SAMLResources.buildPath(appId), instance.config.host),
+      new URL(SAMLResources.buildPath(appId), instance.baseUrl),
       instance.authorize
     )
   );

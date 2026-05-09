@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -24,7 +24,7 @@ import {
 const PATH = '/v1/customers/users';
 
 export class UserResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(id?: string): string {
     if (id?.startsWith(PATH)) {
@@ -58,11 +58,11 @@ export class UserResources {
 }
 
 export async function listUsers(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   pagination?: Pagination
 ): Promise<PaginationCollection<User>> {
   const url = addPaginationToURL(
-    new URL(UserResources.buildPath(), instance.config.host),
+    new URL(UserResources.buildPath(), instance.baseUrl),
     pagination
   );
 
@@ -72,24 +72,24 @@ export async function listUsers(
 }
 
 export async function getUser(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<User> {
   return UserSchema.parse(
     await getItemWithAuthorization(
-      new URL(UserResources.buildPath(id), instance.config.host),
+      new URL(UserResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function insertUser(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   item: InsertUserInput
 ): Promise<User> {
   return UserSchema.parse(
     await postItemWithAuthorization(
-      new URL(UserResources.buildPath(), instance.config.host),
+      new URL(UserResources.buildPath(), instance.baseUrl),
       instance.authorize,
       InsertUserPayloadSchema.parse(item)
     )
@@ -97,13 +97,13 @@ export async function insertUser(
 }
 
 export async function updateUser(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string,
   item: UpdateUserInput
 ): Promise<User> {
   return UserSchema.parse(
     await patchItemWithAuthorization(
-      new URL(UserResources.buildPath(id), instance.config.host),
+      new URL(UserResources.buildPath(id), instance.baseUrl),
       instance.authorize,
       UpdateUserPayloadSchema.parse(item)
     )
@@ -111,12 +111,12 @@ export async function updateUser(
 }
 
 export async function deleteUser(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<User> {
   return UserSchema.parse(
     await deleteItemWithAuthorization(
-      new URL(UserResources.buildPath(id), instance.config.host),
+      new URL(UserResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );

@@ -1,28 +1,29 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import { RegistrationResources } from './resources.js';
 
 describe('App Registration Resources', () => {
-  let mockInstance: MondoIdentity;
+  let mockInstance: MondoInstance;
   let registrationResources: RegistrationResources;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Mock MondoIdentity instance
+    // Mock MondoInstance instance
     mockInstance = {
+      baseUrl: new URL('https://api.example.com'),
       config: {
         host: 'https://api.example.com',
         accessToken: 'test-token',
       },
       authorize: vi.fn((req) => req),
-    } as unknown as MondoIdentity;
+    } as unknown as MondoInstance;
 
     registrationResources = new RegistrationResources(mockInstance);
   });
 
   describe('RegistrationResources class', () => {
-    test('should initialize with MondoIdentity instance', () => {
+    test('should initialize with MondoInstance instance', () => {
       expect(registrationResources).toBeInstanceOf(RegistrationResources);
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(registrationResources['instance']).toBe(mockInstance);
@@ -176,13 +177,14 @@ describe('App Registration Resources', () => {
     });
   });
 
-  describe('Integration with MondoIdentity instance', () => {
-    test('should store MondoIdentity instance internally', () => {
+  describe('Integration with MondoInstance instance', () => {
+    test('should store MondoInstance instance internally', () => {
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       const internalInstance = registrationResources['instance'];
       expect(internalInstance).toBe(mockInstance);
-      expect(internalInstance.config.host).toBe('https://api.example.com');
-      expect(internalInstance.config.accessToken).toBe('test-token');
+      expect(internalInstance.baseUrl.toString()).toBe(
+        'https://api.example.com/'
+      );
     });
 
     test('should maintain reference to authorize function', () => {
@@ -192,21 +194,22 @@ describe('App Registration Resources', () => {
       expect(internalInstance.authorize).toBe(mockInstance.authorize);
     });
 
-    test('should work with different MondoIdentity configurations', () => {
+    test('should work with different MondoInstance configurations', () => {
       const customInstance = {
+        baseUrl: new URL('https://custom-registration.api.com'),
         config: {
           host: 'https://custom-registration.api.com',
           accessToken: 'custom-registration-token',
         },
         authorize: vi.fn(),
-      } as unknown as MondoIdentity;
+      } as unknown as MondoInstance;
 
       const customResources = new RegistrationResources(customInstance);
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(customResources['instance']).toBe(customInstance);
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
-      expect(customResources['instance'].config.host).toBe(
-        'https://custom-registration.api.com'
+      expect(customResources['instance'].baseUrl.toString()).toBe(
+        'https://custom-registration.api.com/'
       );
     });
   });

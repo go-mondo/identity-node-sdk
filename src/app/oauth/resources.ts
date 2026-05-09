@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
   postItemWithAuthorization,
@@ -14,7 +14,7 @@ import {
 const RESOURCE = 'oauth';
 
 export class OAuthResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(appId: string): string {
     if (appId?.startsWith(PATH)) {
@@ -34,25 +34,25 @@ export class OAuthResources {
 }
 
 export async function getOAuth(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string
 ): Promise<OAuth> {
   return OAuthSchema.parse(
     await getItemWithAuthorization(
-      new URL(OAuthResources.buildPath(appId), instance.config.host),
+      new URL(OAuthResources.buildPath(appId), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function rotateOAuthSecret(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string,
   item?: InsertOAuthInput
 ): Promise<OAuth> {
   return OAuthSchema.parse(
     await postItemWithAuthorization(
-      new URL(OAuthResources.buildPath(appId), instance.config.host),
+      new URL(OAuthResources.buildPath(appId), instance.baseUrl),
       instance.authorize,
       InsertOAuthPayloadSchema.parse(item)
     )

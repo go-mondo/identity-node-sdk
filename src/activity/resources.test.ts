@@ -1,28 +1,29 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import type { MondoIdentity } from '../common/resources/init.js';
+import type { MondoInstance } from '../common/resources/init.js';
 import { ActivityResources } from './resources.js';
 
 describe('Activity Resources', () => {
-  let mockInstance: MondoIdentity;
+  let mockInstance: MondoInstance;
   let activityResources: ActivityResources;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Mock MondoIdentity instance
+    // Mock MondoInstance instance
     mockInstance = {
+      baseUrl: new URL('https://api.example.com'),
       config: {
         host: 'https://api.example.com',
         accessToken: 'test-token',
       },
       authorize: vi.fn((req) => req),
-    } as unknown as MondoIdentity;
+    } as unknown as MondoInstance;
 
     activityResources = new ActivityResources(mockInstance);
   });
 
   describe('ActivityResources class', () => {
-    test('should initialize with MondoIdentity instance', () => {
+    test('should initialize with MondoInstance instance', () => {
       expect(activityResources).toBeInstanceOf(ActivityResources);
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(activityResources['instance']).toBe(mockInstance);
@@ -166,13 +167,14 @@ describe('Activity Resources', () => {
     });
   });
 
-  describe('Integration with MondoIdentity instance', () => {
-    test('should store MondoIdentity instance internally', () => {
+  describe('Integration with MondoInstance instance', () => {
+    test('should store MondoInstance instance internally', () => {
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       const internalInstance = activityResources['instance'];
       expect(internalInstance).toBe(mockInstance);
-      expect(internalInstance.config.host).toBe('https://api.example.com');
-      expect(internalInstance.config.accessToken).toBe('test-token');
+      expect(internalInstance.baseUrl.toString()).toBe(
+        'https://api.example.com/'
+      );
     });
 
     test('should maintain reference to authorize function', () => {
@@ -182,21 +184,22 @@ describe('Activity Resources', () => {
       expect(internalInstance.authorize).toBe(mockInstance.authorize);
     });
 
-    test('should work with different MondoIdentity configurations', () => {
+    test('should work with different MondoInstance configurations', () => {
       const customInstance = {
+        baseUrl: new URL('https://custom.api.com'),
         config: {
           host: 'https://custom.api.com',
           accessToken: 'custom-token',
         },
         authorize: vi.fn(),
-      } as unknown as MondoIdentity;
+      } as unknown as MondoInstance;
 
       const customResources = new ActivityResources(customInstance);
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
       expect(customResources['instance']).toBe(customInstance);
       // biome-ignore lint/complexity/useLiteralKeys: <explanation>
-      expect(customResources['instance'].config.host).toBe(
-        'https://custom.api.com'
+      expect(customResources['instance'].baseUrl.toString()).toBe(
+        'https://custom.api.com/'
       );
     });
   });

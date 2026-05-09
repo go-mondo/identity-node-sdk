@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -23,7 +23,7 @@ export type SessionListingOptions = {
 };
 
 export class SessionResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(id: string): string {
     if (id.startsWith(PATH)) {
@@ -58,12 +58,12 @@ export class SessionResources {
 }
 
 export async function listSessions(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   options?: SessionListingOptions,
   pagination?: Pagination
 ): Promise<PaginationCollection<Session>> {
   const url = addPaginationToURL(
-    new URL(SessionResources.buildListingPath(options), instance.config.host),
+    new URL(SessionResources.buildListingPath(options), instance.baseUrl),
     pagination
   );
 
@@ -73,12 +73,12 @@ export async function listSessions(
 }
 
 export async function deleteSession(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Session> {
   return SessionSchema.parse(
     await deleteItemWithAuthorization(
-      new URL(SessionResources.buildPath(id), instance.config.host),
+      new URL(SessionResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );

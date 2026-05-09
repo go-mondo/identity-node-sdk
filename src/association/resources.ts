@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../common/resources/init.js';
+import type { MondoInstance } from '../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -29,7 +29,7 @@ export type AssociationListingOptions = {
 };
 
 export class AssociationResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(fromId: string, toId: string): string {
     if (fromId.startsWith(PATH)) {
@@ -79,7 +79,7 @@ export class AssociationResources {
 }
 
 export async function listAssociations<O extends AssociationObject>(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string,
   options?: AssociationListingOptions,
   pagination?: Pagination
@@ -87,7 +87,7 @@ export async function listAssociations<O extends AssociationObject>(
   const url = addPaginationToURL(
     new URL(
       AssociationResources.buildListingPath(id, options),
-      instance.config.host
+      instance.baseUrl
     ),
     pagination
   );
@@ -98,17 +98,14 @@ export async function listAssociations<O extends AssociationObject>(
 }
 
 export async function upsertAssociation<O extends AssociationObject>(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   fromId: string,
   toId: string,
   item?: UpsertAssociationInput
 ): Promise<Association<O>> {
   return AssociationSchema.parse(
     await putItemWithAuthorization(
-      new URL(
-        AssociationResources.buildPath(fromId, toId),
-        instance.config.host
-      ),
+      new URL(AssociationResources.buildPath(fromId, toId), instance.baseUrl),
       instance.authorize,
       item ? UpsertAssociationPayloadSchema.parse(item) : undefined
     )
@@ -116,16 +113,13 @@ export async function upsertAssociation<O extends AssociationObject>(
 }
 
 export async function deleteAssociation<O extends AssociationObject>(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   fromId: string,
   toId: string
 ): Promise<Association<O>> {
   return AssociationSchema.parse(
     await deleteItemWithAuthorization(
-      new URL(
-        AssociationResources.buildPath(fromId, toId),
-        instance.config.host
-      ),
+      new URL(AssociationResources.buildPath(fromId, toId), instance.baseUrl),
       instance.authorize
     )
   ) as unknown as Promise<Association<O>>;

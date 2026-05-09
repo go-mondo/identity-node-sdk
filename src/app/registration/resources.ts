@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
   postItemWithAuthorization,
@@ -14,7 +14,7 @@ import {
 const RESOURCE = 'registration';
 
 export class RegistrationResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(id: string): string {
     if (id?.startsWith(PATH)) {
@@ -37,25 +37,25 @@ export class RegistrationResources {
 }
 
 export async function getRegistration(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Registration> {
   return RegistrationSchema.parse(
     await getItemWithAuthorization(
-      new URL(RegistrationResources.buildPath(id), instance.config.host),
+      new URL(RegistrationResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function upsertRegistration(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string,
   item: UpsertRegistrationInput
 ): Promise<Registration> {
   return RegistrationSchema.parse(
     await postItemWithAuthorization(
-      new URL(RegistrationResources.buildPath(id), instance.config.host),
+      new URL(RegistrationResources.buildPath(id), instance.baseUrl),
       instance.authorize,
       UpsertRegistrationPayloadSchema.parse(item)
     )

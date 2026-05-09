@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
   putItemWithAuthorization,
@@ -14,7 +14,7 @@ import {
 const RESOURCE = 'authorization';
 
 export class AuthorizationResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(appId: string): string {
     return [PATH, appId, RESOURCE].filter(Boolean).join('/');
@@ -33,25 +33,25 @@ export class AuthorizationResources {
 }
 
 export async function getAuthorization(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string
 ): Promise<Authorization> {
   return AuthorizationSchema.parse(
     await getItemWithAuthorization(
-      new URL(AuthorizationResources.buildPath(appId), instance.config.host),
+      new URL(AuthorizationResources.buildPath(appId), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function upsertAuthorization(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string,
   item: UpsertAuthorizationInput
 ): Promise<Authorization> {
   return AuthorizationSchema.parse(
     await putItemWithAuthorization(
-      new URL(AuthorizationResources.buildPath(appId), instance.config.host),
+      new URL(AuthorizationResources.buildPath(appId), instance.baseUrl),
       instance.authorize,
       UpsertAuthorizationPayloadSchema.parse(item)
     )

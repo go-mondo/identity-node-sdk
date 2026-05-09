@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -23,7 +23,7 @@ import {
 const PATH = '/v1/authorization/roles';
 
 export class RoleResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(id?: string): string {
     if (id?.startsWith(PATH)) {
@@ -57,11 +57,11 @@ export class RoleResources {
 }
 
 export async function listRoles(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   pagination?: Pagination
 ): Promise<PaginationCollection<Role>> {
   const url = addPaginationToURL(
-    new URL(RoleResources.buildPath(), instance.config.host),
+    new URL(RoleResources.buildPath(), instance.baseUrl),
     pagination
   );
   return PaginationCollectionSchema(RoleSchema).parse(
@@ -70,24 +70,24 @@ export async function listRoles(
 }
 
 export async function getRole(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Role> {
   return RoleSchema.parse(
     await getItemWithAuthorization(
-      new URL(RoleResources.buildPath(id), instance.config.host),
+      new URL(RoleResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function insertRole(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   item: InsertRoleInput
 ): Promise<Role> {
   return RoleSchema.parse(
     await postItemWithAuthorization(
-      new URL(RoleResources.buildPath(), instance.config.host),
+      new URL(RoleResources.buildPath(), instance.baseUrl),
       instance.authorize,
       InsertRolePayloadSchema.parse(item)
     )
@@ -95,13 +95,13 @@ export async function insertRole(
 }
 
 export async function updateRole(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string,
   item: UpdateRoleInput
 ): Promise<Role> {
   return RoleSchema.parse(
     await patchItemWithAuthorization(
-      new URL(RoleResources.buildPath(id), instance.config.host),
+      new URL(RoleResources.buildPath(id), instance.baseUrl),
       instance.authorize,
       UpdateRolePayloadSchema.parse(item)
     )
@@ -109,12 +109,12 @@ export async function updateRole(
 }
 
 export async function deleteRole(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Role> {
   return RoleSchema.parse(
     await deleteItemWithAuthorization(
-      new URL(RoleResources.buildPath(id), instance.config.host),
+      new URL(RoleResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );

@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -23,7 +23,7 @@ import {
 const PATH = '/v1/authorization/permissions';
 
 export class PermissionResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(id?: string): string {
     if (id?.startsWith(PATH)) {
@@ -60,11 +60,11 @@ export class PermissionResources {
 }
 
 export async function listPermissions(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   pagination?: Pagination
 ): Promise<PaginationCollection<Permission>> {
   const url = addPaginationToURL(
-    new URL(PermissionResources.buildPath(), instance.config.host),
+    new URL(PermissionResources.buildPath(), instance.baseUrl),
     pagination
   );
 
@@ -74,24 +74,24 @@ export async function listPermissions(
 }
 
 export async function getPermission(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Permission> {
   return PermissionSchema.parse(
     await getItemWithAuthorization(
-      new URL(PermissionResources.buildPath(id), instance.config.host),
+      new URL(PermissionResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function insertPermission(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   item: InsertPermissionInput
 ): Promise<Permission> {
   return PermissionSchema.parse(
     await postItemWithAuthorization(
-      new URL(PermissionResources.buildPath(), instance.config.host),
+      new URL(PermissionResources.buildPath(), instance.baseUrl),
       instance.authorize,
       InsertPermissionPayloadSchema.parse(item)
     )
@@ -99,13 +99,13 @@ export async function insertPermission(
 }
 
 export async function updatePermission(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string,
   item: UpdatePermissionInput
 ): Promise<Permission> {
   return PermissionSchema.parse(
     await patchItemWithAuthorization(
-      new URL(PermissionResources.buildPath(id), instance.config.host),
+      new URL(PermissionResources.buildPath(id), instance.baseUrl),
       instance.authorize,
       UpdatePermissionPayloadSchema.parse(item)
     )
@@ -113,12 +113,12 @@ export async function updatePermission(
 }
 
 export async function deletePermission(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Permission> {
   return PermissionSchema.parse(
     await deleteItemWithAuthorization(
-      new URL(PermissionResources.buildPath(id), instance.config.host),
+      new URL(PermissionResources.buildPath(id), instance.baseUrl),
       instance.authorize
     )
   );

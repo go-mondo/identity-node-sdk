@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -24,7 +24,7 @@ import {
 const RESOURCE = 'strategies';
 
 export class StrategyResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildItemPath(id: string): string {
     return [StrategyResources.buildPath(), id].filter(Boolean).join('/');
@@ -58,11 +58,11 @@ export class StrategyResources {
 }
 
 export async function listStrategies(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   pagination?: Pagination
 ): Promise<PaginationCollection<Strategy>> {
   const url = addPaginationToURL(
-    new URL(StrategyResources.buildPath(), instance.config.host),
+    new URL(StrategyResources.buildPath(), instance.baseUrl),
     pagination
   );
   return PaginationCollectionSchema(StrategySchema).parse(
@@ -71,24 +71,24 @@ export async function listStrategies(
 }
 
 export async function getStrategy(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Strategy> {
   return StrategySchema.parse(
     await getItemWithAuthorization(
-      new URL(StrategyResources.buildItemPath(id), instance.config.host),
+      new URL(StrategyResources.buildItemPath(id), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function insertStrategy(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   item: InsertStrategyInput
 ): Promise<Strategy> {
   return StrategySchema.parse(
     await postItemWithAuthorization(
-      new URL(StrategyResources.buildPath(), instance.config.host),
+      new URL(StrategyResources.buildPath(), instance.baseUrl),
       instance.authorize,
       InsertStrategyPayloadSchema.parse(item)
     )
@@ -96,13 +96,13 @@ export async function insertStrategy(
 }
 
 export async function updateStrategy(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string,
   item: UpdateStrategyInput
 ): Promise<Strategy> {
   return StrategySchema.parse(
     await patchItemWithAuthorization(
-      new URL(StrategyResources.buildItemPath(id), instance.config.host),
+      new URL(StrategyResources.buildItemPath(id), instance.baseUrl),
       instance.authorize,
       UpdateStrategyPayloadSchema.parse(item)
     )
@@ -110,12 +110,12 @@ export async function updateStrategy(
 }
 
 export async function deleteStrategy(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   id: string
 ): Promise<Strategy> {
   return StrategySchema.parse(
     await deleteItemWithAuthorization(
-      new URL(StrategyResources.buildItemPath(id), instance.config.host),
+      new URL(StrategyResources.buildItemPath(id), instance.baseUrl),
       instance.authorize
     )
   );

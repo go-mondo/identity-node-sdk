@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   getItemWithAuthorization,
   postItemWithAuthorization,
@@ -14,7 +14,7 @@ import {
 const RESOURCE = 'settings';
 
 export class SettingsResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(): string {
     return [PATH, RESOURCE].filter(Boolean).join('/');
@@ -29,22 +29,22 @@ export class SettingsResources {
   }
 }
 
-export async function getSettings(instance: MondoIdentity): Promise<Settings> {
+export async function getSettings(instance: MondoInstance): Promise<Settings> {
   return SettingsSchema.parse(
     await getItemWithAuthorization(
-      new URL(SettingsResources.buildPath(), instance.config.host),
+      new URL(SettingsResources.buildPath(), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function upsertSettings(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   item: UpsertSettingsInput
 ): Promise<Settings> {
   return SettingsSchema.parse(
     await postItemWithAuthorization(
-      new URL(SettingsResources.buildPath(), instance.config.host),
+      new URL(SettingsResources.buildPath(), instance.baseUrl),
       instance.authorize,
       UpsertSettingsPayloadSchema.parse(item)
     )

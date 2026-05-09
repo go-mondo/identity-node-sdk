@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../common/resources/init.js';
+import type { MondoInstance } from '../common/resources/init.js';
 import { getItemWithAuthorization } from '../common/resources/operations.js';
 import { addPaginationToURL } from '../common/resources/utils.js';
 import {
@@ -11,7 +11,7 @@ import { type Activity, ActivitySchema } from './schema/schema.js';
 export const PATH = '/v1/activities';
 
 export class ActivityResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(source: string): string {
     if (source.startsWith(PATH)) {
@@ -30,12 +30,12 @@ export class ActivityResources {
 }
 
 export async function listActivities(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   source: string,
   pagination?: Pagination
 ): Promise<PaginationCollection<Activity>> {
   const url = addPaginationToURL(
-    new URL(ActivityResources.buildPath(source), instance.config.host),
+    new URL(ActivityResources.buildPath(source), instance.baseUrl),
     pagination
   );
 

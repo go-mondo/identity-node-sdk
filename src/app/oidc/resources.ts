@@ -1,4 +1,4 @@
-import type { MondoIdentity } from '../../common/resources/init.js';
+import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
@@ -18,7 +18,7 @@ import {
 const RESOURCE = 'oidc';
 
 export class OIDCResources {
-  public constructor(private readonly instance: MondoIdentity) {}
+  public constructor(private readonly instance: MondoInstance) {}
 
   static buildPath(appId: string): string {
     if (appId?.startsWith(PATH)) {
@@ -46,25 +46,25 @@ export class OIDCResources {
 }
 
 export async function getOIDC(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string
 ): Promise<OIDC> {
   return OIDCSchema.parse(
     await getItemWithAuthorization(
-      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      new URL(OIDCResources.buildPath(appId), instance.baseUrl),
       instance.authorize
     )
   );
 }
 
 export async function insertOIDC(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string,
   item?: InsertOIDCInput
 ): Promise<OIDC> {
   return OIDCSchema.parse(
     await postItemWithAuthorization(
-      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      new URL(OIDCResources.buildPath(appId), instance.baseUrl),
       instance.authorize,
       item ? InsertOIDCPayloadSchema.parse(item) : undefined
     )
@@ -72,13 +72,13 @@ export async function insertOIDC(
 }
 
 export async function updateOIDC(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string,
   item: UpdateOIDCInput
 ): Promise<OIDC> {
   return OIDCSchema.parse(
     await patchItemWithAuthorization(
-      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      new URL(OIDCResources.buildPath(appId), instance.baseUrl),
       instance.authorize,
       UpdateOIDCPayloadSchema.parse(item)
     )
@@ -86,12 +86,12 @@ export async function updateOIDC(
 }
 
 export async function deleteOIDC(
-  instance: MondoIdentity,
+  instance: MondoInstance,
   appId: string
 ): Promise<OIDC> {
   return OIDCSchema.parse(
     await deleteItemWithAuthorization(
-      new URL(OIDCResources.buildPath(appId), instance.config.host),
+      new URL(OIDCResources.buildPath(appId), instance.baseUrl),
       instance.authorize
     )
   );
