@@ -9,7 +9,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 
 const AllowSelfRegistrationSchema = z.boolean();
@@ -33,7 +34,7 @@ export const RegistrationPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type RegistrationPayload = z.output<typeof RegistrationPayloadSchema>;
 
@@ -41,7 +42,7 @@ export const UpsertRegistrationPayloadSchema = z.object({
   allowSelfRegistration: z
     .union([AllowSelfRegistrationSchema, z.undefined()])
     .optional(),
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpsertRegistrationInput = z.input<
   typeof UpsertRegistrationPayloadSchema

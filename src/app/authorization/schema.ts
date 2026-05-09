@@ -10,8 +10,8 @@ import {
 import { AlgorithmSchema } from '../../common/schema/jwt.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import { optionallyNullishToUndefined } from '../../common/schema/schema.js';
 import {
@@ -75,7 +75,7 @@ export const AuthorizationPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;
 
@@ -88,7 +88,7 @@ export const UpsertAuthorizationPayloadSchema = z.object({
   availableAudiences: AudienceArraySchema.optional(),
   availableGrants: AvailableGrantArraySchema.optional(),
   defaultAudience: z.union([z.string(), z.null(), z.undefined()]).optional(),
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpsertAuthorizationInput = z.input<
   typeof UpsertAuthorizationPayloadSchema

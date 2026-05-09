@@ -12,7 +12,8 @@ import {
 import { KSUIDSchema } from '../../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../../common/schema/metadata.js';
 import { Model } from '../../utils.js';
 
@@ -68,18 +69,18 @@ export const BaseStrategyPayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 
 export const BaseInsertStrategyPayloadSchema = z.object({
   id: StrategyIdSchema.optional(),
   label: StrategyLabelSchema,
   status: StrategyStatusSchema.default(StrategyStatus.ENABLED),
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 
 export const BaseUpdateStrategyPayloadSchema = z.object({
   label: StrategyLabelSchema.optional(),
   status: StrategyStatusSchema.optional(),
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });

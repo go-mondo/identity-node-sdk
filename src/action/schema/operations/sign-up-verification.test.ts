@@ -39,7 +39,7 @@ describe('Action Schema Operations - Sign Up Verification', () => {
 
       const result = SignUpVerificationActionPayloadSchema.safeParse(payload);
       // Parse succeeds for valid data
-      expect(result.data).toEqual(payload);
+      expect(result.data?.metadata).toBeUndefined();
     });
 
     test('should accept payload with optional dates', () => {

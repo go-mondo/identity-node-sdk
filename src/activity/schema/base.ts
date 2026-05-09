@@ -13,8 +13,8 @@ import {
 import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import { Model, generateActivityId } from './utils.js';
 
@@ -84,16 +84,16 @@ export const BasePayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 
 export const BaseInsertPayloadSchema = z.object({
   id: ActivityIdSchema.default(() => generateActivityId()),
   performedBy: PerformedBySchema.optional(),
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 
 export const BaseUpdatePayloadSchema = z.object({
   performedBy: PerformedBySchema.optional(),
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });

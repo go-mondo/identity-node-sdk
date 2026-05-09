@@ -9,7 +9,7 @@ import {
 } from '../../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  UpsertMetadataPropertySchema,
 } from '../../../common/schema/metadata.js';
 
 const TableSchema = z.object({
@@ -37,7 +37,7 @@ export const UserPreferencesPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UserPreferencesPayload = z.output<
   typeof UserPreferencesPayloadSchema
@@ -45,7 +45,7 @@ export type UserPreferencesPayload = z.output<
 
 export const UpsertUserPreferencesPayloadSchema = z.object({
   ...BaseSchema.shape,
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpsertUserPreferencesPayload = z.output<
   typeof UpsertUserPreferencesPayloadSchema

@@ -9,8 +9,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 
 export const OIDCSchema = z.object({
@@ -26,16 +26,16 @@ export const OIDCPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type OIDCPayload = z.output<typeof OIDCPayloadSchema>;
 
 export const InsertOIDCPayloadSchema = z.object({
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertOIDCInput = z.input<typeof InsertOIDCPayloadSchema>;
 export type InsertOIDCPayload = z.output<typeof InsertOIDCPayloadSchema>;
 
-export const UpdateOIDCPayloadSchema = MetadataPayloadPropertySchema;
+export const UpdateOIDCPayloadSchema = UpsertMetadataPropertySchema;
 export type UpdateOIDCInput = z.input<typeof UpdateOIDCPayloadSchema>;
 export type UpdateOIDCPayload = z.output<typeof UpdateOIDCPayloadSchema>;

@@ -12,7 +12,8 @@ import {
 import { KSUIDSchema } from '../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../common/schema/metadata.js';
 import { Model } from './utils.js';
 
@@ -59,7 +60,7 @@ export const AppPayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type AppPayload = z.output<typeof AppPayloadSchema>;
 
@@ -68,7 +69,7 @@ export const InsertAppPayloadSchema = z.object({
   status: StatusSchema.default(AppStatus.ENABLED),
   label: z.string(),
   description: z.string().optional(),
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertAppInput = z.input<typeof InsertAppPayloadSchema>;
 export type InsertAppPayload = z.output<typeof InsertAppPayloadSchema>;
@@ -77,7 +78,7 @@ export const UpdateAppPayloadSchema = z.object({
   status: StatusSchema.optional(),
   label: z.string().or(z.null()).optional(),
   description: z.string().or(z.null()).optional(),
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpdateAppInput = z.input<typeof UpdateAppPayloadSchema>;
 export type UpdateAppPayload = z.output<typeof UpdateAppPayloadSchema>;

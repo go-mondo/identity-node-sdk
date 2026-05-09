@@ -10,7 +10,8 @@ import {
 import { AlgorithmSchema, DEFAULT_ALGORITHM } from '../../common/schema/jwt.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 
 export const DEFAULT_SESSION_DURATION = 60 * 60 * 4; // 4 hour
@@ -39,13 +40,13 @@ export const AuthorizationPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type AuthorizationPayload = z.output<typeof AuthorizationPayloadSchema>;
 
 export const UpsertAuthorizationPayloadSchema = z.object({
   ...BaseAttributes.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpsertAuthorizationPayload = z.output<
   typeof UpsertAuthorizationPayloadSchema

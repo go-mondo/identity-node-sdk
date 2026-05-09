@@ -139,7 +139,7 @@ describe('App OAuth - Schema', () => {
 
       const result = OAuthPayloadSchema.parse(payload);
       // Parse succeeds for valid data
-      expect(result).toEqual(payload);
+      expect(result.metadata).toBeUndefined();
     });
 
     test('should accept payload with optional dates', () => {

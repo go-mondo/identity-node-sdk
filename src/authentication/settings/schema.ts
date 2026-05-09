@@ -9,8 +9,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import { AuthenticationFactorsSchema } from '../factors/schema.js';
 
@@ -29,13 +29,13 @@ export const SettingsPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type SettingsPayload = z.output<typeof SettingsPayloadSchema>;
 
 export const UpsertSettingsPayloadSchema = z.object({
   factors: AuthenticationFactorsSchema.optional(),
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpsertSettingsInput = z.input<typeof UpsertSettingsPayloadSchema>;
 export type UpsertSettingsPayload = z.output<

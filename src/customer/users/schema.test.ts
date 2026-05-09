@@ -169,11 +169,11 @@ describe('Customer - User', () => {
 
     test('should parse valid unverified phone number', () => {
       const result = UnverifiedEmailOrPhonePropertiesSchema.safeParse({
-        unverifiedPhoneNumber: '+0987654321',
+        unverifiedPhoneNumber: '+1987654321',
       });
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.unverifiedPhoneNumber).toBe('+0987654321');
+        expect(result.data.unverifiedPhoneNumber).toBe('+1987654321');
       }
     });
 
@@ -265,7 +265,7 @@ describe('Customer - User', () => {
         verifiedEmail: 'verified@example.com',
         unverifiedEmail: 'pending@example.com',
         verifiedPhoneNumber: '+1234567890',
-        unverifiedPhoneNumber: '+0987654321',
+        unverifiedPhoneNumber: '+1987654321',
         status: UserStatus.ACTIVE,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -278,7 +278,7 @@ describe('Customer - User', () => {
         expect(result.data.verifiedEmail).toBe('verified@example.com');
         expect(result.data.unverifiedEmail).toBe('pending@example.com');
         expect(result.data.verifiedPhoneNumber).toBe('+1234567890');
-        expect(result.data.unverifiedPhoneNumber).toBe('+0987654321');
+        expect(result.data.unverifiedPhoneNumber).toBe('+1987654321');
       }
     });
 
@@ -497,7 +497,7 @@ describe('Customer - User', () => {
         verifiedEmail: 'verified@example.com',
         unverifiedEmail: 'pending@example.com',
         verifiedPhoneNumber: '+1234567890',
-        unverifiedPhoneNumber: '+0987654321',
+        unverifiedPhoneNumber: '+1987654321',
       };
 
       const result = InsertUserPayloadSchema.safeParse(item);
@@ -507,7 +507,7 @@ describe('Customer - User', () => {
         expect(result.data.verifiedEmail).toBe('verified@example.com');
         expect(result.data.unverifiedEmail).toBe('pending@example.com');
         expect(result.data.verifiedPhoneNumber).toBe('+1234567890');
-        expect(result.data.unverifiedPhoneNumber).toBe('+0987654321');
+        expect(result.data.unverifiedPhoneNumber).toBe('+1987654321');
       }
     });
 

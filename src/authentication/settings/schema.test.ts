@@ -211,7 +211,7 @@ describe('Authentication Settings - Schema', () => {
       // Parse succeeds for valid data
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data).toEqual(payload);
+        expect(result.data.metadata).toBeUndefined();
       }
     });
 

@@ -9,7 +9,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 
 const LogoSchema = z.object({
@@ -43,13 +44,13 @@ export const BrandingPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type BrandingPayload = z.output<typeof BrandingPayloadSchema>;
 
 export const UpsertBrandingPayloadSchema = z.object({
   ...BaseSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpsertBrandingPayload = z.output<
   typeof UpsertBrandingPayloadSchema

@@ -15,8 +15,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import {
   optionallyNullish,
@@ -131,7 +131,7 @@ const UserPayloadSchemaBase = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 
 export const UserPayloadSchema = UserPayloadSchemaBase.transform((user) => ({
@@ -162,7 +162,7 @@ export const InsertUserPayloadSchema = z
     ...UserNamePropertiesSchema.shape,
     ...UpsertEmailOrPhonePropertiesSchema.shape,
     ...UserAssociationsSchema.shape,
-    ...UpsertMetadataPropertyPayloadSchema.shape,
+    ...UpsertMetadataPropertySchema.shape,
   })
   .refine(hasEmailOrPhone, {
     message: requiredEmailOrPhoneMessage,
@@ -188,7 +188,7 @@ export const UpdateUserPayloadSchema = z.object({
   ...UpdateUserNamePropertiesSchema.shape,
   ...VerifiedEmailOrPhonePropertiesSchema.shape,
   ...UpsertEmailOrPhonePropertiesSchema.shape,
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpdateUserInput = z.input<typeof UpdateUserPayloadSchema>;
 export type UpdateUserPayload = z.output<typeof UpdateUserPayloadSchema>;

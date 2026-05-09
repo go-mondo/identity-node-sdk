@@ -6,7 +6,7 @@ import {
   UpdatedAtPropertyPayloadSchema,
 } from '../../common/schema/dates.js';
 import { KSUIDSchema } from '../../common/schema/id.js';
-import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import { MetadataRecordPropertySchema } from '../../common/schema/metadata.js';
 import { Model } from './utils.js';
 
 export const ActionOperation = {
@@ -40,5 +40,5 @@ export const BasePayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });

@@ -4,7 +4,7 @@ import {
   DeletedAtPropertyPayloadSchema,
   UpdatedAtPropertyPayloadSchema,
 } from '../../common/schema/dates.js';
-import { MetadataPayloadPropertySchema } from '../../common/schema/metadata.js';
+import { MetadataRecordPropertySchema } from '../../common/schema/metadata.js';
 import { UserIdSchema } from '../../customer/schema.js';
 import { StrategyIdSchema } from '../strategies/schema/base.js';
 
@@ -32,6 +32,6 @@ export const ProviderPayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type ProviderPayload = z.output<typeof ProviderPayloadSchema>;

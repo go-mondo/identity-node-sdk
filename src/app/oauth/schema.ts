@@ -10,7 +10,8 @@ import {
 import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import { Model, generateOAuthId } from '../utils.js';
 
@@ -43,13 +44,13 @@ export const OAuthPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type OAuthPayload = z.output<typeof OAuthPayloadSchema>;
 
 export const InsertOAuthPayloadSchema = z.object({
   id: OAuthIdSchema.default(() => generateOAuthId()),
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertOAuthInput = z.input<typeof InsertOAuthPayloadSchema>;
 export type InsertOAuthPayload = z.output<typeof InsertOAuthPayloadSchema>;

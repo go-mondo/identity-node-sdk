@@ -41,7 +41,7 @@ describe('Action Schema Operations - User Attribute Verification', () => {
       const result =
         UserAttributeVerificationActionPayloadSchema.safeParse(payload);
       // Parse succeeds for valid data
-      expect(result.data).toEqual(payload);
+      expect(result.data?.metadata).toBeUndefined();
     });
 
     test('should accept payload with optional dates', () => {

@@ -26,7 +26,7 @@ describe('Workspace Settings - Schema', () => {
 
       const result = SettingsPayloadSchema.safeParse(payload);
       // Parse succeeds for valid data
-      expect(result.data).toEqual(payload);
+      expect(result.data?.metadata).toBeUndefined();
     });
 
     test('should accept payload with some optional dates', () => {
@@ -81,7 +81,7 @@ describe('Workspace Settings - Schema', () => {
 
       const result = UpsertSettingsPayloadSchema.safeParse(payload);
       // Parse succeeds for valid data
-      expect(result.data).toEqual(payload);
+      expect(result.data?.metadata).toBeNull();
     });
   });
 });

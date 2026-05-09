@@ -14,7 +14,7 @@ import {
 import { KSUIDSchema } from '../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
 } from '../../common/schema/metadata.js';
 import { RelativeUrlPathSchema } from '../../common/schema/url.js';
 import { UserIdSchema } from '../../customer/schema.js';
@@ -102,7 +102,10 @@ export const SessionSchema = z.object({
   expiresAt: RequiredDateSchema,
   ...CreatedAtPropertySchema.shape,
   ...UpdatedAtPropertySchema.shape,
-  factorHistory: SessionAuthenticationFactorHistorySetSchema,
+  factorHistory:
+    SessionAuthenticationFactorHistorySetSchema.optional().transform(
+      (factorHistory) => factorHistory ?? new Set()
+    ),
   redirectPath: RelativeUrlPathSchema.default('/'),
   ...DeletedAtPropertySchema.shape,
   ...DeactivatedAtPropertySchema.shape,
@@ -119,7 +122,7 @@ export const SessionPayloadSchema = z.object({
   redirectPath: RelativeUrlPathSchema.default('/'),
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type SessionPayload = z.output<typeof SessionPayloadSchema>;
 

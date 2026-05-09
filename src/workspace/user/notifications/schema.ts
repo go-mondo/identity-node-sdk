@@ -12,7 +12,8 @@ import {
 import { KSUIDSchema } from '../../../common/schema/id.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../../common/schema/metadata.js';
 import { Model, generateNotificationId } from '../../utils.js';
 
@@ -69,7 +70,7 @@ export const UserNotificationPayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type UserNotificationPayload = z.output<
   typeof UserNotificationPayloadSchema
@@ -80,7 +81,7 @@ export const InsertUserNotificationPayloadSchema = z.object({
   type: z.enum([NotificationType.INFO] as const),
   action: ActionSchema.optional(),
   ...BaseSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertUserNotificationPayload = z.output<
   typeof InsertUserNotificationPayloadSchema
@@ -89,7 +90,7 @@ export type InsertUserNotificationPayload = z.output<
 export const UpdateUserNotificationPayloadSchema = z.object({
   ...BaseSchema.shape,
   action: ActionSchema.optional(),
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpdateUserNotificationPayload = z.output<
   typeof UpdateUserNotificationPayloadSchema

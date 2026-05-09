@@ -11,8 +11,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import { OrganizationIdSchema, generateOrganizationId } from '../schema.js';
 
@@ -60,7 +60,7 @@ export const OrganizationPayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type OrganizationPayload = z.output<typeof OrganizationPayloadSchema>;
 
@@ -68,7 +68,7 @@ export const InsertOrganizationPayloadSchema = z.object({
   id: OrganizationIdSchema.default(() => generateOrganizationId()),
   status: OrganizationStatusSchema.optional(),
   name: OrganizationNameSchema,
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertOrganizationPayload = z.output<
   typeof InsertOrganizationPayloadSchema
@@ -77,7 +77,7 @@ export type InsertOrganizationPayload = z.output<
 export const UpdateOrganizationPayloadSchema = z.object({
   status: OrganizationStatusSchema.optional(),
   name: OrganizationNameSchema.optional(),
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpdateOrganizationPayload = z.output<
   typeof UpdateOrganizationPayloadSchema

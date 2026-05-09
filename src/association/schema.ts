@@ -17,7 +17,8 @@ import {
 } from '../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../common/schema/metadata.js';
 import { OrganizationAssociationReferenceSchema } from '../customer/organization/schema.js';
 import { UserAssociationReferenceSchema } from '../customer/users/schema.js';
@@ -81,7 +82,7 @@ export const AssociationPayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 type RootAssociationPayload = z.output<typeof AssociationPayloadSchema>;
 
@@ -93,7 +94,7 @@ export type AssociationPayload<
 
 export const UpsertAssociationPayloadSchema = z.object({
   expiresAt: OptionalDatePayloadSchema,
-  ...MetadataPayloadPropertySchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpsertAssociationInput = z.input<
   typeof UpsertAssociationPayloadSchema

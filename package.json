@@ -134,7 +134,7 @@
   },
   "dependencies": {
     "ksuid": "^3.0.0",
-    "zod": "^4.0.17"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

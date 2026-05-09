@@ -13,8 +13,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import { UserIdAssociationsSchema } from '../../customer/schema.js';
 import { PermissionIdAssociationsSchema, RoleIdSchema } from '../schema.js';
@@ -67,7 +67,7 @@ export const RolePayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type RolePayload = z.output<typeof RolePayloadSchema>;
 
@@ -80,7 +80,7 @@ export const InsertRolePayloadSchema = z.object({
   status: StatusSchema.default(RoleStatus.ENABLED),
   description: z.string().optional(),
   ...RoleAssociationsSchema.shape,
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertRoleInput = z.input<typeof InsertRolePayloadSchema>;
 export type InsertRolePayload = z.output<typeof InsertRolePayloadSchema>;
@@ -92,7 +92,7 @@ export const UpdateRolePayloadSchema = z.object({
   name: z.string().optional(),
   status: StatusSchema.optional(),
   description: z.string().optional(),
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpdateRoleInput = z.input<typeof UpdateRolePayloadSchema>;
 export type UpdateRolePayload = z.output<typeof UpdateRolePayloadSchema>;

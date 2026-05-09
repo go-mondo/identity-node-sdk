@@ -13,8 +13,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 import { PermissionIdSchema, RoleIdAssociationsSchema } from '../schema.js';
 
@@ -70,7 +70,7 @@ export const PermissionPayloadSchema = z.object({
   ...UpdatedAtPropertyPayloadSchema.shape,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type PermissionPayload = z.output<typeof PermissionPayloadSchema>;
 
@@ -83,7 +83,7 @@ export const InsertPermissionPayloadSchema = z.object({
   status: PermissionStatusSchema.default(PermissionStatus.ENABLED),
   description: z.string().optional(),
   ...PermissionAssociationsSchema.shape,
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertPermissionInput = z.input<
   typeof InsertPermissionPayloadSchema
@@ -99,7 +99,7 @@ export const UpdatePermissionPayloadSchema = z.object({
   name: z.string().optional(),
   status: PermissionStatusSchema.optional(),
   description: z.string().optional(),
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type UpdatePermissionInput = z.input<
   typeof UpdatePermissionPayloadSchema

@@ -9,8 +9,8 @@ import {
 } from '../../common/schema/dates.js';
 import {
   MetadataMapPropertySchema,
-  MetadataPayloadPropertySchema,
-  UpsertMetadataPropertyPayloadSchema,
+  MetadataRecordPropertySchema,
+  UpsertMetadataPropertySchema,
 } from '../../common/schema/metadata.js';
 
 export const SAMLSchema = z.object({
@@ -26,16 +26,16 @@ export const SAMLPayloadSchema = z.object({
   updatedAt: OptionalDatePayloadSchema,
   ...DeletedAtPropertyPayloadSchema.shape,
   ...DeactivatedAtPropertyPayloadSchema.shape,
-  ...MetadataPayloadPropertySchema.shape,
+  ...MetadataRecordPropertySchema.shape,
 });
 export type SAMLPayload = z.output<typeof SAMLPayloadSchema>;
 
 export const InsertSAMLPayloadSchema = z.object({
-  ...UpsertMetadataPropertyPayloadSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
 });
 export type InsertSAMLInput = z.input<typeof InsertSAMLPayloadSchema>;
 export type InsertSAMLPayload = z.output<typeof InsertSAMLPayloadSchema>;
 
-export const UpdateSAMLPayloadSchema = UpsertMetadataPropertyPayloadSchema;
+export const UpdateSAMLPayloadSchema = UpsertMetadataPropertySchema;
 export type UpdateSAMLInput = z.input<typeof InsertSAMLPayloadSchema>;
 export type UpdateSAMLPayload = z.output<typeof InsertSAMLPayloadSchema>;

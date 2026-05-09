@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import {
-  type AppAssociationReference,
   AppAssociationReferenceSchema,
   AppIdPropertySchema,
   AppIdSchema,
+  AppPayloadSchema,
   AppSchema,
   AppStatus,
   UpdateAppPayloadSchema,
@@ -77,7 +77,6 @@ describe('App - Schema', () => {
         label: 'Simple App',
         createdAt: new Date(),
         updatedAt: new Date(),
-        metadata: {},
       };
 
       const result = AppSchema.parse(app);
@@ -123,6 +122,114 @@ describe('App - Schema', () => {
       };
 
       const result = AppSchema.safeParse(app);
+      expect(result.success).toBe(false);
+    });
+  });
+
+  describe('AppPayloadSchema', () => {
+    test('should accept complete app payload', () => {
+      const payload = {
+        id: generateAppId(),
+        status: 'enabled' as const,
+        label: 'Payload App',
+        description: 'Application payload description',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        deletedAt: new Date().toISOString(),
+        deactivatedAt: new Date().toISOString(),
+        metadata: {
+          enabled: true,
+          plan: 'pro',
+          version: 1,
+        },
+      };
+
+      const result = AppPayloadSchema.parse(payload);
+
+      expect(result).toEqual(payload);
+    });
+
+    test('should accept minimal app payload', () => {
+      const payload = {
+        id: generateAppId(),
+        status: 'disabled' as const,
+        label: 'Minimal Payload App',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const result = AppPayloadSchema.parse(payload);
+
+      expect(result).toEqual({
+        ...payload,
+        metadata: undefined,
+      });
+    });
+
+    test('should convert metadata map to record', () => {
+      const payload = {
+        id: generateAppId(),
+        status: 'enabled' as const,
+        label: 'Map Metadata App',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        metadata: new Map<string, string | number | boolean>([
+          ['enabled', true],
+          ['plan', 'pro'],
+          ['version', 2],
+        ]),
+      };
+
+      const result = AppPayloadSchema.parse(payload);
+
+      expect(result.metadata).toEqual({
+        enabled: true,
+        plan: 'pro',
+        version: 2,
+      });
+    });
+
+    test('should omit empty metadata from payload output', () => {
+      const payload = {
+        id: generateAppId(),
+        status: 'enabled' as const,
+        label: 'Empty Metadata App',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        metadata: {},
+      };
+
+      const result = AppPayloadSchema.parse(payload);
+
+      expect(result.metadata).toBeUndefined();
+    });
+
+    test('should reject invalid payload metadata values', () => {
+      const payload = {
+        id: generateAppId(),
+        status: 'enabled' as const,
+        label: 'Invalid Metadata App',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        metadata: {
+          nested: { unsupported: true },
+        },
+      };
+
+      const result = AppPayloadSchema.safeParse(payload);
+
+      expect(result.success).toBe(false);
+    });
+
+    test('should reject missing required payload fields', () => {
+      const payload = {
+        id: generateAppId(),
+        status: 'enabled' as const,
+        // missing label, createdAt, updatedAt
+      };
+
+      const result = AppPayloadSchema.safeParse(payload);
+
       expect(result.success).toBe(false);
     });
   });
