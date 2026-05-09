@@ -1,7 +1,7 @@
 import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
-  getItemWithAuthorization,
+  listItemsWithAuthorization,
 } from '../../common/resources/operations.js';
 import { addPaginationToURL } from '../../common/resources/utils.js';
 import {
@@ -68,7 +68,7 @@ export async function listSessions(
   );
 
   return PaginationCollectionSchema(SessionSchema).parse(
-    await getItemWithAuthorization(url, instance.authorize)
+    await listItemsWithAuthorization(url, instance.authorize)
   );
 }
 

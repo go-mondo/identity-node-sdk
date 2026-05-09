@@ -2,6 +2,7 @@ import type { MondoInstance } from '../../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
   getItemWithAuthorization,
+  listItemsWithAuthorization,
   patchItemWithAuthorization,
   postItemWithAuthorization,
 } from '../../common/resources/operations.js';
@@ -69,7 +70,7 @@ export async function listPermissions(
   );
 
   return PaginationCollectionSchema(PermissionSchema).parse(
-    await getItemWithAuthorization(url, instance.authorize)
+    await listItemsWithAuthorization(url, instance.authorize)
   );
 }
 

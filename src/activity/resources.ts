@@ -1,5 +1,5 @@
 import type { MondoInstance } from '../common/resources/init.js';
-import { getItemWithAuthorization } from '../common/resources/operations.js';
+import { listItemsWithAuthorization } from '../common/resources/operations.js';
 import { addPaginationToURL } from '../common/resources/utils.js';
 import {
   type PaginationCollection,
@@ -40,6 +40,6 @@ export async function listActivities(
   );
 
   return PaginationCollectionSchema(ActivitySchema).parse(
-    await getItemWithAuthorization(url, instance.authorize)
+    await listItemsWithAuthorization(url, instance.authorize)
   );
 }

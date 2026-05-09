@@ -1,7 +1,7 @@
 import type { MondoInstance } from '../common/resources/init.js';
 import {
   deleteItemWithAuthorization,
-  getItemWithAuthorization,
+  listItemsWithAuthorization,
   putItemWithAuthorization,
 } from '../common/resources/operations.js';
 import { addPaginationToURL } from '../common/resources/utils.js';
@@ -93,7 +93,7 @@ export async function listAssociations<O extends AssociationObject>(
   );
 
   return PaginationCollectionSchema(AssociationSchema).parse(
-    await getItemWithAuthorization(url, instance.authorize)
+    await listItemsWithAuthorization(url, instance.authorize)
   ) as unknown as Promise<PaginationCollection<Association<O>>>;
 }
 
