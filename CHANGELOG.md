@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.87](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.86...identity-sdk-v0.0.2-beta.87) (2026-05-09)
+
+
+### Bug Fixes
+
+* use instance over class ([7908bbd](https://github.com/go-mondo/identity-node-sdk/commit/7908bbde9c760ab727c39b873a4b078ed44e9c5a))
+
 ## [0.0.2-beta.86](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.85...identity-sdk-v0.0.2-beta.86) (2026-05-08)
 
 
