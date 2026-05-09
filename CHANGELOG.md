@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.89](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.88...identity-sdk-v0.0.2-beta.89) (2026-05-09)
+
+
+### Bug Fixes
+
+* zod upgrade | metadata refactor ([186761e](https://github.com/go-mondo/identity-node-sdk/commit/186761e28e92d2a6580172508948508383cc1e27))
+
 ## [0.0.2-beta.88](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.87...identity-sdk-v0.0.2-beta.88) (2026-05-09)
 
 
