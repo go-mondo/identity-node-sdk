@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.90](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.89...identity-sdk-v0.0.2-beta.90) (2026-05-12)
+
+
+### Bug Fixes
+
+* use Bearer token ([7211bf8](https://github.com/go-mondo/identity-node-sdk/commit/7211bf88756f446602acfaf86f9483038b4a0179))
+
 ## [0.0.2-beta.89](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.88...identity-sdk-v0.0.2-beta.89) (2026-05-09)
 
 
