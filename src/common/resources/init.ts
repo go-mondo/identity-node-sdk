@@ -67,7 +67,10 @@ export class MondoIdentity implements MondoInstance {
           : this.config.accessToken;
 
       request.headers = new Headers(request.headers);
-      request.headers.set('authorization', getAccessTokenValue(accessToken));
+      request.headers.set(
+        'authorization',
+        `Bearer ${getAccessTokenValue(accessToken)}`
+      );
       return request;
     };
   }

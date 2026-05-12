@@ -147,7 +147,7 @@ describe('Common Resources - Init', () => {
 
         expect(authorizedRequest.headers).toBeInstanceOf(Headers);
         const headers = authorizedRequest.headers as Headers;
-        expect(headers.get('authorization')).toBe('bearer-token-123');
+        expect(headers.get('authorization')).toBe('Bearer bearer-token-123');
       });
 
       test('should preserve existing headers when adding authorization', async () => {
@@ -169,7 +169,7 @@ describe('Common Resources - Init', () => {
         const authorizedRequest = await authorize(mockRequest);
         const headers = authorizedRequest.headers as Headers;
 
-        expect(headers.get('authorization')).toBe('test-token');
+        expect(headers.get('authorization')).toBe('Bearer test-token');
         expect(headers.get('content-type')).toBe('application/json');
         expect(headers.get('user-agent')).toBe('test-client');
       });
@@ -194,7 +194,7 @@ describe('Common Resources - Init', () => {
         const authorizedRequest = await authorize(mockRequest);
         const headers = authorizedRequest.headers as Headers;
 
-        expect(headers.get('authorization')).toBe('header-token');
+        expect(headers.get('authorization')).toBe('Bearer header-token');
         expect(headers.get('accept')).toBe('application/json');
       });
 
@@ -214,7 +214,9 @@ describe('Common Resources - Init', () => {
         const authorizedRequest = await authorize(mockRequest);
         const headers = authorizedRequest.headers as Headers;
 
-        expect(headers.get('authorization')).toBe('undefined-headers-token');
+        expect(headers.get('authorization')).toBe(
+          'Bearer undefined-headers-token'
+        );
       });
 
       test('should return same request reference with modified headers', async () => {
@@ -257,8 +259,8 @@ describe('Common Resources - Init', () => {
         const headers1 = result1.headers as Headers;
         const headers2 = result2.headers as Headers;
 
-        expect(headers1.get('authorization')).toBe('consistent-token');
-        expect(headers2.get('authorization')).toBe('consistent-token');
+        expect(headers1.get('authorization')).toBe('Bearer consistent-token');
+        expect(headers2.get('authorization')).toBe('Bearer consistent-token');
       });
 
       test('should resolve access token providers with authorize options', async () => {
@@ -276,10 +278,10 @@ describe('Common Resources - Init', () => {
         expect(accessToken).toHaveBeenNthCalledWith(1, undefined);
         expect(accessToken).toHaveBeenNthCalledWith(2, { refresh: true });
         expect((cachedRequest.headers as Headers).get('authorization')).toBe(
-          'cached-token'
+          'Bearer cached-token'
         );
         expect((refreshedRequest.headers as Headers).get('authorization')).toBe(
-          'refreshed-token'
+          'Bearer refreshed-token'
         );
       });
 
@@ -295,7 +297,7 @@ describe('Common Resources - Init', () => {
         const request = await mondoIdentity.authorize({ method: 'GET' });
 
         expect((request.headers as Headers).get('authorization')).toBe(
-          'object-token'
+          'Bearer object-token'
         );
       });
     });
@@ -327,7 +329,9 @@ describe('Common Resources - Init', () => {
         const authorizedRequest = await authorize(apiRequest);
         const headers = authorizedRequest.headers as Headers;
 
-        expect(headers.get('authorization')).toBe('prod_12345abcdef67890');
+        expect(headers.get('authorization')).toBe(
+          'Bearer prod_12345abcdef67890'
+        );
         expect(headers.get('accept')).toBe('application/json');
         expect(headers.get('user-agent')).toBe('mondo-identity-sdk/1.0.0');
       });
