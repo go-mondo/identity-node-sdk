@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.94](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.93...identity-sdk-v0.0.2-beta.94) (2026-05-13)
+
+
+### Bug Fixes
+
+* export upsert metadata schema ([a4480a5](https://github.com/go-mondo/identity-node-sdk/commit/a4480a514dfc615070ae6acf0cc947e7d5a81968))
+
 ## [0.0.2-beta.93](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.92...identity-sdk-v0.0.2-beta.93) (2026-05-13)
 
 
