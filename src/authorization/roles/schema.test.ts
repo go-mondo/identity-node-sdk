@@ -4,6 +4,7 @@ import { generateUserId } from '../../customer/schema.js';
 import { generatePermissionId, generateRoleId } from '../schema.js';
 import {
   InsertRolePayloadSchema,
+  InsertRolePayloadWithoutAssociationsSchema,
   RoleAssociationReferenceSchema,
   RoleAssociationsSchema,
   RoleIdPropertySchema,
@@ -189,6 +190,40 @@ describe('Authorization Roles - Schema', () => {
 
       const result = InsertRolePayloadSchema.safeParse(payload);
       // Parse succeeds for valid data
+    });
+  });
+
+  describe('InsertRolePayloadWithoutAssociationsSchema', () => {
+    test('should accept insert payload without associations', () => {
+      const payload = {
+        id: generateRoleId(),
+        name: 'admin',
+        status: 'enabled' as const,
+        description: 'Administrator role',
+        metadata: { key: 'value' },
+      };
+
+      const result =
+        InsertRolePayloadWithoutAssociationsSchema.safeParse(payload);
+      expect(result.data).toEqual(payload);
+    });
+
+    test('should omit associations from insert payload output', () => {
+      const payload = {
+        name: 'moderator',
+        apps: [generateAppId()],
+        permissions: [generatePermissionId()],
+        users: [generateUserId()],
+      };
+
+      const result =
+        InsertRolePayloadWithoutAssociationsSchema.safeParse(payload);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).not.toHaveProperty('apps');
+        expect(result.data).not.toHaveProperty('permissions');
+        expect(result.data).not.toHaveProperty('users');
+      }
     });
   });
 

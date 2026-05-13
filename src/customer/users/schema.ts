@@ -145,6 +145,15 @@ export const UserPayloadSchema = UserPayloadSchemaBase.transform((user) => ({
 }));
 export type UserPayload = z.output<typeof UserPayloadSchema>;
 
+const InsertUserPayloadShape = {
+  id: UserIdSchema.optional(),
+  status: UserStatusSchema.optional(),
+  ...UserNamePropertiesSchema.shape,
+  ...UpsertEmailOrPhonePropertiesSchema.shape,
+  ...UserAssociationsSchema.shape,
+  ...UpsertMetadataPropertySchema.shape,
+};
+
 const requiredEmailOrPhoneMessage =
   'At least one of verifiedEmail, verifiedPhoneNumber, unverifiedEmail, or unverifiedPhoneNumber is required';
 
@@ -159,31 +168,34 @@ const hasEmailOrPhone = (data: {
   data.unverifiedEmail != null ||
   data.unverifiedPhoneNumber != null;
 
-export const InsertUserPayloadSchema = z
-  .object({
-    id: UserIdSchema.optional(),
-    status: UserStatusSchema.optional(),
-    ...UserNamePropertiesSchema.shape,
-    ...UpsertEmailOrPhonePropertiesSchema.shape,
-    ...UserAssociationsSchema.shape,
-    ...UpsertMetadataPropertySchema.shape,
-  })
-  .refine(hasEmailOrPhone, {
-    message: requiredEmailOrPhoneMessage,
-    path: ['verifiedEmail'],
-  })
-  .refine(hasEmailOrPhone, {
-    message: requiredEmailOrPhoneMessage,
-    path: ['verifiedPhoneNumber'],
-  })
-  .refine(hasEmailOrPhone, {
-    message: requiredEmailOrPhoneMessage,
-    path: ['unverifiedEmail'],
-  })
-  .refine(hasEmailOrPhone, {
-    message: requiredEmailOrPhoneMessage,
-    path: ['unverifiedPhoneNumber'],
-  });
+const withRequiredEmailOrPhone = <T extends z.ZodObject>(schema: T) =>
+  schema
+    .refine(hasEmailOrPhone, {
+      message: requiredEmailOrPhoneMessage,
+      path: ['verifiedEmail'],
+    })
+    .refine(hasEmailOrPhone, {
+      message: requiredEmailOrPhoneMessage,
+      path: ['verifiedPhoneNumber'],
+    })
+    .refine(hasEmailOrPhone, {
+      message: requiredEmailOrPhoneMessage,
+      path: ['unverifiedEmail'],
+    })
+    .refine(hasEmailOrPhone, {
+      message: requiredEmailOrPhoneMessage,
+      path: ['unverifiedPhoneNumber'],
+    });
+
+const { roles, ...InsertUserPayloadWithoutAssociationsShape } =
+  InsertUserPayloadShape;
+
+export const InsertUserPayloadWithoutAssociationsSchema =
+  withRequiredEmailOrPhone(z.object(InsertUserPayloadWithoutAssociationsShape));
+
+export const InsertUserPayloadSchema = withRequiredEmailOrPhone(
+  z.object(InsertUserPayloadShape)
+);
 export type InsertUserInput = z.input<typeof InsertUserPayloadSchema>;
 export type InsertUserPayload = z.output<typeof InsertUserPayloadSchema>;
 

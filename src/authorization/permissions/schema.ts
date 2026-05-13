@@ -77,13 +77,21 @@ export type PermissionPayload = z.output<typeof PermissionPayloadSchema>;
 /**
  * Insert
  */
-export const InsertPermissionPayloadSchema = z.object({
+const InsertPermissionPayloadWithoutAssociationsShape = {
   id: PermissionIdSchema.optional(),
   name: z.string(),
   status: PermissionStatusSchema.default(PermissionStatus.ENABLED),
   description: z.string().optional(),
-  ...PermissionAssociationsSchema.shape,
   ...UpsertMetadataPropertySchema.shape,
+};
+
+export const InsertPermissionPayloadWithoutAssociationsSchema = z.object(
+  InsertPermissionPayloadWithoutAssociationsShape
+);
+
+export const InsertPermissionPayloadSchema = z.object({
+  ...InsertPermissionPayloadWithoutAssociationsShape,
+  ...PermissionAssociationsSchema.shape,
 });
 export type InsertPermissionInput = z.input<
   typeof InsertPermissionPayloadSchema

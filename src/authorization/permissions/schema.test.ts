@@ -7,6 +7,7 @@ import {
 } from '../schema.js';
 import {
   InsertPermissionPayloadSchema,
+  InsertPermissionPayloadWithoutAssociationsSchema,
   PermissionAssociationReferenceSchema,
   PermissionAssociationsSchema,
   PermissionIdPropertySchema,
@@ -172,6 +173,38 @@ describe('Authorization Permissions - Schema', () => {
     test('should reject missing name', () => {
       const result = InsertPermissionPayloadSchema.safeParse({});
       expect(result.success).toBe(false);
+    });
+  });
+
+  describe('InsertPermissionPayloadWithoutAssociationsSchema', () => {
+    test('should accept insert payload without associations', () => {
+      const payload = {
+        id: generatePermissionId(),
+        name: 'read:users',
+        status: 'enabled' as const,
+        description: 'Read user data',
+        metadata: { key: 'value' },
+      };
+
+      const result =
+        InsertPermissionPayloadWithoutAssociationsSchema.safeParse(payload);
+      expect(result.data).toEqual(payload);
+    });
+
+    test('should omit associations from insert payload output', () => {
+      const payload = {
+        name: 'read:users',
+        apps: [generateAppId()],
+        roles: [generateRoleId()],
+      };
+
+      const result =
+        InsertPermissionPayloadWithoutAssociationsSchema.safeParse(payload);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).not.toHaveProperty('apps');
+        expect(result.data).not.toHaveProperty('roles');
+      }
     });
   });
 

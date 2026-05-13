@@ -74,13 +74,21 @@ export type RolePayload = z.output<typeof RolePayloadSchema>;
 /**
  * Insert
  */
-export const InsertRolePayloadSchema = z.object({
+const InsertRolePayloadWithoutAssociationsShape = {
   id: RoleIdSchema.optional(),
   name: z.string(),
   status: StatusSchema.default(RoleStatus.ENABLED),
   description: z.string().optional(),
-  ...RoleAssociationsSchema.shape,
   ...UpsertMetadataPropertySchema.shape,
+};
+
+export const InsertRolePayloadWithoutAssociationsSchema = z.object(
+  InsertRolePayloadWithoutAssociationsShape
+);
+
+export const InsertRolePayloadSchema = z.object({
+  ...InsertRolePayloadWithoutAssociationsShape,
+  ...RoleAssociationsSchema.shape,
 });
 export type InsertRoleInput = z.input<typeof InsertRolePayloadSchema>;
 export type InsertRolePayload = z.output<typeof InsertRolePayloadSchema>;

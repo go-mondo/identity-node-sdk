@@ -3,6 +3,7 @@ import { generateUserId } from '../schema.js';
 import {
   EmailOrPhonePropertiesSchema,
   InsertUserPayloadSchema,
+  InsertUserPayloadWithoutAssociationsSchema,
   RequiredEmailSchema,
   UnverifiedEmailOrPhonePropertiesSchema,
   UpdateUserNamePropertiesSchema,
@@ -649,6 +650,41 @@ describe('Customer - User', () => {
         expect(result.data.unverifiedEmail).toBeNull();
         expect(result.data.verifiedEmail).toBeUndefined();
         expect(result.data.verifiedPhoneNumber).toBeUndefined();
+      }
+    });
+  });
+
+  describe('InsertUserPayloadWithoutAssociationsSchema', () => {
+    test('should accept insert payload without associations', async () => {
+      const item = {
+        id: generateUserId(),
+        familyName: 'Foo',
+        verifiedPhoneNumber: '+12025551234',
+      };
+
+      const result = InsertUserPayloadWithoutAssociationsSchema.safeParse(item);
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual(item);
+      }
+    });
+
+    test('should omit associations from insert payload output', async () => {
+      const item = {
+        id: generateUserId(),
+        verifiedEmail: 'test@example.com',
+        roles: [
+          'rol_2NfYOTzVqhCHgWFzUL0WPfRRuhH',
+          'rol_2NfYOTzVqhCHgWFzUL0WPfRRuhI',
+        ],
+      };
+
+      const result = InsertUserPayloadWithoutAssociationsSchema.safeParse(item);
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).not.toHaveProperty('roles');
       }
     });
   });
