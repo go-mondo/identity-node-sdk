@@ -110,14 +110,20 @@ describe('Action Schema Operations - Sign Up', () => {
     test('should accept email sign up request', () => {
       const request = {
         id: generateUserId(),
-        email: 'john@example.com',
+        email: '  John@Example.COM  ',
         givenName: 'John',
         familyName: 'Doe',
       };
 
       const result = SignUpActionRequestSchema.safeParse(request);
       // Parse succeeds for valid data
-      expect(result.data).toEqual(request);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toEqual({
+          ...request,
+          email: 'john@example.com',
+        });
+      }
     });
 
     test('should accept phone number sign up request', () => {

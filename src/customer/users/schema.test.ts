@@ -3,6 +3,7 @@ import { generateUserId } from '../schema.js';
 import {
   EmailOrPhonePropertiesSchema,
   InsertUserPayloadSchema,
+  RequiredEmailSchema,
   UnverifiedEmailOrPhonePropertiesSchema,
   UpdateUserNamePropertiesSchema,
   UpdateUserPayloadSchema,
@@ -94,6 +95,17 @@ describe('Customer - User', () => {
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.givenName).toBeNull();
+      }
+    });
+  });
+
+  describe('RequiredEmailSchema', () => {
+    test('should trim and lowercase email addresses', () => {
+      const result = RequiredEmailSchema.safeParse('  Test.User@Example.COM  ');
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data).toBe('test.user@example.com');
       }
     });
   });
@@ -494,8 +506,8 @@ describe('Customer - User', () => {
     test('should parse with all verified and unverified email/phone properties', async () => {
       const item = {
         id: generateUserId(),
-        verifiedEmail: 'verified@example.com',
-        unverifiedEmail: 'pending@example.com',
+        verifiedEmail: '  Verified@Example.COM  ',
+        unverifiedEmail: '  Pending@Example.COM  ',
         verifiedPhoneNumber: '+1234567890',
         unverifiedPhoneNumber: '+1987654321',
       };
