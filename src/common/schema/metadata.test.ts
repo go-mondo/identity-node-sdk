@@ -4,6 +4,7 @@ import {
   MetadataMapSchema,
   MetadataRecordPropertySchema,
   MetadataRecordSchema,
+  UpsertMetadataSchema,
   UpsertMetadataPropertySchema,
   buildMetadataPayload,
   buildUpsertMetadataPayload,
@@ -211,6 +212,54 @@ describe('Common - Metadata', () => {
       const result = MetadataRecordPropertySchema.safeParse({});
 
       expect(result.data?.metadata).is.undefined;
+    });
+  });
+
+  describe('UpsertMetadataSchema', () => {
+    test('should handle incoming record', () => {
+      const result = UpsertMetadataSchema.safeParse({
+        foo: 'bar',
+        enabled: true,
+        retries: 3,
+      });
+
+      expect(result.data).toEqual({
+        foo: 'bar',
+        enabled: true,
+        retries: 3,
+      });
+    });
+
+    test('should handle incoming map', () => {
+      const result = UpsertMetadataSchema.safeParse(
+        new Map<string, string | number>([
+          ['foo', 'bar'],
+          ['baz', 0],
+        ])
+      );
+
+      expect(result.data).toEqual({
+        foo: 'bar',
+        baz: 0,
+      });
+    });
+
+    test('should return null for empty inputs that explicitly clear metadata', () => {
+      expect(UpsertMetadataSchema.parse(null)).toBeNull();
+      expect(UpsertMetadataSchema.parse({})).toBeNull();
+      expect(UpsertMetadataSchema.parse(new Map())).toBeNull();
+    });
+
+    test('should return undefined for missing input', () => {
+      expect(UpsertMetadataSchema.parse(undefined)).toBeUndefined();
+    });
+
+    test('should reject unsupported metadata values', () => {
+      const result = UpsertMetadataSchema.safeParse({
+        nested: { unsupported: true },
+      });
+
+      expect(result.success).toBe(false);
     });
   });
 

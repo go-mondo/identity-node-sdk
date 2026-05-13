@@ -151,6 +151,24 @@ export type MetadataRecordProperty = z.output<
 >;
 
 /**
+ * Parses metadata for update/upsert payloads.
+ *
+ * Missing or `undefined` metadata stays `undefined`. Explicitly empty or
+ * `null` metadata is normalized to `null`, allowing callers to clear existing
+ * metadata.
+ */
+export const UpsertMetadataSchema =
+  MetadataRecordSchema.optional().transform(emptyRecordToNull);
+/**
+ * Input accepted by {@link UpsertMetadataSchema}.
+ */
+export type UpsertMetadataInput = z.input<typeof UpsertMetadataSchema>;
+/**
+ * Output produced by {@link UpsertMetadataSchema}.
+ */
+export type UpsertMetadata = z.output<typeof UpsertMetadataSchema>;
+
+/**
  * Object schema for upsert payloads that expose metadata as a record.
  *
  * Missing or `undefined` `metadata` stays `undefined`. Explicitly empty or
@@ -158,7 +176,7 @@ export type MetadataRecordProperty = z.output<
  * metadata.
  */
 export const UpsertMetadataPropertySchema = z.object({
-  metadata: MetadataRecordSchema.optional().transform(emptyRecordToNull),
+  metadata: UpsertMetadataSchema,
 });
 export type UpsertMetadataPropertyInput = z.input<
   typeof UpsertMetadataPropertySchema
