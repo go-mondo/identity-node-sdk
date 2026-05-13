@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.92](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.91...identity-sdk-v0.0.2-beta.92) (2026-05-13)
+
+
+### Bug Fixes
+
+* normalize email address ([73f45f0](https://github.com/go-mondo/identity-node-sdk/commit/73f45f01f2381fa8889c8df342b135c3841eabe1))
+
 ## [0.0.2-beta.91](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.90...identity-sdk-v0.0.2-beta.91) (2026-05-12)
 
 
