@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.93](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.92...identity-sdk-v0.0.2-beta.93) (2026-05-13)
+
+
+### Bug Fixes
+
+* export schemas without associations ([d60372f](https://github.com/go-mondo/identity-node-sdk/commit/d60372f9dd977beb301ca54b39d266b7502806a3))
+
 ## [0.0.2-beta.92](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.91...identity-sdk-v0.0.2-beta.92) (2026-05-13)
 
 
