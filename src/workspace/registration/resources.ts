@@ -27,8 +27,8 @@ export class RegistrationResources {
     return getRegistration(this.instance);
   }
 
-  public updateItem(item: UpsertRegistrationInput): Promise<Registration> {
-    return updateRegistration(this.instance, item);
+  public upsertItem(item: UpsertRegistrationInput): Promise<Registration> {
+    return upsertRegistration(this.instance, item);
   }
 }
 
@@ -43,7 +43,7 @@ export async function getRegistration(
   );
 }
 
-export async function updateRegistration(
+export async function upsertRegistration(
   instance: MondoInstance,
   item: UpsertRegistrationInput
 ): Promise<Registration> {

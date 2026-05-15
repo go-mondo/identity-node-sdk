@@ -25,8 +25,8 @@ export class BrandingResources {
     return getBranding(this.instance);
   }
 
-  public updateItem(item: UpsertBrandingInput): Promise<Branding> {
-    return updateBranding(this.instance, item);
+  public upsertItem(item: UpsertBrandingInput): Promise<Branding> {
+    return upsertBranding(this.instance, item);
   }
 }
 
@@ -39,7 +39,7 @@ export async function getBranding(instance: MondoInstance): Promise<Branding> {
   );
 }
 
-export async function updateBranding(
+export async function upsertBranding(
   instance: MondoInstance,
   item: UpsertBrandingInput
 ): Promise<Branding> {

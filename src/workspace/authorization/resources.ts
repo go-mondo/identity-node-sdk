@@ -27,8 +27,8 @@ export class AuthorizationResources {
     return getAuthorization(this.instance);
   }
 
-  public updateItem(item: UpsertAuthorizationInput): Promise<Authorization> {
-    return updateAuthorization(this.instance, item);
+  public upsertItem(item: UpsertAuthorizationInput): Promise<Authorization> {
+    return upsertAuthorization(this.instance, item);
   }
 }
 
@@ -43,7 +43,7 @@ export async function getAuthorization(
   );
 }
 
-export async function updateAuthorization(
+export async function upsertAuthorization(
   instance: MondoInstance,
   item: UpsertAuthorizationInput
 ): Promise<Authorization> {
