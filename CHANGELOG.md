@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.98](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.97...identity-sdk-v0.0.2-beta.98) (2026-05-15)
+
+
+### Bug Fixes
+
+* prepend version to workspace resources ([36d90ae](https://github.com/go-mondo/identity-node-sdk/commit/36d90aec066bb8e38709e42f5725033150af4403))
+
 ## [0.0.2-beta.97](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.96...identity-sdk-v0.0.2-beta.97) (2026-05-15)
 
 
