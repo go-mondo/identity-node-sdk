@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.97](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.96...identity-sdk-v0.0.2-beta.97) (2026-05-15)
+
+
+### Bug Fixes
+
+* prefer upsert over update ([c2208f4](https://github.com/go-mondo/identity-node-sdk/commit/c2208f4058faa7d472c50c45d1737be35a13112e))
+
 ## [0.0.2-beta.96](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.95...identity-sdk-v0.0.2-beta.96) (2026-05-15)
 
 
