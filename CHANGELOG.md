@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2-beta.96](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.95...identity-sdk-v0.0.2-beta.96) (2026-05-15)
+
+
+### Bug Fixes
+
+* export new resources ([f7974cf](https://github.com/go-mondo/identity-node-sdk/commit/f7974cfbbec62669c263e1d0d1d7f28ad68f95a1))
+
 ## [0.0.2-beta.95](https://github.com/go-mondo/identity-node-sdk/compare/identity-sdk-v0.0.2-beta.94...identity-sdk-v0.0.2-beta.95) (2026-05-15)
 
 
