@@ -10,7 +10,7 @@ import {
   UpsertRegistrationPayloadSchema,
 } from './schema.js';
 
-const PATH = '/workspace/registration';
+const PATH = '/v1/workspace/registration';
 
 export type UpsertRegistrationInput = z.input<
   typeof UpsertRegistrationPayloadSchema

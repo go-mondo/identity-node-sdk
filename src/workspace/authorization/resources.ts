@@ -10,7 +10,7 @@ import {
   UpsertAuthorizationPayloadSchema,
 } from './schema.js';
 
-const PATH = '/workspace/authorization';
+const PATH = '/v1/workspace/authorization';
 
 export type UpsertAuthorizationInput = z.input<
   typeof UpsertAuthorizationPayloadSchema

@@ -10,7 +10,7 @@ import {
   UpsertBrandingPayloadSchema,
 } from './schema.js';
 
-const PATH = '/workspace/branding';
+const PATH = '/v1/workspace/branding';
 
 export type UpsertBrandingInput = z.input<typeof UpsertBrandingPayloadSchema>;
 
